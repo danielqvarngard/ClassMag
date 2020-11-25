@@ -30,3 +30,43 @@
 *.exe
 *.out
 *.app
+*.mcsim
+
+# System files
+*.DS_Store
+
+# .idea stuff
+*.idea
+.idea/*
+
+# vscode preferences:
+./.vscode
+*.vscode
+./.vscode/*
+*.code-workspace
+
+# previous versions:
+source/OLDmakefile
+OLDmakefile
+
+# input files:
+*.mcinput
+*.spinconfig
+
+# default compiler outputs: 
+*.depend
+*/CMakeFiles
+*/.cmake
+*/Makefile
+*/cmake_install.cmake
+*/CMakeCache.txt
+*/compile_commands.json
+build/
+
+# shellscripts:
+*.sh
+shell/
+
+# output
+out/
+inbox/
