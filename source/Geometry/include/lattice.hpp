@@ -10,8 +10,8 @@ namespace classmag::geometry{
     template <unsigned int dimension>
     class Lattice{
         private:
-            const std::array<Qartesian<dimension>,dimension> bravais_(dimension);
-            const std::array<unsigned int,dimension> systemSize_(dimension); 
+            const std::array<Qartesian<dimension>,dimension> bravais_;
+            const std::array<unsigned int,dimension> systemSize_; 
         public:
             Lattice<dimension>(
                 const std::array<Qartesian<dimension>,dimension> &bravais,
@@ -23,22 +23,20 @@ namespace classmag::geometry{
 
             Lattice<dimension>(const Lattice<dimension> &lattice)
             {
-                delete;
+                delete this;
             }
 
             ~Lattice<dimension>()
             {
-                bravais_.clear();
-                systemSize_.clear();
             }
 
-            virtual Qartesian<dimension> double position_(unsigned int site) const
+            Qartesian<dimension> position_(unsigned int site) const
             {
                 auto periodicityConstant = 1;
-                Qartesian<dimension> translationVector = {0.0, 0.0, 0.0};
+                Qartesian<dimension> translationVector(0.0);
                 
                 for (unsigned int ii = 0; ii < dimension; ++ii){
-                    unsigned int n = (site1/periodicityConstant) % systemSize_[ii];
+                    int n = (site/periodicityConstant) % systemSize_[ii];
                     translationVector += n*bravais_[ii];
                     periodicityConstant *= systemSize_[ii];
                 }
@@ -60,11 +58,12 @@ namespace classmag::geometry{
     template <unsigned int dimension>
     class DecoratedLattice : public Lattice<dimension>{
         private:
-            std::vector<Qartesian<dimension>> decoration_();
+            std::vector<Qartesian<dimension>> decoration_;
         public:
-            void decorate_(const vector<Qartesian<dimension>> &targetDecoration){
-                decoration_ = targetDecoration;
-            }
+        void decorate_(
+            const std::vector<Qartesian<dimension>> &targetDecoration){
+            decoration_ = targetDecoration;
+        }
     };
 }
 

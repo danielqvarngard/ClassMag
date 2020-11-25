@@ -22,6 +22,13 @@ namespace classmag::geometry
             
         }
 
+        Qartesian<size>(const double initValue):
+        entry(std::make_unique<double[]>(size))
+        {
+            for (unsigned int index = 0; index < size; ++index)
+                entry[index] = initValue;
+        }
+
         Qartesian<size>(std::initializer_list<double> l):
         entry(std::make_unique<double[]>(size))
         {
@@ -91,6 +98,15 @@ namespace classmag::geometry
         Qartesian<n> result;
         for (unsigned int ii = 0; ii < n; ++ii)
             result.set(ii, magnitude*cartesian.get(ii));
+        return result;
+    }
+
+    template <unsigned int n>
+    Qartesian<n> operator*(const int magnitude, const Qartesian<n> &cartesian)
+    {
+        Qartesian<n> result;
+        for (unsigned int ii = 0; ii < n; ++ii)
+            result.set(ii, static_cast<double>(magnitude)*cartesian.get(ii));
         return result;
     }
 
