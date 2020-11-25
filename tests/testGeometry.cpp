@@ -6,8 +6,15 @@
 using namespace classmag::geometry;
 
 int main(){
-    auto e1 = Euclidean<2>({1.0, 1.0});
-    auto e2 = Euclidean<2>({0.0, 3.0});
-    e2.set(1.0);
-    std::cout << norm(proj(e1,e2)) << "\n";
+    auto e1 = Euclidean<2>({1.0, 0.0});
+    auto e2 = Euclidean<2>({0.0, 1.0});
+
+    auto bravais = std::array<Euclidean<2>,2>({e1,e2});
+    auto systemSize = std::array<unsigned int,2>({3,3});
+    Lattice<2> lattice(bravais,systemSize);
+
+    auto n_sites = systemSize[0]*systemSize[1];
+    for (unsigned int ii = 0; ii < n_sites; ++ii)
+        std::cout << lattice.position_(ii)[0] << " " << lattice.position_(ii)[1] << "\n";
+    
 }

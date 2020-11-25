@@ -2,6 +2,7 @@
 #define CLASSMAG_GEOMETRY_EUCLIDEAN_HPP
 
 #include <array>
+#include <utility>
 #include <math.h>
 
 namespace classmag::geometry{
@@ -13,6 +14,23 @@ namespace classmag::geometry{
             for (unsigned int ii = 0; ii < dimension; ++ii)
                 (*this)[ii] = d;
         }
+        Euclidean& operator+=(const Euclidean &src){
+            for (unsigned int ii = 0; ii < dimension; ++ii)
+                (*this)[ii] += src[ii];
+            return *this;
+        }
+
+        Euclidean& operator-=(const Euclidean &src){
+            for (unsigned int ii = 0; ii < dimension; ++ii)
+                (*this)[ii] -= src[ii];
+            return *this;
+        }
+
+        Euclidean& operator*=(const double d){
+            for (unsigned int ii = 0; ii < dimension; ++ii)
+                (*this)[ii] *= d;
+            return *this;
+        }
     };
 
     template<unsigned int dimension>
@@ -22,6 +40,16 @@ namespace classmag::geometry{
         Euclidean<dimension> result;
         for (unsigned int ii = 0; ii < dimension; ++ii)
             result[ii] = e1[ii] + e2[ii];
+        return result;
+    }
+
+    template<unsigned int dimension>
+    Euclidean<dimension> operator-(
+        const Euclidean<dimension> &e1,
+        const Euclidean<dimension> &e2){
+        Euclidean<dimension> result;
+        for (unsigned int ii = 0; ii < dimension; ++ii)
+            result[ii] = e1[ii] - e2[ii];
         return result;
     }
 
