@@ -6,7 +6,8 @@
 using namespace classmag::geometry;
 
 int main(){
-    auto e1 = Euclidean<2>({1.0, 2.0});
+    auto e1 = Euclidean<2>({1.0, 1.0});
     auto e2 = Euclidean<2>({0.0, 3.0});
+    e2.set(1.0);
     std::cout << norm(proj(e1,e2)) << "\n";
 }
