@@ -7,7 +7,8 @@ using namespace classmag::geometry;
 
 int main(){
     auto e1 = Euclidean<2>({1.0, 0.0});
-    auto e2 = Euclidean<2>({0.0, 1.0});
+    auto e2 = Euclidean<2>({1.0, 1.0});
+    e2 -= proj(e2,e1);
 
     auto bravais = std::array<Euclidean<2>,2>({e1,e2});
     auto systemSize = std::array<unsigned int,2>({3,3});
