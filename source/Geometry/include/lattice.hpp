@@ -59,7 +59,7 @@ namespace classmag::geometry{
     template <unsigned int dimension>
     class DecoratedLattice : public Lattice<dimension>{
         private:
-            std::vector<Euclidean<dimension>> decoration_;
+            std::vector<Euclidean<dimension>> decoration_({0.0});
         public:
         void decorate_(
             const std::vector<Euclidean<dimension>> &targetDecoration){
