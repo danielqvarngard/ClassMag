@@ -3,30 +3,36 @@
 
 #include "euclidean.hpp"
 #include <array>
-#include <cerrno>
+#include <utility>
+#include <vector>
 
 namespace classmag::geometry{
+
+    template<unsigned int dimension>
+    std::vector<Euclidean<dimension>> defaultDecoration(){
+        auto e = Euclidean<dimension>();
+        e.fill(0.0);
+        std::vector<Euclidean<dimension>> result;
+        result.resize(1);
+        result[0] = e;
+        return result;
+    }
+
+    
 
     template <unsigned int dimension>
     class Lattice{
         private:
             const std::array<Euclidean<dimension>,dimension> bravais_;
             const std::array<unsigned int,dimension> systemSize_; 
+            const std::vector<Euclidean<dimension>> decoration_;
         public:
             Lattice<dimension>(
                 const std::array<Euclidean<dimension>,dimension> &bravais,
                 const std::array<unsigned int,dimension> &systemSize):
                 bravais_(bravais),
-                systemSize_(systemSize)
-            {
-            }
-
-            Lattice<dimension>(const Lattice<dimension> &lattice)
-            {
-                delete this;
-            }
-
-            ~Lattice<dimension>()
+                systemSize_(systemSize),
+                decoration_(defaultDecoration<dimension>())
             {
             }
 
@@ -34,7 +40,7 @@ namespace classmag::geometry{
             {
                 auto periodicityConstant = 1;
                 Euclidean<dimension> translationVector;
-                translationVector.set(0.0);
+                translationVector.fill(0.0);
                 
                 for (unsigned int ii = 0; ii < dimension; ++ii){
                     int n = (site/periodicityConstant) % systemSize_[ii];
@@ -53,18 +59,6 @@ namespace classmag::geometry{
                 return result;
 
             }
-    };
-
-
-    template <unsigned int dimension>
-    class DecoratedLattice : public Lattice<dimension>{
-        private:
-            std::vector<Euclidean<dimension>> decoration_ = {0.0};
-        public:
-        void decorate_(
-            const std::vector<Euclidean<dimension>> &targetDecoration){
-            decoration_ = targetDecoration;
-        }
     };
 }
 

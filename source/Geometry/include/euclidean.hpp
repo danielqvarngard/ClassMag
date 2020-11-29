@@ -10,11 +10,10 @@ namespace classmag::geometry{
     template<unsigned int dimension>
     class Euclidean : public std::array<double, dimension>{
         public:
-        void set(const double d){
+        void fill(const double d){
             for (unsigned int ii = 0; ii < dimension; ++ii)
                 (*this)[ii] = d;
         }
-        
         Euclidean& operator=(const Euclidean &src){
             for (unsigned int ii = 0; ii < dimension; ++ii)
                 (*this)[ii] = src[ii];

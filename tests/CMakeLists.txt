@@ -1,7 +1,9 @@
 add_executable(
     testGeometry.exe
     testGeometry.cpp
-    ${CMAKE_SOURCE_DIR}/source/Geometry/include/qartesian.hpp
+    ${CMAKE_SOURCE_DIR}/source/Geometry/predefLattices.cpp
+    ${CMAKE_SOURCE_DIR}/source/Geometry/include/predefLattices.hpp
+    ${CMAKE_SOURCE_DIR}/source/Geometry/include/euclidean.hpp
 )
 
 target_include_directories(
