@@ -3,7 +3,7 @@
 
 #include <array>
 #include <utility>
-#include <math.h>
+#include <math.h> // sqrt
 
 namespace classmag::geometry{
 
@@ -82,6 +82,16 @@ namespace classmag::geometry{
     template<unsigned int dimension>
     Euclidean<dimension> operator*(
         const int d,
+        const Euclidean<dimension> &e){
+        Euclidean<dimension> result;
+        for (unsigned int ii = 0; ii < dimension; ++ii)
+            result[ii] = static_cast<double>(d) * e[ii];
+        return result;
+    }
+
+    template<unsigned int dimension>
+    Euclidean<dimension> operator*(
+        const unsigned int d,
         const Euclidean<dimension> &e){
         Euclidean<dimension> result;
         for (unsigned int ii = 0; ii < dimension; ++ii)

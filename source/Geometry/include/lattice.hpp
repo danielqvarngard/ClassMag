@@ -5,6 +5,8 @@
 #include <array>
 #include <utility>
 #include <vector>
+#include <iostream>
+#include <algorithm> // *min_element
 
 namespace classmag::geometry{
 
@@ -50,6 +52,33 @@ namespace classmag::geometry{
                     periodicityConstant *= systemSize_[ii];
                 }
                 return translationVector;
+            }
+
+            Euclidean<dimension> mirroredPosition_(
+                unsigned int site, 
+                std::array<int, dimension> &periods) const{
+                    auto position = position_(site);
+                    for (unsigned int ii = 0; ii < dimension; ++ii){
+                        position += (static_cast<int>(systemSize_[ii])*periods[ii])*bravais_[ii];
+                    }
+                    return position;
+            }
+
+
+            virtual double squareDistance_(unsigned int site1, unsigned int site2)const {
+                std::vector<double> squareDistances(3*dimension);
+                for (unsigned int index = 0; index < 3*dimension; ++index){
+                    std::array<int, dimension> periods;
+                    periods.fill(0);
+                    int multiplier = (index % 3) - 1;
+                    periods[index/3] = multiplier;
+                    auto v1 = position_(site1);
+                    auto v2 = mirroredPosition_(site2,periods);
+                    squareDistances[index] = (v1 - v2) * (v1 - v2);
+                }
+
+                double r = *std::min_element(squareDistances.begin(), squareDistances.end());
+                return r;
             }
 
             void decorate_(const std::vector<Euclidean<dimension>> & targetDecoration){
