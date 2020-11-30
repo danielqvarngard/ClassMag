@@ -25,7 +25,7 @@ namespace classmag::geometry{
         private:
             const std::array<Euclidean<dimension>,dimension> bravais_;
             const std::array<unsigned int,dimension> systemSize_; 
-            const std::vector<Euclidean<dimension>> decoration_;
+            std::vector<Euclidean<dimension>> decoration_;
         public:
             Lattice<dimension>(
                 const std::array<Euclidean<dimension>,dimension> &bravais,
@@ -39,25 +39,31 @@ namespace classmag::geometry{
             Euclidean<dimension> position_(unsigned int site) const
             {
                 auto periodicityConstant = 1;
-                Euclidean<dimension> translationVector;
-                translationVector.fill(0.0);
-                
+                auto decorationNumber = site % decoration_.size();
+                const int cellNumber = site / decoration_.size();
+                Euclidean<dimension> translationVector = decoration_[decorationNumber];
+
                 for (unsigned int ii = 0; ii < dimension; ++ii){
-                    int n = (site/periodicityConstant) % systemSize_[ii];
+                    
+                    int n = (cellNumber/periodicityConstant) % systemSize_[ii];
                     translationVector += n*bravais_[ii];
                     periodicityConstant *= systemSize_[ii];
                 }
                 return translationVector;
             }
 
-            virtual double distanceSquared_(
-                const unsigned int site1, 
-                const unsigned int site2) const
-            {
-                auto v = (position_(site1) - position_(site2));
-                double result = v*v;
-                return result;
+            void decorate_(const std::vector<Euclidean<dimension>> & targetDecoration){
+                auto n_decorations = targetDecoration.size();
+                decoration_.resize(n_decorations);
+                for (unsigned int ii = 0; ii < n_decorations; ++ii)
+                    decoration_[ii] = targetDecoration[ii];
+            }
 
+            unsigned int n_sites_(){
+                unsigned int n = decoration_.size();
+                for (auto s : systemSize_)
+                    n *= s;
+                return n;
             }
     };
 }

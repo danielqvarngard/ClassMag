@@ -120,6 +120,7 @@ namespace classmag::geometry{
         result = ((onReference*e)/(onReference*onReference))*onReference;
         return result;
     }
+
 }
 
 
