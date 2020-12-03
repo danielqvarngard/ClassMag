@@ -1,6 +1,14 @@
 #include "include/mcFunctions.hpp"
 
-namespace classmag::interactions{
+namespace classmag::montecarlo{
+    double squareRoot(double x){
+        return std::sqrt(x);
+    }
+
+    double pi(){
+        return M_PI;
+    }
+
     double exponential(double x){
         return exp(x);
     }

@@ -7,6 +7,8 @@
 
 
 namespace classmag::montecarlo{
+    double squareRoot(double x);
+    double pi();
     double exponential(double x);
     double logarithm(double x);
     double boltzmannFactor(double beta, double delta_E);

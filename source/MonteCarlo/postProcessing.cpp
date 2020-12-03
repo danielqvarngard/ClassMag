@@ -12,12 +12,15 @@ namespace classmag::montecarlo{
         auto a = 0.0;
         for (auto d : x)
             a += std::pow(d, exponent);
-        return a/static_cast<double>(x.size());
+        return a/static_cast<double>(x.size() - 1);
     }
 
     double variance(const std::vector<double> &x, double x_mean){
-        auto a = moment(x,2.0);
-        return a - x_mean*x_mean;
+        auto result = 0.0;
+        for (auto d : x)
+            result += (d - x_mean)*(d - x_mean);
+        result /= static_cast<double>(x.size() - 1);
+        return result;
     }
 
     double variance(const std::vector<double> &x){
@@ -27,7 +30,7 @@ namespace classmag::montecarlo{
 
     std::pair<double, double> bootstrap(
         const std::vector<double> &data,
-        std::function<double(std::vector<double> &)> estimator,
+        std::function<double(const std::vector<double> &x)> estimator,
         unsigned int n_resamples){
             std::vector<double> estimate(n_resamples);
             
@@ -35,7 +38,7 @@ namespace classmag::montecarlo{
             std::uniform_int_distribution<unsigned int> distr(0, data.size() - 1);
             for (unsigned int ii = 0; ii < n_resamples; ++ii){
                 std::vector<double> resample(data.size());
-                for (unsigned int jj = 0; jj < data.size(); ++ii)
+                for (unsigned int jj = 0; jj < data.size(); ++jj)
                     resample[jj] = data[distr(mt)];
                 estimate[ii] = estimator(resample);
             }
@@ -43,5 +46,5 @@ namespace classmag::montecarlo{
             auto varianceEstimate = variance(estimate,meanEstimate);
             std::pair<double, double> result = {meanEstimate, varianceEstimate};
             return result;
-        }
+    }
 }

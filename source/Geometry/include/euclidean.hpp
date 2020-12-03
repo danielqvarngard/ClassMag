@@ -89,15 +89,7 @@ namespace classmag::geometry{
         return result;
     }
 
-    template<unsigned int dimension>
-    Euclidean<dimension> operator*(
-        const unsigned int d,
-        const Euclidean<dimension> &e){
-        Euclidean<dimension> result;
-        for (unsigned int ii = 0; ii < dimension; ++ii)
-            result[ii] = static_cast<double>(d) * e[ii];
-        return result;
-    }
+    
 
     template<unsigned int dimension>
     Euclidean<dimension> operator*(
@@ -130,6 +122,28 @@ namespace classmag::geometry{
         result = ((onReference*e)/(onReference*onReference))*onReference;
         return result;
     }
+
+    inline double epsilonContraction(
+        unsigned int ii, 
+        const Euclidean<3> &v1, 
+        const Euclidean<3> &v2)
+    {
+        double value;
+        value = v1[(ii + 1) % 3] * v2[(ii + 2) % 3] -
+                v2[(ii + 1) % 3] * v1[(ii + 2) % 3];
+        return value;
+    };
+
+    inline Euclidean<3> cross(
+        const Euclidean<3> &e1,
+        const Euclidean<3> &e2){
+            Euclidean<3> w = {
+                epsilonContraction(0, e1, e2),
+                epsilonContraction(1, e1, e2),
+                epsilonContraction(2, e1, e2)
+                };
+            return w;
+        }
 
 }
 

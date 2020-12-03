@@ -17,3 +17,21 @@ target_link_libraries(
     PRIVATE
     ClassMag_Geometry
 )
+
+add_executable(
+    testMC.exe
+    testMC.cpp
+)
+
+target_include_directories(
+    testMC.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+target_link_libraries(
+    testMC.exe
+    PRIVATE
+    ClassMag_MonteCarlo
+    ClassMag_Geometry
+)

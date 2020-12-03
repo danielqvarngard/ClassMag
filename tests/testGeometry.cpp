@@ -36,4 +36,6 @@ int main(){
     auto site3 = 5;
     std::cout << "Distance between site1 and site2 is: " << sqrt(lattice.squareDistance_(site1,site2)) << "\n";
     std::cout << "Distance between site1 and site3 is: " << sqrt(lattice.squareDistance_(site1,site3)) << "\n";
+
+    std::cout << "The number of sites are: " << static_cast<double>(lattice.n_sites_()) << "\n";
 }
