@@ -97,11 +97,85 @@ namespace classmag::geometry{
 
         std::vector<unsigned int> neighborCellSites_(
             const unsigned int referenceSite){
-                
+            
+            auto n_decorations = decoration_.size();
+            auto decorationIndex = referenceSite % n_decorations;
             std::vector<unsigned int> correspondingSiteIndices(2*dimension);
             
+            auto cell = referenceSite/n_decorations;
+            auto cellCoordinates = std::array<unsigned int, dimension>();
+
+            auto wrappingNumber = 1;
+            for (unsigned int ii = 0; ii < dimension; ++ii){
+                cellCoordinates[ii] = (cell/wrappingNumber) % systemSize_[ii];
+                wrappingNumber *= systemSize_[ii];
+            }
+
+            auto atLeftEdgeOf = 
+                [&cellCoordinates, this]
+                (unsigned int direction){
+                if (cellCoordinates[direction] % 
+                        systemSize_[direction] == 0)
+                    return true;
+                else
+                    return false;
+            };
+            
+            auto atRightEdgeOf = 
+                [&cellCoordinates, this]
+                (unsigned int direction){
+                if ((cellCoordinates[direction] - 1) % 
+                        systemSize_[direction] == 0)
+                    return true;
+                else
+                    return false;
+            };
+
+            auto sideIndex = 
+                [referenceSite, &wrappingNumber, this]
+                (unsigned int direction, bool left){
+                    auto a = (left? -1 : +1);
+                return (referenceSite + a * 
+                        decoration_.size() * wrappingNumber);
+            };
+
+            auto wrappedSideIndex = 
+                [referenceSite, &wrappingNumber, this]
+                (unsigned int direction, bool left){
+                    auto a = (left? 1 : -1);
+                return (referenceSite + a *
+                        decoration_.size() * (wrappingNumber * 
+                            (systemSize_[direction] - 1)));
+            };
 
 
+            wrappingNumber = 1;
+            for (unsigned int direction = 0; direction < dimension; ++direction){
+                auto left = true;
+                auto right = !left;
+
+                if (atLeftEdgeOf(direction)){
+                    correspondingSiteIndices[2*direction] = 
+                        wrappedSideIndex(direction, left);
+                    correspondingSiteIndices[2*direction + 1] =
+                        sideIndex(direction, right); 
+                }
+                else if (atRightEdgeOf(direction)){
+                    correspondingSiteIndices[2*direction] = 
+                        sideIndex(direction, left);
+                    correspondingSiteIndices[2*direction + 1] =
+                        wrappedSideIndex(direction, right);
+                }
+                else{
+                    correspondingSiteIndices[2*direction] = 
+                        sideIndex(direction, left);
+                    correspondingSiteIndices[2*direction + 1] =
+                        sideIndex(direction, right);
+                }
+                wrappingNumber *= systemSize_[direction];
+            }
+
+            return correspondingSiteIndices;
         }
     };
 }
