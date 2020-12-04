@@ -3,4 +3,5 @@ add_library(
     SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/couplingLookup.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/couplingLookup.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/orderParameter.hpp
 )

@@ -1,0 +1,7 @@
+#ifndef CLASSMAG_INTERACTIONS_ORDERPARAMETER_HPP
+#define CLASSMAG_INTERACTIONS_ORDERPARAMETER_HPP
+
+#include <functional>
+#include <utility>
+
+#endif
