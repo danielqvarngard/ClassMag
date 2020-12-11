@@ -1,10 +1,10 @@
-#ifndef CLASSMAG_INTERACTIONS_COUPLINGLOOKUP_HPP
-#define CLASSMAG_INTERACTIONS_COUPLINGLOOKUP_HPP
+#ifndef CLASSMAG_MODELS_COUPLINGLOOKUP_HPP
+#define CLASSMAG_MODELS_COUPLINGLOOKUP_HPP
 #include <vector>
 #include <functional>
 #include <iostream>
 
-namespace classmag::interactions{
+namespace classmag::models{
     class CouplingLookup{
         private:
             std::vector<double> couplingTable_;

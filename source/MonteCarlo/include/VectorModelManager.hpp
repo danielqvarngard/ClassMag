@@ -7,6 +7,7 @@
 #include <random>
 #include "Geometry/include/euclidean.hpp"
 #include "Interactions/include/couplingLookup.hpp"
+#include "Interactions/include/orderParameter.hpp"
 #include "mcFunctions.hpp"
 
 namespace classmag::montecarlo{
@@ -15,15 +16,16 @@ namespace classmag::montecarlo{
     class VectorModelManager{
         private:
             const unsigned int n_sites_;
-            const interactions::CouplingLookup lookup_;
-            std::vector<classmag::geometry::Euclidean<spinDimension>> spin_;
+            const models::CouplingLookup lookup_;
+            models::SpinStructure<spinDimension> spin_;
             std::mt19937 randEngine_;
+            models::OrderParameters<spinDimension> orderParameters_;
 
             std::normal_distribution<double> normalDistribution_;
             std::uniform_real_distribution<double> uniformDistribution_;
 
             virtual geometry::Euclidean<spinDimension> randomUnitVector_(){
-                classmag::geometry::Euclidean<spinDimension> e;
+                geometry::Euclidean<spinDimension> e;
                 for (unsigned int ii = 0; ii < spinDimension; ++ii){
                     e[ii] = normalDistribution_(randEngine_);
                 }
@@ -31,7 +33,7 @@ namespace classmag::montecarlo{
             }
 
             geometry::Euclidean<spinDimension> localField_(unsigned int site) const{
-                classmag::geometry::Euclidean<spinDimension> field;
+                geometry::Euclidean<spinDimension> field;
                 field.fill(0.0);
                 for (unsigned int ii = 0; ii < n_sites_; ++ii){
                     double coupling = lookup_.coupling_(site,ii);
@@ -62,12 +64,13 @@ namespace classmag::montecarlo{
 
         public:
             double beta_ = 1.0;
+
             VectorModelManager(
                 unsigned int n_sites,
-                const std::function<double(int,int)> interaction, 
+                const std::function<double(unsigned int, unsigned int)> interaction, 
                 int seed):
             n_sites_(n_sites),
-            lookup_(interactions::CouplingLookup(n_sites,interaction)),
+            lookup_(models::CouplingLookup(n_sites,interaction)),
             randEngine_(std::mt19937(seed)),
             uniformDistribution_(std::uniform_real_distribution<double>()),
             normalDistribution_(std::normal_distribution<double>())
@@ -75,6 +78,17 @@ namespace classmag::montecarlo{
                 spin_.resize(n_sites);
                 for (unsigned int ii = 0; ii < n_sites; ++ii)
                     spin_[ii] = randomUnitVector_();
+            }
+
+            void addOrderParameter_(
+                const models::OrderParameter<spinDimension> &op){
+                orderParameters_.push_back(op);
+            }
+
+            void addOrderParameter_(
+                const models::OrderParameters<spinDimension> &op){
+                for (auto o : op)
+                    addOrderParameter_(o);
             }
 
             void update_(){
@@ -97,6 +111,11 @@ namespace classmag::montecarlo{
                 }
 
             }
+
+            void overRelax_(const unsigned int n_times){
+                for (unsigned int ii = 0; ii < n_times; ++ii)
+                    overRelax_();
+            }
             
             double energy_() const{
                 auto total = 0.0;
@@ -108,11 +127,18 @@ namespace classmag::montecarlo{
                 return total/2.0; // Do not count interactions twice!
             }
 
-            void printNorms_() const{
-                for (unsigned int ii = 0; ii < n_sites_; ++ii){
-                    std::cout << geometry::norm(spin_[ii]);
-                    std::cout << "\n";
-                }
+            std::vector<double> measure_() const{
+                std::vector<double> results;
+                for (auto orderParameter : orderParameters_)
+                    results.push_back(orderParameter.measure_(spin_));
+                return results;
+            }
+
+            std::vector<std::string> measurementNames_() const{
+                std::vector<std::string> results;
+                for (auto measure : orderParameters_)
+                    results.push_back(measure.name_);
+                return results;
             }
 
             void printSpin_(unsigned int site) const{

@@ -4,9 +4,13 @@
 #include "lattice.hpp"
 
 namespace classmag::geometry{
+    inline double tsaiRadius();
+    inline double goldenRatio();
     std::vector<Euclidean<3>> icosahedralCluster();
 
-    Lattice<2> squareLattice(const std::array<unsigned int,2> &systemSize);
+    Lattice<3> bccLattice(const std::array<unsigned int, 3> &systemSize);
+    Lattice<3> has0(const std::array<unsigned int, 3> &systemSize);
+    Lattice<3> has100(const std::array<unsigned int, 3> &systemSize);
 
     template<unsigned int dim>
     Lattice<dim> cubicLattice(

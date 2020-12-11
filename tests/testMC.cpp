@@ -1,65 +1,76 @@
+#include <iostream>
+
 #include "Geometry/include/lattice.hpp"
+#include "Geometry/include/predefLattices.hpp"
+#include "Interactions/include/orderParameter.hpp"
+#include "Interactions/include/nearestNeighbor.hpp"
 #include "MonteCarlo/include/VectorModelManager.hpp"
 #include "MonteCarlo/include/postProcessing.hpp"
 
 using namespace classmag;
 int main(int argc, char *argv[]){
 
-    auto n_measurements = 1000;
-    auto n_thermalizations = 1000;
+    auto n_thermalize = 1000;
+    auto n_overrelax = 100;
+    auto n_measure = 1000;
+    auto n_resamples = 1000;
 
-    std::array<geometry::Euclidean<3>,3> bravais;
-    for (unsigned int ii = 0; ii < 3; ++ii){
-        bravais[ii].fill(0.0);
-        bravais[ii][ii] = 1.0;
-    }
-
-    const std::array<unsigned int,3> systemSize = {4, 4, 4};
-
-    geometry::Lattice<3> lattice(bravais,systemSize);
-    lattice.squareDistance_(0,1);
-
-    auto nn_coupling = [lattice](int site1, int site2){
-        if (lattice.squareDistance_(site1,site2) < 1.01 && site1 != site2)
-            return 1.0;
-        return 0.0;
-    };
+    auto const systemSize = std::array<unsigned int, 3>({4,4,4});
+    auto lattice = geometry::cubicLattice<3>(systemSize);
+    const auto interaction = models::nearestNeighbor(1.0,lattice,1.001);
+    const auto mag = models::magnetization<3>();
     auto seed = 0;
-    montecarlo::VectorModelManager<3> mcProc(lattice.n_sites_(), nn_coupling, seed);
-    mcProc.printM_();
-    std::vector<double> temperature = {3.0, 2.5, 2.0, 1.8, 1.7, 1.6, 1.5, 1.4, 1.3, 1.2, 1.1, 1.0, 0.9, 0.8,
-    0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.09, 0.08, 0.07, 0.06};
-    std::vector<double> energy(temperature.size());
-    std::vector<double> heatCapacity(temperature.size());
-    auto measureindex = 0;
-    auto n_sites = static_cast<double>(lattice.n_sites_());
-    for (auto T : temperature){
-        auto beta = 1.0/T;
-        mcProc.beta_ = 1.0/T;
-        std::cout << "Temperature: " << T << "\n";
-        mcProc.update_(n_thermalizations);
-        std::vector<double> microstateEnergy(n_measurements);
-        for (unsigned int ii = 0; ii < n_measurements; ++ii){
-            mcProc.update_();
-            mcProc.overRelax_();
-            microstateEnergy[ii] = mcProc.energy_();
-        }
-        auto energyEstimator = [n_sites](const std::vector<double> &x){
-            return montecarlo::mean(x)/n_sites;
-        };
-        auto heatCapacityEstimator = [n_sites,T](const std::vector<double> &x){
-            return montecarlo::variance(x)/(T*T*n_sites);
-        };
-        
-        auto energyEstimate = montecarlo::bootstrap(microstateEnergy,energyEstimator,1000);
-        auto heatCapacityEstimate = montecarlo::bootstrap(microstateEnergy,heatCapacityEstimator,1000);
+    auto mc = montecarlo::VectorModelManager<3>(
+        (lattice.n_sites_()),
+        interaction,
+        seed);
 
-        energy[measureindex] = energyEstimate.first;
-        heatCapacity[measureindex] = heatCapacityEstimate.first;
+    mc.addOrderParameter_(mag);
+
+    auto temperatures = {
+        3.0, 2.5, 2.0, 1.5, 1.4, 1.3, 1.2, 1.1, 1.05, 1.025, 1.0, 
+        0.975, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4,
+        0.3, 0.2, 0.1, 0.08, 0.06, 0.04};
+
+    auto heatCapMeasures = std::vector<double>();
+    auto magMeasures = std::vector<double>();
+    auto chiMeasures = std::vector<double>();
+
+    for (auto T : temperatures){
+        mc.beta_ = 1.0/T;
+        mc.update_(n_thermalize);
+        std::vector<double> energyData(n_measure);
+        std::vector<double> magData(n_measure);
+        for (unsigned int ii = 0; ii < n_measure; ++ii){
+            mc.overRelax_(n_overrelax);
+            mc.update_();
+            energyData[ii] = mc.energy_();
+            auto mag = mc.measure_();
+            magData[ii] = mag[0];
+        }
+
+        auto meanEstimate = [](const std::vector<double> &x){return montecarlo::mean(x);};
+        auto varianceEstimate = [](const std::vector<double> &x){return montecarlo::variance(x);};
+
+        auto heatCapResult = montecarlo::bootstrap(energyData,varianceEstimate,n_resamples);
+        heatCapResult.first /= T*T;
+        heatCapResult.first /= static_cast<double>(lattice.n_sites_());
+
+        auto magResult = montecarlo::bootstrap(magData,meanEstimate,n_resamples);
+        magResult.first /= static_cast<double>(lattice.n_sites_());
+        auto chiResult = montecarlo::bootstrap(magData,varianceEstimate,n_resamples);
+        chiResult.first /= static_cast<double>(lattice.n_sites_());
+        chiResult.first /= T;
+
+        heatCapMeasures.push_back(heatCapResult.first);
+        magMeasures.push_back(magResult.first);
+        chiMeasures.push_back(chiResult.first);
+
         std::cout << T << " ";
-        std::cout << energy[measureindex] << " ";
-        std::cout << heatCapacity[measureindex] << "\n";
-        ++measureindex;
-        
+        std::cout << montecarlo::mean(energyData)/static_cast<double>(lattice.n_sites_()) << " ";
+        std::cout << heatCapResult.first << " ";
+        std::cout << magResult.first << " ";
+        std::cout << chiResult.first << "\n";
     }
+    
 }

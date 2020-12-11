@@ -145,6 +145,13 @@ namespace classmag::geometry{
             return w;
         }
 
+    template<unsigned int dimension>
+    void circShift(Euclidean<dimension> &e){
+            auto e_copy = e;
+        for (unsigned int ii = 0; ii < dimension; ++ii){
+            e[ii] = e_copy[(ii + 1) % dimension];
+        }
+    }
 }
 
 

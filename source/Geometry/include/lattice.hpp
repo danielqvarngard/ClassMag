@@ -88,7 +88,17 @@ namespace classmag::geometry{
                 decoration_[ii] = targetDecoration[ii];
         }
 
-        unsigned int n_sites_(){
+        void append_(const std::vector<Euclidean<dimension>> & targetDecoration){
+            auto n_decorations = targetDecoration.size();
+            for (unsigned int ii = 0; ii < n_decorations; ++ii)
+                decoration_.push_back(targetDecoration[ii]);
+        }
+
+        void append_(const Euclidean<dimension> &targetDecoration){
+                decoration_.push_back(targetDecoration);
+        }
+
+        unsigned int n_sites_() const{
             unsigned int n = decoration_.size();
             for (auto s : systemSize_)
                 n *= s;
@@ -96,7 +106,7 @@ namespace classmag::geometry{
         }
 
         std::vector<unsigned int> neighborCellSites_(
-            const unsigned int referenceSite){
+            const unsigned int referenceSite) const{
             
             auto n_decorations = decoration_.size();
             auto decorationIndex = referenceSite % n_decorations;
