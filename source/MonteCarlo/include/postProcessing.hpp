@@ -20,6 +20,16 @@ namespace classmag::montecarlo{
         const unsigned int n_resamples
         );
     
+    struct DefaultBoostrapOut{
+        public:
+        double meanEstimate;
+        double meanDeviation;
+        double varianceEstimate;
+        double varianceDeviation;
+    };
+
+    DefaultBoostrapOut defaultBootstrap(const std::vector<double> &x);
+    
 }
 
 #endif

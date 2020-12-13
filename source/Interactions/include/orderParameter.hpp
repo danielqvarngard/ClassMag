@@ -59,12 +59,14 @@ namespace classmag::models{
                 for (unsigned int site = 0; site < spins.size(); ++site){
                     auto loopIndices = lattice.neighborCellSites_(site);
                     auto n_neighbors = static_cast<double>(loopIndices.size());
-                    for (auto neighborSite : loopIndices)
+                    for (auto neighborSite : loopIndices){
+                        if (neighborSite < 0 || neighborSite > lattice.n_sites_() - 1)
+                            std::cout << "ASSHULT MC BULT\n";
                         result += spins[site]*spins[neighborSite]/n_neighbors;
+                    }
                 }
                 auto n_sites = static_cast<double>(spins.size());
-                result /= n_sites;
-                return result;
+                return result/n_sites;
             };
 
             auto clusterFunction = OrderParameter<spinDimension>("Cluster",order);
@@ -72,6 +74,9 @@ namespace classmag::models{
         };
 
     std::pair<geometry::Lattice<3>, OrderParameter<3>> DefaultTsaiSim(
+        const std::array<unsigned int,3> &systemSize);
+
+    std::pair<OrderParameter<3>, OrderParameter<3>> has100Params(
         const std::array<unsigned int,3> &systemSize);
 }
 

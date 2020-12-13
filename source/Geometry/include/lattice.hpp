@@ -105,20 +105,26 @@ namespace classmag::geometry{
             return n;
         }
 
+        unsigned int n_decorations_() const{
+            return decoration_.size();
+        }
+
         std::vector<unsigned int> neighborCellSites_(
             const unsigned int referenceSite) const{
             
             auto n_decorations = decoration_.size();
             auto decorationIndex = referenceSite % n_decorations;
             std::vector<unsigned int> correspondingSiteIndices(2*dimension);
-            
-            auto cell = referenceSite/n_decorations;
-            auto cellCoordinates = std::array<unsigned int, dimension>();
-
             auto wrappingNumber = 1;
-            for (unsigned int ii = 0; ii < dimension; ++ii){
-                cellCoordinates[ii] = (cell/wrappingNumber) % systemSize_[ii];
-                wrappingNumber *= systemSize_[ii];
+            auto cellCoordinates = std::array<unsigned int, dimension>();
+            {
+                const auto cell = referenceSite/n_decorations;
+
+                
+                for (unsigned int ii = 0; ii < dimension; ++ii){
+                    cellCoordinates[ii] = (cell/wrappingNumber) % systemSize_[ii];
+                    wrappingNumber *= systemSize_[ii];
+                }
             }
 
             auto atLeftEdgeOf = 
@@ -134,7 +140,7 @@ namespace classmag::geometry{
             auto atRightEdgeOf = 
                 [&cellCoordinates, this]
                 (unsigned int direction){
-                if ((cellCoordinates[direction] - 1) % 
+                if ((cellCoordinates[direction] + 1) % 
                         systemSize_[direction] == 0)
                     return true;
                 else
