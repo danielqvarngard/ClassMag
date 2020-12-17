@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#define LATTICEFUNCTION geometry::has100
+#define LATTICEFUNCTION geometry::has0
 
 #include "Geometry/include/lattice.hpp"
 #include "Geometry/include/predefLattices.hpp"
@@ -15,7 +15,7 @@ using namespace classmag;
 int main(int argc, char *argv[]){
 
     auto n_thermalize = 10000;
-    auto n_overrelax = 5;
+    auto n_overrelax = 10;
     auto n_measure = 10000;
     auto n_skip = 2;
     auto n_resamples = 100;
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
     
     auto temperatures = {
         0.0015, 0.00125, 0.0011, 0.001, 0.0009, 0.0008, 0.0007, 0.0006, 0.0005, 0.0004,
-        0.00035, 0.000325, 0.0003, 0.000275, 0.00025, 0.0002, 0.000175, 0.00015
+        0.00035, 0.000325, 0.0003
         };
 
     auto fp = std::ofstream(filename);
