@@ -116,6 +116,13 @@ namespace classmag::montecarlo{
                 for (unsigned int ii = 0; ii < n_times; ++ii)
                     overRelax_();
             }
+
+            void update_(unsigned int n_times, unsigned int n_overRelax){
+                for (unsigned int ii = 0; ii < n_times; ++ii){
+                    overRelax_(n_overRelax);
+                    update_();
+                }
+            }
             
             double energy_() const{
                 auto total = 0.0;

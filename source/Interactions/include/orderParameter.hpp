@@ -65,8 +65,7 @@ namespace classmag::models{
                         result += spins[site]*spins[neighborSite]/n_neighbors;
                     }
                 }
-                auto n_sites = static_cast<double>(spins.size());
-                return result/n_sites;
+                return result;
             };
 
             auto clusterFunction = OrderParameter<spinDimension>("Cluster",order);

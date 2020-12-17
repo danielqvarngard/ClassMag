@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #define LATTICEFUNCTION geometry::has100
 
@@ -6,6 +7,7 @@
 #include "Geometry/include/predefLattices.hpp"
 #include "Interactions/include/orderParameter.hpp"
 #include "Interactions/include/nearestNeighbor.hpp"
+#include "Interactions/include/rkky.hpp"
 #include "MonteCarlo/include/VectorModelManager.hpp"
 #include "MonteCarlo/include/postProcessing.hpp"
 
@@ -13,16 +15,21 @@ using namespace classmag;
 int main(int argc, char *argv[]){
 
     auto n_thermalize = 10000;
-    auto n_overrelax = 10;
-    auto n_measure = 1000;
-    auto n_skip = 10;
+    auto n_overrelax = 5;
+    auto n_measure = 10000;
+    auto n_skip = 2;
     auto n_resamples = 100;
-
-    auto const systemSize = std::array<unsigned int, 3>({4,4,4});
+    unsigned int L = 6;
+    auto const systemSize = std::array<unsigned int, 3>({L,L,L});
     auto lattice = LATTICEFUNCTION(systemSize);
-    
-    const auto interaction = models::nearestNeighbor(-1.0,lattice,0.385);
+    int kf_label = 19;
+    auto kf = static_cast<double>(kf_label);
+    const auto interaction = models::rkkyInteraction(kf,lattice,4.0);
 
+    std::string dir = "../out/";
+    std::string filename = dir + "testMC_RKKY_";
+    filename += std::to_string(kf_label);
+    filename += "_";
     auto seed = 0;
     auto mc = montecarlo::VectorModelManager<3>(
         (lattice.n_sites_()),
@@ -31,67 +38,77 @@ int main(int argc, char *argv[]){
     
     const auto mag = models::magnetization<3>();
     mc.addOrderParameter_(mag);
+    auto n_orderParameters = 1;
+    
     if (lattice.n_decorations_() == 12){
+        filename += "has0_";
         const auto cluster = models::clusterOrder<3,3>(lattice);
         mc.addOrderParameter_(cluster);
+        ++n_orderParameters;
     }
     else if (lattice.n_decorations_() == 13){
+        filename += "has100_";
         const auto clusterPair = models::has100Params(systemSize);
         mc.addOrderParameter_(clusterPair.first);
         mc.addOrderParameter_(clusterPair.second);
+        n_orderParameters = n_orderParameters + 2;
     }
+    filename += "L_";
+    filename += std::to_string(L);
+    filename += ".mcout";
 
-    
+    std::vector<std::vector<double>> opc(n_orderParameters);
+    for (unsigned int jj = 0; jj < n_orderParameters; ++jj)
+        opc[jj].resize(n_measure);
     
     auto temperatures = {
-        3.0, 2.5, 2.0, 1.5, 1.4, 1.3, 1.2, 1.1, 1.0, 0.9, 0.8, 0.7, 0.6,
-        0.58, 0.56, 0.54, 0.52, 0.5, 0.48, 0.46, 0.44, 0.42, 0.4,
-        0.3, 0.2, 0.1, 0.08, 0.06, 0.04};
+        0.0015, 0.00125, 0.0011, 0.001, 0.0009, 0.0008, 0.0007, 0.0006, 0.0005, 0.0004,
+        0.00035, 0.000325, 0.0003, 0.000275, 0.00025, 0.000225, 0.0002
+        };
 
-    auto heatCapMeasures = std::vector<double>();
-    auto magMeasures = std::vector<double>();
-    auto chiMeasures = std::vector<double>();
-
+    auto fp = std::ofstream(filename);
+    auto zeroPatience = 1;
     for (auto T : temperatures){
         mc.beta_ = 1.0/T;
-        mc.update_(n_thermalize);
-        std::vector<double> energyData(n_measure);
-        std::vector<double> magData(n_measure);
-        std::vector<double> clusterData(n_measure);
+        std::vector<double> energy(n_measure);
+        mc.update_(n_thermalize,n_overrelax);
         for (unsigned int ii = 0; ii < n_measure; ++ii){
-            mc.overRelax_(n_overrelax);
-            mc.update_(n_skip);
-            energyData[ii] = mc.energy_();
+            mc.update_(n_skip,n_overrelax);
+            energy[ii] = mc.energy_();
             auto mag = mc.measure_();
-            magData[ii] = mag[0];
-            clusterData[ii] = mag[1];
+            for (unsigned int jj = 0; jj < n_orderParameters; ++jj){
+                opc[jj][ii] = mag[jj];
+            }
         }
 
         auto meanEstimate = [](const std::vector<double> &x){return montecarlo::mean(x);};
         auto varianceEstimate = [](const std::vector<double> &x){return montecarlo::variance(x);};
+        std::vector<double> estimates(2*n_orderParameters);
 
-        auto heatCapResult = montecarlo::bootstrap(energyData,varianceEstimate,n_resamples);
-        heatCapResult.first /= T*T;
-        heatCapResult.first /= static_cast<double>(lattice.n_sites_());
+        fp << T << " ";
+        for (unsigned int jj = 0; jj < n_orderParameters; ++jj){
+            auto meanval = montecarlo::bootstrap(opc[jj],meanEstimate,n_resamples);
+            auto n_sites = static_cast<double>(lattice.n_sites_());
+            fp << meanval.first/n_sites << " ";
+            auto varval = montecarlo::bootstrap(opc[jj],varianceEstimate,n_resamples);
+            fp << varval.first/(T*n_sites) << " ";
+        }
+        {
+        auto meanval = montecarlo::bootstrap(energy,meanEstimate,n_resamples);
+        auto n_sites = static_cast<double>(lattice.n_sites_());
+        fp << meanval.first/n_sites << " ";
+        fp << meanval.second/n_sites << " ";
+        auto varval = montecarlo::bootstrap(energy,varianceEstimate,n_resamples);
+        fp << varval.first/(T*T*n_sites) << " ";
+        fp << varval.second/(T*T*n_sites);
+        }
+        fp << "\n";
+        std::cout << zeroPatience << "/" << temperatures.size();
+        std::cout << " temperatures completed\n";
+        ++zeroPatience;
 
-        auto magResult = montecarlo::bootstrap(magData,meanEstimate,n_resamples);
-        magResult.first /= static_cast<double>(lattice.n_sites_());
-        auto chiResult = montecarlo::bootstrap(magData,varianceEstimate,n_resamples);
-        chiResult.first /= static_cast<double>(lattice.n_sites_());
-        chiResult.first /= T;
-
-        auto clusterResult = montecarlo::bootstrap(clusterData, meanEstimate, n_resamples);
-
-        heatCapMeasures.push_back(heatCapResult.first);
-        magMeasures.push_back(magResult.first);
-        chiMeasures.push_back(chiResult.first);
-
-        std::cout << T << " ";
-        std::cout << montecarlo::mean(energyData)/static_cast<double>(lattice.n_sites_()) << " ";
-        std::cout << heatCapResult.first << " ";
-        std::cout << magResult.first << " ";
-        std::cout << clusterResult.first << " ";
-        std::cout << chiResult.first << "\n";
     }
+
+    fp.close();
     
 }

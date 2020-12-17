@@ -35,3 +35,21 @@ target_link_libraries(
     ClassMag_MonteCarlo
     ClassMag_Geometry
 )
+
+add_executable(
+    heatcapTestMC.exe
+    heatcapTestMC.cpp
+)
+
+target_include_directories(
+    heatcapTestMC.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+target_link_libraries(
+    heatcapTestMC.exe
+    PRIVATE
+    ClassMag_MonteCarlo
+    ClassMag_Geometry
+)
