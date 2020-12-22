@@ -13,7 +13,7 @@ namespace classmag::fileio{
         void newline_();
         std::string delimiter_ = ",\t";
         void delimiter_();
-        
+
         OStreamManager();
         OStreamManager(const std::string &filename);
         OStreamManager(const OStreamManager &sm) = delete;
@@ -40,7 +40,7 @@ namespace classmag::fileio{
         std::ifstream is_;
 
         public:
-        std::string delimiter_ = "\t";
+        std::string delimiter_ = ",\t";
         std::string newline_ = "\n";
 
     };
