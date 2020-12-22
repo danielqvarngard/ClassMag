@@ -22,7 +22,7 @@ int main(int argc, char *argv[]){
     unsigned int L = 6;
     auto const systemSize = std::array<unsigned int, 3>({L,L,L});
     auto lattice = LATTICEFUNCTION(systemSize);
-    int kf_label = 19;
+    int kf_label = 18;
     auto kf = static_cast<double>(kf_label);
     const auto interaction = models::rkkyInteraction(kf,lattice,4.0);
 
@@ -62,9 +62,9 @@ int main(int argc, char *argv[]){
         opc[jj].resize(n_measure);
     
     auto temperatures = {
-        0.0015, 0.00125, 0.0011, 0.001, 0.0009, 0.0008, 0.0007, 0.0006, 0.0005, 0.0004,
-        0.00035, 0.000325, 0.0003, 0.000275, 0.00025, 0.0002, 0.000175, 0.00015
-        };
+        0.0005, 0.0004, 0.00035, 0.000325, 0.0003, 0.000275, 0.00025, 0.000225, 0.0002, 0.000175,
+        0.00015, 0.000125, 0.0001
+    };
 
     auto fp = std::ofstream(filename);
     auto zeroPatience = 1;

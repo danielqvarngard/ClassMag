@@ -19,17 +19,20 @@ int main(int argc, char *argv[]){
     auto n_measure = 10000;
     auto n_skip = 2;
     auto n_resamples = 100;
-    unsigned int L = 6;
-    auto const systemSize = std::array<unsigned int, 3>({L,L,L});
-    auto lattice = LATTICEFUNCTION(systemSize);
-    int kf_label = 19;
-    auto kf = static_cast<double>(kf_label);
-    const auto interaction = models::rkkyInteraction(kf,lattice,4.0);
+    unsigned int L = 4;
+    const auto systemSize = std::array<unsigned int, 3>({L,L,L});
+    std::array<geometry::Euclidean<3>,3> bravais;
+    for (unsigned int ii = 0; ii < 3; ++ii){
+        bravais[ii].fill(0.0);
+        bravais[ii][ii] = 3.0;
+    }
+    auto lattice = geometry::Lattice<3>(bravais,systemSize);
+    lattice.decorate_(geometry::icosahedralCluster());
+    lattice.append_({0.0, 0.0, 0.0});
+    const auto interaction = models::nearestNeighbor(-1.0,lattice,0.385);
 
     std::string dir = "../out/";
-    std::string filename = dir + "testMC_RKKY_";
-    filename += std::to_string(kf_label);
-    filename += "_";
+    std::string filename = dir + "testMC_NN_single_";
     auto seed = 0;
     auto mc = montecarlo::VectorModelManager<3>(
         (lattice.n_sites_()),
@@ -62,9 +65,10 @@ int main(int argc, char *argv[]){
         opc[jj].resize(n_measure);
     
     auto temperatures = {
-        0.0015, 0.00125, 0.0011, 0.001, 0.0009, 0.0008, 0.0007, 0.0006, 0.0005, 0.0004,
-        0.00035, 0.000325, 0.0003
-        };
+        1.5000, 1.2500, 1.0000, 0.8000, 0.7000, 0.6000, 0.5800, 0.5600, 0.5400, 0.5200, 0.5000, 
+        0.4900, 0.4800, 0.4600, 0.4400, 0.4200, 0.4000, 0.3000, 0.2000, 0.1800, 0.1600, 0.1400,
+        0.1200, 0.1100, 0.1000, 0.0900, 0.0800, 0.0600, 0.0400, 0.0200
+    };
 
     auto fp = std::ofstream(filename);
     auto zeroPatience = 1;
@@ -75,10 +79,6 @@ int main(int argc, char *argv[]){
         for (unsigned int ii = 0; ii < n_measure; ++ii){
             mc.update_(n_skip,n_overrelax);
             energy[ii] = mc.energy_();
-            auto mag = mc.measure_();
-            for (unsigned int jj = 0; jj < n_orderParameters; ++jj){
-                opc[jj][ii] = mag[jj];
-            }
         }
 
         auto meanEstimate = [](const std::vector<double> &x){return montecarlo::mean(x);};
@@ -86,22 +86,16 @@ int main(int argc, char *argv[]){
         std::vector<double> estimates(2*n_orderParameters);
 
         fp << T << " ";
-        for (unsigned int jj = 0; jj < n_orderParameters; ++jj){
-            auto meanval = montecarlo::bootstrap(opc[jj],meanEstimate,n_resamples);
+        {
+            auto meanval = montecarlo::bootstrap(energy,meanEstimate,n_resamples);
             auto n_sites = static_cast<double>(lattice.n_sites_());
             fp << meanval.first/n_sites << " ";
-            auto varval = montecarlo::bootstrap(opc[jj],varianceEstimate,n_resamples);
-            fp << varval.first/(T*n_sites) << " ";
+            fp << meanval.second/n_sites << " ";
+            auto varval = montecarlo::bootstrap(energy,varianceEstimate,n_resamples);
+            fp << varval.first/(T*T*n_sites) << " ";
+            fp << varval.second/(T*T*n_sites);
         }
-        {
-        auto meanval = montecarlo::bootstrap(energy,meanEstimate,n_resamples);
-        auto n_sites = static_cast<double>(lattice.n_sites_());
-        fp << meanval.first/n_sites << " ";
-        fp << meanval.second/n_sites << " ";
-        auto varval = montecarlo::bootstrap(energy,varianceEstimate,n_resamples);
-        fp << varval.first/(T*T*n_sites) << " ";
-        fp << varval.second/(T*T*n_sites);
-        }
+
         fp << "\n";
         std::cout << zeroPatience << "/" << temperatures.size();
         std::cout << " temperatures completed\n";

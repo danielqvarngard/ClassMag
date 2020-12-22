@@ -20,8 +20,6 @@ namespace classmag::geometry{
         return result;
     }
 
-    
-
     template <unsigned int dimension>
     class Lattice{
         private:
@@ -53,6 +51,8 @@ namespace classmag::geometry{
             }
             return translationVector;
         }
+
+        
 
         Euclidean<dimension> mirroredPosition_(
             unsigned int site, 
@@ -109,7 +109,27 @@ namespace classmag::geometry{
             return decoration_.size();
         }
 
-        std::vector<unsigned int> neighborCellSites_(
+        std::array<unsigned int,dimension> cellCoordinates(unsigned int referenceSite){
+            auto wrappingNumber = 1;
+            auto result = std::array<unsigned int, dimension>();
+            {
+                const auto cell = referenceSite/n_decorations_();
+                for (unsigned int ii = 0; ii < dimension; ++ii){
+                    result[ii] = (cell/wrappingNumber) % systemSize_[ii];
+                    wrappingNumber *= systemSize_[ii];
+                }
+            }
+            return result;
+        }
+        /*
+        virtual std::vector<unsigned int> neighborClusterCoords(std::array<unsigned int, dimension> & clusterCoord){
+            std::vector<unsigned int> result;
+
+        }
+
+       // bool atRightEdgeof();
+        */
+        virtual std::vector<unsigned int> neighborCellSites_(
             const unsigned int referenceSite) const{
             
             auto n_decorations = decoration_.size();
@@ -194,6 +214,16 @@ namespace classmag::geometry{
             return correspondingSiteIndices;
         }
     };
+
+    /*
+    class BCC_Lattice : public Lattice<3>{
+        public:
+        std::vector<unsigned int> neighborCellSites_(
+            const unsigned int referenceSite) const{
+            
+        }
+    };
+    */
 }
 
 #endif
