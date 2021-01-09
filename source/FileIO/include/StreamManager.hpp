@@ -13,9 +13,9 @@ namespace classmag::fileio{
 
         public:
         std::string delimiter_ = ",\t";
-        void delimiter_();
+        void printDelimiter_();
         std::string newline_ = "\n";
-        void newline_();
+        void printNewline_();
 
         OStreamManager();
         OStreamManager(const std::string &filename);
@@ -67,10 +67,8 @@ namespace classmag::fileio{
             std::getline(is_,headers);
             std::stringstream entryBuffer(headers);
             std::string entry;
-            try{
-                for (auto ii = 0; ii < array.size(); ++ii){
-                    (*this) >> array[ii];
-                }
+            for (auto ii = 0; ii < array.size(); ++ii){
+                (*this) >> array[ii];
             }
         }
     };

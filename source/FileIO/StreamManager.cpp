@@ -17,11 +17,11 @@ namespace classmag::fileio{
         os_.close();
     }
 
-    void OStreamManager::delimiter_(){
+    void OStreamManager::printDelimiter_(){
         (*this) << delimiter_;
     }
 
-    void OStreamManager::newline_(){
+    void OStreamManager::printNewline_(){
         (*this) << newline_;
     }
 

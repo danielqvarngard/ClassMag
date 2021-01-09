@@ -3,6 +3,8 @@ add_library(
     SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/postProcessing.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mcFunctions.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/extendedEnsembles.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/extendedEnsembles.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/postProcessing.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/mcFunctions.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/VectorModelManager.hpp
