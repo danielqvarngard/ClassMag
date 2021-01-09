@@ -14,7 +14,8 @@ namespace classmag::montecarlo{
         std::vector<PermutationEntry> sn_;
 
         std::mt19937 mt_ = std::mt19937(0);
-        std::uniform_real_distribution<double> distr_ = std::uniform_real_distribution<double>(0.0,1.0);
+        std::uniform_real_distribution<double> distr_ =
+            std::uniform_real_distribution<double>(0.0,1.0);
         public:
         PermutationManager(unsigned int size);
 
