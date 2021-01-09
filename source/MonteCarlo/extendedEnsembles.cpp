@@ -37,7 +37,16 @@ namespace classmag::montecarlo{
     }
 
     void ParallelTemperer::update_(const std::vector<double> &energies){
-        
+        for (auto ii = 0u; ii < temperatures_.size() - 1; ii = ii + 2){
+            auto deltaBeta = 1.0/temperatures_[ii+1] - 1.0/temperatures_[ii];
+            auto deltaE = energies[pm_.process_(ii+1)] - energies[pm_.process_(ii)];
+            if (boltzmannFactor(deltaBeta,deltaE) > distr_(mt_))
+                pm_.switch_(ii + 1, ii);
+        }
+
+        for (auto ii = 1u; ii < temperatures_.size() - 1; ii = ii + 2){
+            pm_.switch_(ii, ii + 1);
+        }
     }
 
 }
