@@ -6,7 +6,7 @@
 namespace classmag::montecarlo{
     struct PermutationEntry{
         unsigned int variableIndex;
-        unsigned int permutationIndex;
+        unsigned int processIndex;
     };
 
     class PermutationManager{
@@ -16,7 +16,7 @@ namespace classmag::montecarlo{
         public:
         PermutationManager(unsigned int size);
 
-        void switch_(unsigned int a, unsigned int b);
+        void switchProcess_(unsigned int a, unsigned int b);
 
         unsigned int variable_(unsigned int processIndex);
         unsigned int process_(unsigned int variableIndex);
