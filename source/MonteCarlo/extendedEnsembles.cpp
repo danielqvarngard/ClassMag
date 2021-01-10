@@ -37,6 +37,7 @@ namespace classmag::montecarlo{
     }
 
     void ParallelTemperer::update_(const std::vector<double> &energies){
+        //TODO: add size check / refactor as template 
         for (auto ii = 0u; ii < temperatures_.size() - 1; ii = ii + 2){
             auto deltaBeta = 1.0/temperatures_[ii+1] - 1.0/temperatures_[ii];
             auto deltaE = energies[pm_.process_(ii+1)] - energies[pm_.process_(ii)];
