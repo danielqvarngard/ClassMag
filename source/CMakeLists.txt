@@ -1,4 +1,5 @@
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/FileIO)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Parallelism)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Geometry)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Interactions)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/MonteCarlo)
