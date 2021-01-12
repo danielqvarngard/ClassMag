@@ -140,7 +140,6 @@ namespace classmag::montecarlo{
             }
         }
         
-
         private:
         const unsigned int n_sites_;
         const base::CouplingLookup lookup_;

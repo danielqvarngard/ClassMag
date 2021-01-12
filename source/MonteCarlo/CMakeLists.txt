@@ -8,6 +8,7 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/postProcessing.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/mcFunctions.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/VectorModelManager.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/MonteCarloBase.hpp
 )
 
 target_include_directories(
