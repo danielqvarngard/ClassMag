@@ -1,3 +1,6 @@
+#ifndef CLASSMAG_MONTECARLO_EXTENDEDENSEMBLES_HPP
+#define CLASSMAG_MONTECARLO_EXTENDEDENSEMBLES_HPP
+
 #include <vector>
 #include <random>
 
@@ -38,3 +41,5 @@ namespace classmag::montecarlo{
         virtual void update_(const std::vector<double> &energies);
     };
 }
+
+#endif

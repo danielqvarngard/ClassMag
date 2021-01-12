@@ -1,5 +1,5 @@
-#ifndef CLASSMAG_MODELS_RKKY_HPP
-#define CLASSMAG_MODELS_RKKY_HPP
+#ifndef CLASSMAG_BASE_RKKY_HPP
+#define CLASSMAG_BASE_RKKY_HPP
 
 #include <utility>
 #include <math.h>

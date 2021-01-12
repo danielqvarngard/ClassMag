@@ -1,3 +1,6 @@
+#ifndef CLASSMAG_BASE_SPIMULATIONPROCESS_HPP
+#define CLASSMAG_BASE_SIMULATIONPROCESS_HPP
+
 #include <functional>
 
 #include "spinStructure.hpp"
@@ -34,3 +37,5 @@ namespace classmag::base{
     };
 
 }
+
+#endif

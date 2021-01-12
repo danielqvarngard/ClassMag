@@ -1,3 +1,6 @@
+#ifndef CLASSMAG_FILEIO_STREAMMANAGER_HPP
+#define CLASSMAG_FILEIO_STREAMMANAGER_HPP
+
 #include <vector>
 #include <array>
 #include <string>
@@ -74,3 +77,5 @@ namespace classmag::fileio{
     };
 
 }
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef CLASSMAG_MODELS_COUPLINGLOOKUP_HPP
-#define CLASSMAG_MODELS_COUPLINGLOOKUP_HPP
+#ifndef CLASSMAG_BASE_COUPLINGLOOKUP_HPP
+#define CLASSMAG_BASE_COUPLINGLOOKUP_HPP
 #include <vector>
 #include <functional>
 #include <iostream>

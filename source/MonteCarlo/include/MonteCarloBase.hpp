@@ -1,3 +1,6 @@
+#ifndef CLASSMAG_MONTECARLO_MONTECARLOBASE_HPP
+#define CLASSMAG_MONTECARLO_MONTECARLOBASE_HPP
+
 #include <random>
 
 #include "Base/include/simulationProcess.hpp"
@@ -11,3 +14,5 @@ namespace classmag::montecarlo{
             std::uniform_real_distribution<double>(0,1);
     };
 }
+
+#endif
