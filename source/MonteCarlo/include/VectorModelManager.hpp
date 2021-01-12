@@ -1,12 +1,10 @@
 #ifndef CLASSMAG_MONTECARLO_MONTECARLOMANAGER_HPP
 #define CLASSMAG_MONTECARLO_MONTECARLOMANAGER_HPP
 
-#include <vector>
 #include <iostream>
-#include <functional>
-#include <random>
+
 #include "Geometry/include/euclidean.hpp"
-#include "Base/include/simulationProcess.hpp"
+#include "MonteCarloBase.hpp"
 #include "mcFunctions.hpp"
 
 namespace classmag::montecarlo{
