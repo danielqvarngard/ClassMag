@@ -16,10 +16,10 @@ namespace classmag::montecarlo{
     class VectorModelManager{
         private:
             const unsigned int n_sites_;
-            const models::CouplingLookup lookup_;
-            models::SpinStructure<spinDimension> spin_;
+            const base::CouplingLookup lookup_;
+            base::SpinStructure<spinDimension> spin_;
             std::mt19937 randEngine_;
-            models::OrderParameters<spinDimension> orderParameters_;
+            base::OrderParameters<spinDimension> orderParameters_;
 
             std::normal_distribution<double> normalDistribution_;
             std::uniform_real_distribution<double> uniformDistribution_;
@@ -70,7 +70,7 @@ namespace classmag::montecarlo{
                 const std::function<double(unsigned int, unsigned int)> interaction, 
                 int seed):
             n_sites_(n_sites),
-            lookup_(models::CouplingLookup(n_sites,interaction)),
+            lookup_(base::CouplingLookup(n_sites,interaction)),
             randEngine_(std::mt19937(seed)),
             uniformDistribution_(std::uniform_real_distribution<double>()),
             normalDistribution_(std::normal_distribution<double>())
@@ -81,12 +81,12 @@ namespace classmag::montecarlo{
             }
 
             void addOrderParameter_(
-                const models::OrderParameter<spinDimension> &op){
+                const base::OrderParameter<spinDimension> &op){
                 orderParameters_.push_back(op);
             }
 
             void addOrderParameter_(
-                const models::OrderParameters<spinDimension> &op){
+                const base::OrderParameters<spinDimension> &op){
                 for (auto o : op)
                     addOrderParameter_(o);
             }

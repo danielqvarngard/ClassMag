@@ -1,7 +1,7 @@
 #include "include/couplingLookup.hpp"
 
-namespace classmag::models{
-    models::CouplingLookup::CouplingLookup(
+namespace classmag::base{
+    base::CouplingLookup::CouplingLookup(
         const unsigned int n_sites, 
         const std::function<double(const int,const int)> interaction):
         n_sites_(n_sites)

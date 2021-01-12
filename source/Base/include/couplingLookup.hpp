@@ -4,7 +4,7 @@
 #include <functional>
 #include <iostream>
 
-namespace classmag::models{
+namespace classmag::base{
     class CouplingLookup{
         private:
             std::vector<double> couplingTable_;

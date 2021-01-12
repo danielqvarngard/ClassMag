@@ -1,7 +1,7 @@
 #include "include/orderParameter.hpp"
 #include "Geometry/include/predefLattices.hpp"
 
-namespace classmag::models{
+namespace classmag::base{
     std::pair<geometry::Lattice<3>, OrderParameter<3>> DefaultTsaiSim(
         const std::array<unsigned int,3> &systemSize){
 

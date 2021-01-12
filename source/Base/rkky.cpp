@@ -1,6 +1,6 @@
 #include "include/rkky.hpp"
 
-namespace classmag::models{
+namespace classmag::base{
     std::function<double(const unsigned int, const unsigned int)>
         rkkyInteraction(
             const double kf,

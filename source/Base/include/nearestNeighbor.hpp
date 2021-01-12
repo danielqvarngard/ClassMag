@@ -6,7 +6,7 @@
 #include "Geometry/include/lattice.hpp"
 
 
-namespace classmag::models{
+namespace classmag::base{
     template<unsigned int dimension>
     std::function<double(const unsigned int, const unsigned int)> 
         nearestNeighbor(

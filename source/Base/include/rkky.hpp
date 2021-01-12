@@ -5,9 +5,9 @@
 #include <math.h>
 
 #include "Geometry/include/lattice.hpp"
-#include "Interactions/include/spinStructure.hpp"
+#include "Base/include/spinStructure.hpp"
 
-namespace classmag::models{
+namespace classmag::base{
     std::function<double(const unsigned int, const unsigned int)>
         rkkyInteraction(
             const double kf,

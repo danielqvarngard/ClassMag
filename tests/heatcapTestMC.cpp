@@ -5,9 +5,9 @@
 
 #include "Geometry/include/lattice.hpp"
 #include "Geometry/include/predefLattices.hpp"
-#include "Interactions/include/orderParameter.hpp"
-#include "Interactions/include/nearestNeighbor.hpp"
-#include "Interactions/include/rkky.hpp"
+#include "Base/include/orderParameter.hpp"
+#include "Base/include/nearestNeighbor.hpp"
+#include "Base/include/rkky.hpp"
 #include "MonteCarlo/include/VectorModelManager.hpp"
 #include "MonteCarlo/include/postProcessing.hpp"
 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
     auto lattice = geometry::Lattice<3>(bravais,systemSize);
     lattice.decorate_(geometry::icosahedralCluster());
     lattice.append_({0.0, 0.0, 0.0});
-    const auto interaction = models::nearestNeighbor(-1.0,lattice,0.385);
+    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
 
     std::string dir = "../out/";
     std::string filename = dir + "testMC_NN_single_";
@@ -39,19 +39,19 @@ int main(int argc, char *argv[]){
         interaction,
         seed);
     
-    const auto mag = models::magnetization<3>();
+    const auto mag = base::magnetization<3>();
     mc.addOrderParameter_(mag);
     auto n_orderParameters = 1;
     
     if (lattice.n_decorations_() == 12){
         filename += "has0_";
-        const auto cluster = models::clusterOrder<3,3>(lattice);
+        const auto cluster = base::clusterOrder<3,3>(lattice);
         mc.addOrderParameter_(cluster);
         ++n_orderParameters;
     }
     else if (lattice.n_decorations_() == 13){
         filename += "has100_";
-        const auto clusterPair = models::has100Params(systemSize);
+        const auto clusterPair = base::has100Params(systemSize);
         mc.addOrderParameter_(clusterPair.first);
         mc.addOrderParameter_(clusterPair.second);
         n_orderParameters = n_orderParameters + 2;

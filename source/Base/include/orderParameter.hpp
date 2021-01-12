@@ -11,7 +11,7 @@
 #include "Geometry/include/lattice.hpp"
 #include "spinStructure.hpp"
 
-namespace classmag::models{
+namespace classmag::base{
     template <unsigned int spinDimension>
     class OrderParameter{
         public:
