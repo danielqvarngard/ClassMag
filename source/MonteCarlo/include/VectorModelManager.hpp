@@ -6,8 +6,7 @@
 #include <functional>
 #include <random>
 #include "Geometry/include/euclidean.hpp"
-#include "Base/include/couplingLookup.hpp"
-#include "Base/include/orderParameter.hpp"
+#include "Base/include/simulationProcess.hpp"
 #include "mcFunctions.hpp"
 
 namespace classmag::montecarlo{
@@ -96,7 +95,7 @@ namespace classmag::montecarlo{
                     updateSpin_(site);
             }
 
-            void update_(unsigned int n_times){
+            void update_(const unsigned int n_times){
                 for (unsigned int ii = 0; ii < n_times; ++ii)
                     update_();
             }
@@ -117,7 +116,7 @@ namespace classmag::montecarlo{
                     overRelax_();
             }
 
-            void update_(unsigned int n_times, unsigned int n_overRelax){
+            void update_(const unsigned int n_times, const unsigned int n_overRelax){
                 for (unsigned int ii = 0; ii < n_times; ++ii){
                     overRelax_(n_overRelax);
                     update_();
