@@ -1,7 +1,6 @@
 #ifndef CLASSMAG_BASE_RKKY_HPP
 #define CLASSMAG_BASE_RKKY_HPP
 
-#include <utility>
 #include <math.h>
 
 #include "Geometry/include/lattice.hpp"

@@ -2,7 +2,6 @@
 #define CLASSMAG_BASE_NEARESTNEIGHBOR_HPP
 
 #include <functional>
-
 #include "Geometry/include/lattice.hpp"
 
 
