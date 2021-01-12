@@ -7,8 +7,18 @@ namespace classmag::base{
     class SimulationProcess{
         public:
         SimulationProcess();
-        void update_();
-        void update_(const unsigned int n_times);
+
+        virtual void update_(){
+
+        };
+
+        void update_(const unsigned int n_times){
+            for (unsigned int ii = 0; ii < n_times; ++ii)
+                update_();
+        };
+
+        private:
+        
     };
 
 }
