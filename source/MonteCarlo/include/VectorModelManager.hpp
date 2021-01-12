@@ -6,8 +6,8 @@
 #include <functional>
 #include <random>
 #include "Geometry/include/euclidean.hpp"
-#include "Interactions/include/couplingLookup.hpp"
-#include "Interactions/include/orderParameter.hpp"
+#include "Base/include/couplingLookup.hpp"
+#include "Base/include/orderParameter.hpp"
 #include "mcFunctions.hpp"
 
 namespace classmag::montecarlo{
