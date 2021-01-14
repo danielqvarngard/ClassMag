@@ -10,7 +10,7 @@
 namespace classmag::montecarlo{
 
     template<unsigned int spinDimension>
-    class VectorModelManager{
+    class VectorModelManager : public base::SimulationBase<spinDimension>{
         public:
         VectorModelManager(
             unsigned int n_sites,
@@ -18,7 +18,7 @@ namespace classmag::montecarlo{
             int seed):
         n_sites_(n_sites),
         lookup_(base::CouplingLookup(n_sites,interaction)),
-        randEngine_(std::mt19937(seed)),
+        rng_(std::mt19937(seed)),
         uniformDistribution_(std::uniform_real_distribution<double>()),
         normalDistribution_(std::normal_distribution<double>())
         {
@@ -26,9 +26,6 @@ namespace classmag::montecarlo{
             for (unsigned int ii = 0; ii < n_sites; ++ii)
                 spin_[ii] = randomUnitVector_();
         }
-            
-        double beta_ = 1.0;
-
 
         void addOrderParameter_(
             const base::OrderParameter<spinDimension> &op){
@@ -41,14 +38,9 @@ namespace classmag::montecarlo{
                 addOrderParameter_(o);
         }
 
-        void update_(){
+        virtual void update_(){
             for (unsigned int site = 0; site < n_sites_; ++site)
                 updateSpin_(site);
-        }
-
-        void update_(const unsigned int n_times){
-            for (unsigned int ii = 0; ii < n_times; ++ii)
-                update_();
         }
 
         void overRelax_(){
@@ -137,12 +129,14 @@ namespace classmag::montecarlo{
                 std::cout << "\n";
             }
         }
+
+        double beta_ = 1.0;
         
         private:
-        const unsigned int n_sites_;
-        const base::CouplingLookup lookup_;
         base::SpinStructure<spinDimension> spin_;
-        std::mt19937 randEngine_;
+        base::CouplingLookup lookup_;
+        const unsigned int n_sites_;
+        std::mt19937 rng_;
         base::OrderParameters<spinDimension> orderParameters_;
 
         std::normal_distribution<double> normalDistribution_;
@@ -151,7 +145,7 @@ namespace classmag::montecarlo{
         virtual geometry::Euclidean<spinDimension> randomUnitVector_(){
             geometry::Euclidean<spinDimension> e;
             for (unsigned int ii = 0; ii < spinDimension; ++ii){
-                e[ii] = normalDistribution_(randEngine_);
+                e[ii] = normalDistribution_(rng_);
             }
             return (e/(geometry::norm(e)));
         }
@@ -171,7 +165,7 @@ namespace classmag::montecarlo{
                 auto candidateSpin = randomUnitVector_();
                 auto field = localField_(ii);
                 auto delta_E = (-1.0) * field * (candidateSpin - spin_[site]);
-                auto r = uniformDistribution_(randEngine_);
+                auto r = uniformDistribution_(rng_);
                 auto bf = boltzmannFactor(beta_,delta_E);
                 auto check = false;
                 if (bf > r){
@@ -187,14 +181,14 @@ namespace classmag::montecarlo{
     void VectorModelManager<3>::updateSpin_(unsigned int site){
         auto field = localField_(site);
         auto fieldNorm = geometry::norm(field);
-        auto z = uniformDistribution_(randEngine_);
+        auto z = uniformDistribution_(rng_);
         
         auto cosine = heatBathCosine(beta_*fieldNorm,z);
         /*if (cosine > 1.0)
             cosine = 1.0; */ // Uncomment if returns NaN
         auto sine = squareRoot(1 - cosine*cosine);
 
-        auto invariantAngle = 2.0*pi()*uniformDistribution_(randEngine_);
+        auto invariantAngle = 2.0*pi()*uniformDistribution_(rng_);
         
         auto fieldParallel = field/fieldNorm;
 

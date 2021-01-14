@@ -20,5 +20,5 @@ target_include_directories(
 target_link_libraries(
     ClassMag_MonteCarlo
     PUBLIC
-    ClassMag_Interactions
+    ClassMag_Base
 )

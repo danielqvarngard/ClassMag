@@ -1,4 +1,4 @@
-#ifndef CLASSMAG_BASE_SPIMULATIONPROCESS_HPP
+#ifndef CLASSMAG_BASE_SIMULATIONPROCESS_HPP
 #define CLASSMAG_BASE_SIMULATIONPROCESS_HPP
 
 #include <functional>
@@ -9,16 +9,9 @@
 namespace classmag::base{
     
     template <unsigned int spinDimension>
-    class SimulationProcess{
+    class SimulationBase{
         public:
-        SimulationProcess(
-            const unsigned int n_sites,
-            const std::function<double(unsigned int, unsigned int)> interaction
-            ):
-            n_sites_(n_sites),
-            lookup_(CouplingLookup(interaction)){
-            
-            spin_.resize(n_sites_);
+        SimulationBase(){
         };
 
         virtual void update_(){
@@ -29,11 +22,6 @@ namespace classmag::base{
             for (unsigned int ii = 0; ii < n_times; ++ii)
                 update_();
         };
-
-        private:
-        const unsigned int n_sites_;
-        SpinStructure<spinDimension> spin_;
-        const CouplingLookup lookup_;
     };
 
 }

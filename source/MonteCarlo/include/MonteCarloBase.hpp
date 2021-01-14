@@ -7,7 +7,9 @@
 
 namespace classmag::montecarlo{
     template <unsigned int spinDimension>
-    class MonteCarloBase : public SimulationProcess<spinDimension>{
+    class MonteCarloBase : public base::SimulationBase<spinDimension>{
+        public:
+        double beta_ = 1.0;
         private:
         std::mt19937 rng_ = std::mt19937(0);
         std::uniform_real_distribution<double> distr_ = 
