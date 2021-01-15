@@ -17,9 +17,10 @@ namespace classmag::parallelism{
 
     class Listener{
         public:
+        Listener() = default;
         Listener(int hubIndex);
-        int getDouble(double &target, int tag);
-        int sendDouble(const double source, int tag);
+        int getDouble_(double &target, int tag);
+        int sendDouble_(const double source, int tag);
         
         private:
         int hubIndex_ = 0;

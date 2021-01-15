@@ -50,12 +50,12 @@ namespace classmag::parallelism {
 
     }
 
-    int Listener::getDouble(double &target, int tag){
+    int Listener::getDouble_(double &target, int tag){
         MPI_Recv(&target, 1, MPI_DOUBLE, hubIndex_, tag, comm_, &status_);
         return 0;
     }
 
-    int Listener::sendDouble(const double source, int tag){
+    int Listener::sendDouble_(const double source, int tag){
         MPI_Send(&source, 1, MPI_DOUBLE, hubIndex_, tag, comm_);
         return 0;
     }

@@ -7,6 +7,7 @@
 #include "Geometry/include/euclidean.hpp"
 #include "Base/include/couplingLookup.hpp"
 #include "Base/include/simulationProcess.hpp"
+#include "mcProfile.hpp"
 #include "mcFunctions.hpp"
 namespace classmag::montecarlo{
 
@@ -14,18 +15,18 @@ namespace classmag::montecarlo{
     class VectorModelManager : public base::SimulationBase<spinDimension>{
         public:
         VectorModelManager(
-            unsigned int n_sites,
-            const std::function<double(unsigned int, unsigned int)> interaction, 
-            int seed):
-        base::SimulationBase<spinDimension>(n_sites),
-        lookup_(base::CouplingLookup(n_sites,interaction)),
-        rng_(std::mt19937(seed)),
+            MC_Profile &mcp,
+            const std::function<double(unsigned int, unsigned int)> interaction):
+        base::SimulationBase<spinDimension>(mcp.n_sites_),
+        mcp_(mcp),
+        lookup_(base::CouplingLookup(mcp.n_sites_,interaction)),
+        rng_(std::mt19937(mcp.seed_)),
         normalDistribution_(std::normal_distribution<double>())
         {
-            for (unsigned int ii = 0; ii < n_sites; ++ii)
+            for (unsigned int ii = 0; ii < mcp.n_sites_; ++ii)
                 this->spin_[ii] = randomUnitVector_();
         }
-        
+
         VectorModelManager(const VectorModelManager &vm) = delete;
 
         void addOrderParameter_(
@@ -39,17 +40,12 @@ namespace classmag::montecarlo{
                 addOrderParameter_(o);
         }
 
-        virtual void update_() override{
-            for (unsigned int site = 0; site < this->n_sites_; ++site)
-                updateSpin_(site);
-        }
-
         void overRelax_(){
             for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
                 auto field = localField_(ii);
 
                 this->spin_[ii] = 
-                    2.0*(classmag::geometry::proj(this->spin_[ii],field)) -
+                    2.0*(geometry::proj(this->spin_[ii],field)) -
                     this->spin_[ii];
             }
 
@@ -63,8 +59,16 @@ namespace classmag::montecarlo{
         void update_(const unsigned int n_times, const unsigned int n_overRelax){
             for (unsigned int ii = 0; ii < n_times; ++ii){
                 overRelax_(n_overRelax);
-                update_();
+                updateLattice_();
             }
+        }
+
+        virtual void update_() override{
+            update_(mcp_.skips_,mcp_.overrelax_);
+        }
+
+        virtual void thermalize_(){
+            this->update_(mcp_.thermalization_);
         }
             
         double energy_() const{
@@ -134,6 +138,7 @@ namespace classmag::montecarlo{
         double beta_ = 1.0;
         
         private:
+        const MC_Profile mcp_;
         base::CouplingLookup lookup_;
         std::mt19937 rng_;
         base::OrderParameters<spinDimension> orderParameters_;
@@ -150,7 +155,7 @@ namespace classmag::montecarlo{
             return (e/(geometry::norm(e)));
         }
 
-        geometry::Euclidean<spinDimension> localField_(unsigned int site) const{
+        virtual geometry::Euclidean<spinDimension> localField_(unsigned int site) const{
             geometry::Euclidean<spinDimension> field;
             field.fill(0.0);
             for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
@@ -174,6 +179,11 @@ namespace classmag::montecarlo{
                 }
 
             }
+        }
+
+        void updateLattice_(){
+            for (unsigned int site = 0; site < this->n_sites_; ++site)
+                updateSpin_(site);
         }
     };
 
