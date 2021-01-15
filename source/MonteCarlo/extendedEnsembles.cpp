@@ -29,9 +29,9 @@ namespace classmag::montecarlo{
         return sn_[processIndex].variableIndex;
     }
 
-    ParallelTemperer::ParallelTemperer(const std::vector<double> &temperatures):
-    temperatures_(temperatures),
-    pm_(PermutationManager(temperatures.size()))
+    ParallelTemperer::ParallelTemperer(const std::vector<double> &betas):
+    PermutationManager{betas.size()},
+    temperatures_(betas)
     {
 
     }
@@ -40,16 +40,16 @@ namespace classmag::montecarlo{
         //TODO: add size check / refactor as template 
         for (auto ii = 0u; ii < temperatures_.size() - 1; ii = ii + 2){
             auto deltaBeta = 1.0/temperatures_[ii+1] - 1.0/temperatures_[ii];
-            auto deltaE = energies[pm_.process_(ii+1)] - energies[pm_.process_(ii)];
+            auto deltaE = energies[process_(ii+1)] - energies[process_(ii)];
             if (boltzmannFactor(deltaBeta,deltaE) > distr_(mt_))
-                pm_.switchProcess_(ii + 1, ii);
+                switchProcess_(ii + 1, ii);
         }
 
         for (auto ii = 1u; ii < temperatures_.size() - 1; ii = ii + 2){
             auto deltaBeta = 1.0/temperatures_[ii+1] - 1.0/temperatures_[ii];
-            auto deltaE = energies[pm_.process_(ii+1)] - energies[pm_.process_(ii)];
+            auto deltaE = energies[process_(ii+1)] - energies[process_(ii)];
             if (boltzmannFactor(deltaBeta,deltaE) > distr_(mt_))
-                pm_.switchProcess_(ii + 1, ii);
+                switchProcess_(ii + 1, ii);
         }
     }
 

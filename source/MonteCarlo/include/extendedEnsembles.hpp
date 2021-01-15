@@ -25,9 +25,8 @@ namespace classmag::montecarlo{
         unsigned int process_(unsigned int variableIndex);
     };
 
-    class ParallelTemperer{
+    class ParallelTemperer : public PermutationManager{
         private:
-        PermutationManager pm_;
         std::vector<double> temperatures_;
 
         std::mt19937 mt_ = std::mt19937(0);
