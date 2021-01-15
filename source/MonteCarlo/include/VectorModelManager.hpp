@@ -2,11 +2,12 @@
 #define CLASSMAG_MONTECARLO_MONTECARLOMANAGER_HPP
 
 #include <iostream>
+#include <random>
 
 #include "Geometry/include/euclidean.hpp"
-#include "MonteCarloBase.hpp"
+#include "Base/include/couplingLookup.hpp"
+#include "Base/include/simulationProcess.hpp"
 #include "mcFunctions.hpp"
-
 namespace classmag::montecarlo{
 
     template<unsigned int spinDimension>
@@ -16,15 +17,13 @@ namespace classmag::montecarlo{
             unsigned int n_sites,
             const std::function<double(unsigned int, unsigned int)> interaction, 
             int seed):
-        n_sites_(n_sites),
+        base::SimulationBase<spinDimension>(n_sites),
         lookup_(base::CouplingLookup(n_sites,interaction)),
         rng_(std::mt19937(seed)),
-        uniformDistribution_(std::uniform_real_distribution<double>()),
         normalDistribution_(std::normal_distribution<double>())
         {
-            spin_.resize(n_sites);
             for (unsigned int ii = 0; ii < n_sites; ++ii)
-                spin_[ii] = randomUnitVector_();
+                this->spin_[ii] = randomUnitVector_();
         }
 
         void addOrderParameter_(
@@ -38,18 +37,18 @@ namespace classmag::montecarlo{
                 addOrderParameter_(o);
         }
 
-        virtual void update_(){
-            for (unsigned int site = 0; site < n_sites_; ++site)
+        virtual void update_() override{
+            for (unsigned int site = 0; site < this->n_sites_; ++site)
                 updateSpin_(site);
         }
 
         void overRelax_(){
-            for (unsigned int ii = 0; ii < n_sites_; ++ii){
+            for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
                 auto field = localField_(ii);
 
-                spin_[ii] = 
-                    2.0*(classmag::geometry::proj(spin_[ii],field)) -
-                    spin_[ii];
+                this->spin_[ii] = 
+                    2.0*(classmag::geometry::proj(this->spin_[ii],field)) -
+                    this->spin_[ii];
             }
 
         }
@@ -68,18 +67,18 @@ namespace classmag::montecarlo{
             
         double energy_() const{
             auto total = 0.0;
-            for (unsigned int ii = 0; ii < n_sites_; ++ii){
-                auto energy = -1.0 * localField_(ii) * spin_[ii];
+            for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
+                auto energy = -1.0 * localField_(ii) * this->spin_[ii];
                 total += energy;
             }
 
             return total/2.0; // Do not count interactions twice!
         }
 
-        std::vector<double> measure_() const{
+        virtual std::vector<double> measure_() const override{
             std::vector<double> results;
             for (auto orderParameter : orderParameters_)
-                results.push_back(orderParameter.measure_(spin_));
+                results.push_back(orderParameter.measure_(this->spin_));
             return results;
         }
 
@@ -92,14 +91,14 @@ namespace classmag::montecarlo{
 
         void printSpin_(unsigned int site) const{
             for (unsigned int ii = 0; ii < spinDimension; ++ii)
-                std::cout << spin_[site][ii] << " ";
+                std::cout << this->spin_[site][ii] << " ";
             std::cout << "\n";
         }
 
         void printM_() const{
             for (unsigned int ii = 0; ii < spinDimension; ++ii){
                 auto total = 0.0;
-                for (auto s : spin_)
+                for (auto s : this->spin_)
                     total += s[ii];
                 std::cout << total << " ";
             }
@@ -107,14 +106,14 @@ namespace classmag::montecarlo{
         }
 
         void printCouplings_(unsigned int site) const{
-                for (unsigned int ii = 0; ii < n_sites_; ++ii)
+                for (unsigned int ii = 0; ii < this->n_sites_; ++ii)
                     std::cout << lookup_.coupling_(site,ii) << "\n";
         }
 
         void printCoordinations_() const{
-            for (unsigned int ii = 0; ii < n_sites_; ++ii){
+            for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
                 auto z = 0.0;
-                for (unsigned int jj = 0; jj < n_sites_; ++jj){
+                for (unsigned int jj = 0; jj < this->n_sites_; ++jj){
                     z += lookup_.coupling_(ii,jj);
                 }
                 std::cout << z << " ";
@@ -123,8 +122,8 @@ namespace classmag::montecarlo{
         }
 
         void printSpins_() const{
-            for (unsigned int ii = 0; ii < n_sites_; ++ii){
-                for (auto s : spin_[ii])
+            for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
+                for (auto s : this->spin_[ii])
                     std::cout << s << " ";
                 std::cout << "\n";
             }
@@ -133,14 +132,13 @@ namespace classmag::montecarlo{
         double beta_ = 1.0;
         
         private:
-        base::SpinStructure<spinDimension> spin_;
         base::CouplingLookup lookup_;
-        const unsigned int n_sites_;
         std::mt19937 rng_;
         base::OrderParameters<spinDimension> orderParameters_;
 
         std::normal_distribution<double> normalDistribution_;
-        std::uniform_real_distribution<double> uniformDistribution_;
+        std::uniform_real_distribution<double> uniformDistribution_ = 
+            std::uniform_real_distribution<double>(0,1);
 
         virtual geometry::Euclidean<spinDimension> randomUnitVector_(){
             geometry::Euclidean<spinDimension> e;
@@ -153,23 +151,23 @@ namespace classmag::montecarlo{
         geometry::Euclidean<spinDimension> localField_(unsigned int site) const{
             geometry::Euclidean<spinDimension> field;
             field.fill(0.0);
-            for (unsigned int ii = 0; ii < n_sites_; ++ii){
+            for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
                 double coupling = lookup_.coupling_(site,ii);
-                field += coupling*spin_[ii];
+                field += coupling*this->spin_[ii];
             }
             return field;
         }
 
         virtual void updateSpin_(unsigned int site){
-            for (unsigned int ii = 0; ii < n_sites_; ++ii){
+            for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
                 auto candidateSpin = randomUnitVector_();
                 auto field = localField_(ii);
-                auto delta_E = (-1.0) * field * (candidateSpin - spin_[site]);
+                auto delta_E = (-1.0) * field * (candidateSpin - this->spin_[site]);
                 auto r = uniformDistribution_(rng_);
                 auto bf = boltzmannFactor(beta_,delta_E);
                 auto check = false;
                 if (bf > r){
-                    spin_[site] = candidateSpin;
+                    this->spin_[site] = candidateSpin;
                     check = true;
                 }
 
@@ -196,7 +194,7 @@ namespace classmag::montecarlo{
         perpendicular1 *= 1.0/geometry::norm(perpendicular1);
         
         auto perpendicular2 = geometry::cross(fieldParallel,perpendicular1);
-        spin_[site] = 
+        this->spin_[site] = 
             std::cos(invariantAngle) * sine * perpendicular1 +
             std::sin(invariantAngle) * sine * perpendicular2 + 
             cosine * fieldParallel;
