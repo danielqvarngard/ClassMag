@@ -19,6 +19,14 @@ namespace classmag::environments{
     int mpiPT_mc(VectorModelManager<spinDimension> &mc){
         parallelism::Listener msg;
         msg.getDouble_(mc.beta_,betaChannel);
+        mc.thermalize_();
+        
+        for (auto ii = 0u; ii < mc.measurements_(); ++ii){
+            mc.update_();
+            msg.sendDouble_(mc.energy_(),energyChannel);
+            msg.getDouble_(mc.beta_,betaChannel);
+        }
+        return 0;
     };
 }
 

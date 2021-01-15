@@ -70,6 +70,10 @@ namespace classmag::montecarlo{
         virtual void thermalize_(){
             this->update_(mcp_.thermalization_);
         }
+
+        unsigned int measurements_(){
+            return mcp_.measurement_;
+        }
             
         double energy_() const{
             auto total = 0.0;
