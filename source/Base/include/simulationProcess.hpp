@@ -12,6 +12,7 @@ namespace classmag::base{
     template<unsigned int spinDimension>
     class SimulationBase{
         public:
+        SimulationBase(const SimulationBase &sb) = delete;
 
         virtual void update_(){
 
@@ -26,7 +27,7 @@ namespace classmag::base{
             for (unsigned int ii = 0; ii < n_times; ++ii)
                 update_();
         };
-
+        
         protected:
         SimulationBase(unsigned int n_sites):
         n_sites_(n_sites)

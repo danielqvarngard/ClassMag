@@ -25,6 +25,8 @@ namespace classmag::montecarlo{
             for (unsigned int ii = 0; ii < n_sites; ++ii)
                 this->spin_[ii] = randomUnitVector_();
         }
+        
+        VectorModelManager(const VectorModelManager &vm) = delete;
 
         void addOrderParameter_(
             const base::OrderParameter<spinDimension> &op){
