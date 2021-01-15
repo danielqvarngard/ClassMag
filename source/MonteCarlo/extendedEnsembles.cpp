@@ -36,6 +36,10 @@ namespace classmag::montecarlo{
 
     }
 
+    void ParallelTemperer::seed_(const int seed){
+        mt_ = std::mt19937(seed);
+    }
+
     void ParallelTemperer::update_(const std::vector<double> &energies){
         //TODO: add size check / refactor as template 
         for (auto ii = 0u; ii < betas_.size() - 1; ii = ii + 2){

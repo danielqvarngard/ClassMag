@@ -13,20 +13,24 @@ namespace classmag::montecarlo{
     };
 
     class PermutationManager{
-        private:
-        std::vector<PermutationEntry> sn_;
-
         public:
-        PermutationManager(unsigned int size);
-
-        void switchProcess_(unsigned int a, unsigned int b);
+        PermutationManager(const PermutationManager &) = delete;
 
         unsigned int variable_(unsigned int processIndex);
         unsigned int process_(unsigned int variableIndex);
+
+        protected:
+        PermutationManager(unsigned int size);
+        void switchProcess_(unsigned int a, unsigned int b);
+
+        private:
+        std::vector<PermutationEntry> sn_;
+
     };
 
     class ParallelTemperer : public PermutationManager{
         private:
+        void seed_(const int seed);
         std::vector<double> betas_;
 
         std::mt19937 mt_ = std::mt19937(0);

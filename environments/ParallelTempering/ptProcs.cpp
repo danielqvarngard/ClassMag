@@ -10,7 +10,7 @@ namespace classmag::environments{
 
         parallelism::Hub msg;
         parallelism::VectorTarget vt(orderCount);
-        montecarlo::PermutationManager pm(betas.size());
+        montecarlo::ParallelTemperer ptm(betas);
         
         msg.scatterDoubles_(betas,betaChannel);
 
