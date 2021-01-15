@@ -31,22 +31,22 @@ namespace classmag::montecarlo{
 
     ParallelTemperer::ParallelTemperer(const std::vector<double> &betas):
     PermutationManager{betas.size()},
-    temperatures_(betas)
+    betas_(betas)
     {
 
     }
 
     void ParallelTemperer::update_(const std::vector<double> &energies){
         //TODO: add size check / refactor as template 
-        for (auto ii = 0u; ii < temperatures_.size() - 1; ii = ii + 2){
-            auto deltaBeta = 1.0/temperatures_[ii+1] - 1.0/temperatures_[ii];
+        for (auto ii = 0u; ii < betas_.size() - 1; ii = ii + 2){
+            auto deltaBeta = betas_[ii+1] - betas_[ii];
             auto deltaE = energies[process_(ii+1)] - energies[process_(ii)];
             if (boltzmannFactor(deltaBeta,deltaE) > distr_(mt_))
                 switchProcess_(ii + 1, ii);
         }
 
-        for (auto ii = 1u; ii < temperatures_.size() - 1; ii = ii + 2){
-            auto deltaBeta = 1.0/temperatures_[ii+1] - 1.0/temperatures_[ii];
+        for (auto ii = 1u; ii < betas_.size() - 1; ii = ii + 2){
+            auto deltaBeta = betas_[ii+1] - betas_[ii];
             auto deltaE = energies[process_(ii+1)] - energies[process_(ii)];
             if (boltzmannFactor(deltaBeta,deltaE) > distr_(mt_))
                 switchProcess_(ii + 1, ii);

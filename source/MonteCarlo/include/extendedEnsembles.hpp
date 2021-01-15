@@ -27,7 +27,7 @@ namespace classmag::montecarlo{
 
     class ParallelTemperer : public PermutationManager{
         private:
-        std::vector<double> temperatures_;
+        std::vector<double> betas_;
 
         std::mt19937 mt_ = std::mt19937(0);
         std::uniform_real_distribution<double> distr_ =
@@ -35,7 +35,7 @@ namespace classmag::montecarlo{
         
 
         public:
-        ParallelTemperer(const std::vector<double> &temperatures);
+        ParallelTemperer(const std::vector<double> &betas);
         
         virtual void update_(const std::vector<double> &energies);
     };
