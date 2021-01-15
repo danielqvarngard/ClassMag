@@ -13,18 +13,18 @@ namespace classmag::environments{
         invalidChannel = -1
     };
 
-    int mpiPT_hub(unsigned int seed);
+    int mpiPT_hub(const std::vector<double> &temperatures);
 
     template <unsigned int spinDimension>
     int mpiPT_mc(VectorModelManager<spinDimension> &mc){
         parallelism::Listener msg;
-        msg.getDouble_(mc.beta_,betaChannel);
+        msg.getDouble_(mc.beta_, betaChannel);
         mc.thermalize_();
         
         for (auto ii = 0u; ii < mc.measurements_(); ++ii){
             mc.update_();
-            msg.sendDouble_(mc.energy_(),energyChannel);
-            msg.getDouble_(mc.beta_,betaChannel);
+            msg.sendDouble_(mc.energy_(), energyChannel);
+            msg.getDouble_(mc.beta_, betaChannel);
         }
         return 0;
     };

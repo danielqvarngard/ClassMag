@@ -26,6 +26,39 @@ namespace classmag::parallelism {
         return 0;
     }
 
+    int Hub::gatherDoubles_(VectorTarget &target, int tag){
+        target.data_.resize(listeners_);
+        
+        auto entry = 0u;
+        for (auto ii = 0u; ii < rank_ - 1u; ++ii){
+            target.data_[entry].resize(target.messageLength_);
+            MPI_Recv(
+                &target.data_[entry][0], 
+                target.messageLength_, 
+                MPI_DOUBLE, 
+                ii, 
+                tag, 
+                comm_, 
+                &status_);
+            ++entry;
+        }
+
+        for (auto ii = 0u; ii < rank_ - 1u; ++ii){
+            target.data_[entry].resize(target.messageLength_);
+            MPI_Recv(
+                &target.data_[entry][0], 
+                target.messageLength_, 
+                MPI_DOUBLE, 
+                ii, 
+                tag, 
+                comm_, 
+                &status_);
+            ++entry;
+        }
+
+        return 0;
+    };
+
     int Hub::scatterDoubles_(const std::vector<double> &source, int tag){
         if (source.size() != listeners_)
             return 1;
