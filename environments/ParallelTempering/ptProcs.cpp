@@ -17,7 +17,7 @@ namespace classmag::environments{
         for (auto ii = 0u; ii < measurementCount; ++ii){
             std::vector<double> energies;
             msg.gatherDoubles_(energies, energyChannel);
-            
+            ptm.update_(energies);
         }
 
 

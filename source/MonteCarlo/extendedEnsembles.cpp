@@ -29,6 +29,16 @@ namespace classmag::montecarlo{
         return sn_[processIndex].variableIndex;
     }
 
+    std::vector<unsigned int> PermutationManager::variable_(){
+        std::vector<unsigned int> result;
+
+        for (auto ii = 0u; ii < sn_.size(); ++ii){
+            result[ii] = variable_(ii);
+        }
+
+        return result;
+    }
+
     ParallelTemperer::ParallelTemperer(const std::vector<double> &betas):
     PermutationManager{betas.size()},
     betas_(betas)
@@ -57,4 +67,12 @@ namespace classmag::montecarlo{
         }
     }
 
+    std::vector<double> ParallelTemperer::reorderedBetas_(){
+        auto permIndices = variable_();
+        std::vector<double> result;
+        result.resize(betas_.size());
+        for (auto ii = 0u; ii < betas_.size(); ++ii)
+            result[ii] = betas_[permIndices[ii]];
+        return result;
+    }
 }

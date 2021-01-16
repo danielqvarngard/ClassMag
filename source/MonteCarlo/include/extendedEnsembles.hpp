@@ -17,6 +17,7 @@ namespace classmag::montecarlo{
         PermutationManager(const PermutationManager &) = delete;
 
         unsigned int variable_(unsigned int processIndex);
+        std::vector<unsigned int> variable_();
         unsigned int process_(unsigned int variableIndex);
 
         protected:
@@ -37,11 +38,12 @@ namespace classmag::montecarlo{
         std::uniform_real_distribution<double> distr_ =
             std::uniform_real_distribution<double>(0.0,1.0);
         
-
         public:
         ParallelTemperer(const std::vector<double> &betas);
         
         virtual void update_(const std::vector<double> &energies);
+
+        std::vector<double> reorderedBetas_();
     };
 }
 
