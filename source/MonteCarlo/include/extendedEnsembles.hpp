@@ -20,6 +20,8 @@ namespace classmag::montecarlo{
         std::vector<unsigned int> variable_();
         unsigned int process_(unsigned int variableIndex);
 
+        std::vector<double> processOrdered_(const std::vector<double> &variableordered);
+        std::vector<double> variableOrdered_(const std::vector<double> &processordered);
         protected:
         PermutationManager(unsigned int size);
         void switchProcess_(unsigned int a, unsigned int b);

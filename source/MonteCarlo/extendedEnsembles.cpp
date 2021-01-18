@@ -39,6 +39,24 @@ namespace classmag::montecarlo{
         return result;
     }
 
+    std::vector<double> PermutationManager::processOrdered_(
+        const std::vector<double> &variableordered){
+        std::vector<double> result(sn_.size());
+        for (auto ii = 0u; ii < sn_.size(); ++ii){
+            result[process_(ii)] = variableordered[ii];
+        }
+        return result;
+    }
+
+    std::vector<double> PermutationManager::variableOrdered_(
+        const std::vector<double> &processordered){
+        std::vector<double> result(sn_.size());
+        for (auto ii = 0u; ii < sn_.size(); ++ii){
+            result[variable_(ii)] = processordered[ii];
+        }
+        return result;
+    }
+
     ParallelTemperer::ParallelTemperer(const std::vector<double> &betas):
     PermutationManager{betas.size()},
     betas_(betas)
