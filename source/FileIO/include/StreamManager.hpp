@@ -8,8 +8,9 @@
 #include <sstream>
 #include <cerrno>
 
-namespace classmag::fileio{
+#include "filesystem.hpp"
 
+namespace classmag::fileio{
     class OStreamManager{
         private:
         std::ofstream os_;

@@ -1,25 +1,15 @@
 #include <mpi.h>
 #include <vector>
 
+#include "FileIO/include/filesystem.hpp"
 namespace classmag::parallelism{
 
-    struct VectorTarget{
-        public:
-        VectorTarget(const unsigned int n):
-        messageLength_(n)
-        {
-
-        }
-
-        std::vector<std::vector<double>> data_;
-        const unsigned int messageLength_;
-    };
     class Hub{
         public:
         Hub();
         int scatterDoubles_(const std::vector<double> &source, int tag);
         int gatherDoubles_(std::vector<double> &target, int tag);
-        int gatherDoubles_(VectorTarget &target, int tag);
+        int gatherDoubles_(fileio::VectorTarget &target, int tag);
 
         private:
         int listeners_;

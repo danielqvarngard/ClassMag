@@ -36,7 +36,7 @@ namespace classmag::environments{
         fileio::OStreamManager mcopFile(fn + ".mcop");
 
         parallelism::Hub msg;
-        parallelism::VectorTarget vt(orderCount);
+        fileio::VectorTarget vt(orderCount);
         montecarlo::ParallelTemperer ptm(betas);
         
         msg.scatterDoubles_(betas,betaChannel);
