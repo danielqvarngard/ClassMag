@@ -67,7 +67,7 @@ namespace classmag::montecarlo{
     }
 
     ParallelTemperer::ParallelTemperer(const std::vector<double> &betas):
-    PermutationManager{betas.size()},
+    PermutationManager{static_cast<unsigned int>(betas.size())},
     betas_(betas)
     {
 
