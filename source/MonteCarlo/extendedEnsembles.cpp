@@ -60,7 +60,7 @@ namespace classmag::montecarlo{
     fileio::VectorTarget PermutationManager::variableOrdered_(
         const fileio::VectorTarget &processordered){
         fileio::VectorTarget result(processordered.messageLength_);
-        for (auto ii = 0u; ii < sn_.size(); ++ii){
+        for (auto ii = 0u; ii < processordered.messageLength_; ++ii){
             result.data_[variable_(ii)] = processordered.data_[ii];
         }
         return result;
