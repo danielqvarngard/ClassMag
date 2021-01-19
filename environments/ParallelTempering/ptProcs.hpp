@@ -22,23 +22,8 @@ namespace classmag::environments{
         const unsigned int orderCount);
 
     template <unsigned int spinDimension>
-    int mpiPT_mc(VectorModelManager<spinDimension> &mc){
-        parallelism::Listener msg;
-        msg.getDouble_(mc.beta_, betaChannel);
-        mc.thermalize_();
-        
-        for (auto ii = 0u; ii < mc.measurements_(); ++ii){
-            mc.update_();
-            msg.sendDouble_(mc.energy_(), energyChannel);
-            msg.getDouble_(mc.beta_, betaChannel);
-        }
-        return 0;
-    };
-
-    template <unsigned int spinDimension>
     int mpiPT_mc(
-        VectorModelManager<spinDimension> &mc,
-        const unsigned int orderCount){
+        VectorModelManager<spinDimension> &mc){
         parallelism::Listener msg;
         msg.getDouble_(mc.beta_, betaChannel);
         mc.thermalize_();
