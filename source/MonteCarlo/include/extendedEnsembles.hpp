@@ -5,6 +5,7 @@
 #include <random>
 
 #include "mcFunctions.hpp"
+#include "FileIO/include/filesystem.hpp"
 
 namespace classmag::montecarlo{
     struct PermutationEntry{
@@ -22,6 +23,7 @@ namespace classmag::montecarlo{
 
         std::vector<double> processOrdered_(const std::vector<double> &variableordered);
         std::vector<double> variableOrdered_(const std::vector<double> &processordered);
+        fileio::VectorTarget variableOrdered_(const fileio::VectorTarget &processordered);
         protected:
         PermutationManager(unsigned int size);
         void switchProcess_(unsigned int a, unsigned int b);

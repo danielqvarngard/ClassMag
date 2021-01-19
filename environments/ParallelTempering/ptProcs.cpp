@@ -49,7 +49,6 @@ namespace classmag::environments{
             msg.scatterDoubles_(ptm.processOrdered_(betas), betaChannel);
             mcenFile << ptm.variableOrdered_(energies);
             auto ei = ptm.variable_();
-            
         }
 
 

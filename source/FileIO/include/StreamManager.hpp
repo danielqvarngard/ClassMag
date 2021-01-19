@@ -51,6 +51,10 @@ namespace classmag::fileio{
             (*this) << newline_;
             return (*this);
         }
+
+        OStreamManager &operator<<(const VectorTarget &v){
+            
+        }
     };
 
     class IStreamManager{
