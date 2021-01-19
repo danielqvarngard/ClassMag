@@ -46,6 +46,7 @@ namespace classmag::environments{
         for (auto ii = 0u; ii < mc.measurements_(); ++ii){
             mc.update_();
             msg.sendDouble_(mc.energy_(), energyChannel);
+            msg.sendDouble_(mc.measure_(), orderChannel);
             msg.getDouble_(mc.beta_, betaChannel);
         }
         return 0;
