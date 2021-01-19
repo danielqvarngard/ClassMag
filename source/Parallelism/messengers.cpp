@@ -26,7 +26,7 @@ namespace classmag::parallelism {
         return 0;
     }
 
-    int Hub::gatherDoubles_(VectorTarget &target, int tag){
+    int Hub::gatherDoubles_(fileio::VectorTarget &target, int tag){
         target.data_.resize(listeners_);
         
         auto entry = 0u;
@@ -90,6 +90,12 @@ namespace classmag::parallelism {
 
     int Listener::sendDouble_(const double source, int tag){
         MPI_Send(&source, 1, MPI_DOUBLE, hubIndex_, tag, comm_);
+        return 0;
+    }
+
+    int Listener::sendDouble_(const std::vector<double> &source, int tag){
+        for(auto d : source)
+            sendDouble_(d,tag);
         return 0;
     }
 }
