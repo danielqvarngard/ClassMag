@@ -53,7 +53,14 @@ namespace classmag::fileio{
         }
 
         OStreamManager &operator<<(const VectorTarget &v){
-            
+            for (auto ii = 0u; ii < v.messageLength_; ++ii){
+                for (auto d : v.data_[ii]){
+                    (*this) << d;
+                    (*this) << delimiter_;
+                }
+            }
+            (*this) << newline_;
+            return (*this);
         }
     };
 
