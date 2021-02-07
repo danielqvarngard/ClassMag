@@ -61,7 +61,8 @@ namespace classmag::montecarlo{
         const fileio::VectorTarget &processordered){
         fileio::VectorTarget result(processordered.messageLength_);
         for (auto ii = 0u; ii < processordered.messageLength_; ++ii){
-            result.data_[variable_(ii)] = processordered.data_[ii];
+            for (auto jj = 0u; jj < processordered.data_[ii].size(); ++jj)
+                result.data_[variable_(ii)][jj] = processordered.data_[ii][jj];
         }
         return result;
     }

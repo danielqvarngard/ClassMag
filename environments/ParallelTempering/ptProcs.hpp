@@ -23,7 +23,7 @@ namespace classmag::environments{
 
     template <unsigned int spinDimension>
     int mpiPT_mc(
-        VectorModelManager<spinDimension> &mc){
+        montecarlo::VectorModelManager<spinDimension> &mc){
         parallelism::Listener msg;
         msg.getDouble_(mc.beta_, betaChannel);
         mc.thermalize_();

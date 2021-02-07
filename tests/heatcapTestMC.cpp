@@ -13,7 +13,7 @@
 
 using namespace classmag;
 int main(int argc, char *argv[]){
-
+    montecarlo::MC_Profile mcp;
     auto n_thermalize = 10000;
     auto n_overrelax = 10;
     auto n_measure = 10000;
@@ -31,13 +31,20 @@ int main(int argc, char *argv[]){
     lattice.append_({0.0, 0.0, 0.0});
     const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
 
+    mcp.measurement_ = n_measure;
+    mcp.thermalization_ = n_thermalize;
+    mcp.skips_ = n_skip;
+    mcp.n_sites_ = lattice.n_sites_();
+    mcp.overrelax_ = n_overrelax;
+    mcp.seed_ = 137;
+
+
     std::string dir = "../out/";
     std::string filename = dir + "testMC_NN_single_";
     auto seed = 0;
     auto mc = montecarlo::VectorModelManager<3>(
-        (lattice.n_sites_()),
-        interaction,
-        seed);
+        mcp,
+        interaction);
     
     const auto mag = base::magnetization<3>();
     mc.addOrderParameter_(mag);

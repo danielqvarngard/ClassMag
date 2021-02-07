@@ -18,6 +18,7 @@ target_link_libraries(
     ClassMag_Geometry
 )
 
+if (FALSE)
 add_executable(
     testMC.exe
     testMC.cpp
@@ -35,6 +36,7 @@ target_link_libraries(
     ClassMag_MonteCarlo
     ClassMag_Geometry
 )
+endif()
 
 add_executable(
     heatcapTestMC.exe

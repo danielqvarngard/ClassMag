@@ -16,4 +16,5 @@ target_link_libraries(
     PUBLIC
     ClassMag_MonteCarlo
     ClassMag_Parallelism
+    ClassMag_FileIO
 )

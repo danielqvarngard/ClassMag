@@ -7,6 +7,7 @@
 #include "Geometry/include/euclidean.hpp"
 #include "Base/include/couplingLookup.hpp"
 #include "Base/include/simulationProcess.hpp"
+#include "Base/include/orderParameter.hpp"
 #include "mcProfile.hpp"
 #include "mcFunctions.hpp"
 namespace classmag::montecarlo{
@@ -68,7 +69,7 @@ namespace classmag::montecarlo{
         }
 
         virtual void thermalize_(){
-            this->update_(mcp_.thermalization_);
+            this->update_(mcp_.thermalization_, mcp_.overrelax_);
         }
 
         unsigned int measurements_(){

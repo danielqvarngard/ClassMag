@@ -3,6 +3,7 @@
 
 #include <ctime> 
 #include <string>
+#include <vector>
 
 namespace classmag::fileio{
     std::string datestamp();

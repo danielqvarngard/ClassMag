@@ -10,7 +10,7 @@
 #include "Base/include/rkky.hpp"
 #include "MonteCarlo/include/VectorModelManager.hpp"
 #include "MonteCarlo/include/postProcessing.hpp"
-
+/*
 using namespace classmag;
 int main(int argc, char *argv[]){
 
@@ -112,3 +112,4 @@ int main(int argc, char *argv[]){
     fp.close();
     
 }
+*/
