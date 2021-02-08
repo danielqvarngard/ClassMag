@@ -53,24 +53,46 @@ namespace classmag::base{
     template<unsigned int dim, unsigned int spinDimension>
     OrderParameter<spinDimension> clusterOrder(
         const geometry::Lattice<dim> lattice){
-            std::function<double(const SpinStructure<spinDimension>& spins)> order =
-                [lattice](const SpinStructure<spinDimension>& spins){
-                auto result = 0.0;
-                for (unsigned int site = 0; site < spins.size(); ++site){
-                    auto loopIndices = lattice.neighborCellSites_(site);
-                    auto n_neighbors = static_cast<double>(loopIndices.size());
-                    for (auto neighborSite : loopIndices){
-                        if (neighborSite < 0 || neighborSite > lattice.n_sites_() - 1)
-                            std::cout << "ASSHULT MC BULT\n";
-                        result += spins[site]*spins[neighborSite]/n_neighbors;
-                    }
+        std::function<double(const SpinStructure<spinDimension>& spins)> order =
+            [lattice](const SpinStructure<spinDimension>& spins){
+            auto result = 0.0;
+            for (unsigned int site = 0; site < spins.size(); ++site){
+                auto loopIndices = lattice.neighborCellSites_(site);
+                auto n_neighbors = static_cast<double>(loopIndices.size());
+                for (auto neighborSite : loopIndices){
+                    if (neighborSite < 0 || neighborSite > lattice.n_sites_() - 1)
+                        std::cout << "DASHULT MC BULT\n";
+                    result += spins[site]*spins[neighborSite]/n_neighbors;
                 }
-                return result;
-            };
-
-            auto clusterFunction = OrderParameter<spinDimension>("Cluster",order);
-            return clusterFunction;
+            }
+            return result;
         };
+
+        auto clusterFunction = OrderParameter<spinDimension>("Cluster",order);
+        return clusterFunction;
+    };
+
+    template<unsigned int dim, unsigned int spinDimension>
+    OrderParameter<spinDimension> clusterMagnetization(
+        const geometry::Lattice<dim> lattice){
+        std::function<double(const SpinStructure<spinDimension>& spins)> order =
+            [lattice](const SpinStructure<spinDimension>& spins){
+            auto result = 0.0;
+            for (unsigned int site = 0; site < spins.size(); ++site){
+                auto loopIndices = lattice.neighborCellSites_(site);
+                auto n_neighbors = static_cast<double>(loopIndices.size());
+                for (auto neighborSite : loopIndices){
+                    if (neighborSite < 0 || neighborSite > lattice.n_sites_() - 1)
+                        std::cout << "DASHULT MC BULT\n";
+                    result += spins[site]*spins[neighborSite]/n_neighbors;
+                }
+            }
+            return result;
+        };
+
+        auto clusterFunction = OrderParameter<spinDimension>("Cluster",order);
+        return clusterFunction;
+    };
 
     std::pair<geometry::Lattice<3>, OrderParameter<3>> DefaultTsaiSim(
         const std::array<unsigned int,3> &systemSize);

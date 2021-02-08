@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
 
 
     std::string dir = "../out/";
-    std::string filename = dir + "testMC_NN_single_";
+    std::string filename = dir + "testMC_NN_new_";
     auto seed = 0;
     auto mc = montecarlo::VectorModelManager<3>(
         mcp,
