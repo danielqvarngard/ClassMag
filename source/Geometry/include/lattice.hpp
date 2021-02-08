@@ -215,6 +215,11 @@ namespace classmag::geometry{
         }
     };
 
+    template <unsigned int dimension>
+    class PartiteLattice : public std::vector<Lattice<dimension>>{
+        
+    };
+
     /*
     class BCC_Lattice : public Lattice<3>{
         public:
