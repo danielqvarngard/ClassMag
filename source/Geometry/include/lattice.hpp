@@ -19,16 +19,16 @@ namespace classmag::geometry{
         result[0] = e;
         return result;
     }
-
+    
     template <unsigned int dimension>
-    class Lattice{
+    class SubLattice{
         private:
         const std::array<Euclidean<dimension>,dimension> bravais_;
         const std::array<unsigned int,dimension> systemSize_; 
         std::vector<Euclidean<dimension>> decoration_;
 
         public:
-        Lattice<dimension>(
+        SubLattice<dimension>(
             const std::array<Euclidean<dimension>,dimension> &bravais,
             const std::array<unsigned int,dimension> &systemSize):
             bravais_(bravais),
@@ -49,6 +49,84 @@ namespace classmag::geometry{
                 translationVector += n*bravais_[ii];
                 periodicityConstant *= systemSize_[ii];
             }
+            return translationVector;
+        }
+
+        void decorate_(const std::vector<Euclidean<dimension>> & targetDecoration){
+            auto n_decorations = targetDecoration.size();
+            decoration_.resize(n_decorations);
+            for (unsigned int ii = 0; ii < n_decorations; ++ii)
+                decoration_[ii] = targetDecoration[ii];
+        }
+
+        void append_(const std::vector<Euclidean<dimension>> & targetDecoration){
+            auto n_decorations = targetDecoration.size();
+            for (unsigned int ii = 0; ii < n_decorations; ++ii)
+                decoration_.push_back(targetDecoration[ii]);
+        }
+
+        void append_(const Euclidean<dimension> &targetDecoration){
+                decoration_.push_back(targetDecoration);
+        }
+
+        unsigned int n_sites_() const{
+            unsigned int n = decoration_.size();
+            for (auto s : systemSize_)
+                n *= s;
+            return n;
+        }
+
+        unsigned int n_decorations_() const{
+            return decoration_.size();
+        }
+
+        std::array<unsigned int,dimension> cellCoordinates_(unsigned int referenceSite){
+            auto wrappingNumber = 1;
+            auto result = std::array<unsigned int, dimension>();
+            {
+                const auto cell = referenceSite/n_decorations_();
+                for (unsigned int ii = 0; ii < dimension; ++ii){
+                    result[ii] = (cell/wrappingNumber) % systemSize_[ii];
+                    wrappingNumber *= systemSize_[ii];
+                }
+            }
+            return result;
+        }
+    };
+
+    template <unsigned int dimension>
+    class Lattice{
+        public:
+        Lattice<dimension>(
+            const std::array<Euclidean<dimension>,dimension> &bravais,
+            const std::array<unsigned int,dimension> &systemSize):
+            bravais_(bravais),
+            systemSize_(systemSize)
+        {
+        }
+
+        Euclidean<dimension> position_(unsigned int site) const{
+            auto periodicityConstant = 1;
+            auto decorationNumber = site % decoration_.size();
+            const int cellNumber = site / decoration_.size();
+            Euclidean<dimension> translationVector = decoration_[decorationNumber];
+
+            auto offset = 0u;
+            auto sl = 0u;
+            auto cont = true;
+            while (cont){
+                if (sl + 1 < subLattice_.size()){
+                    if (site > offset + subLattice_[sl].n_sites){
+                        offset += subLattice_[sl].n_sites_();
+                        ++sl;
+                    }
+                    else
+                        cont = false;
+                }
+                else
+                    cont = false;
+            }
+            auto translationVector = subLattice_[sl].position_(site - offset);
             return translationVector;
         }
 
@@ -81,27 +159,27 @@ namespace classmag::geometry{
             return r;
         }
 
-        void decorate_(const std::vector<Euclidean<dimension>> & targetDecoration){
+        void decorate_(const std::vector<SubLattice<dimension>> & targetDecoration){
             auto n_decorations = targetDecoration.size();
-            decoration_.resize(n_decorations);
+            subLattice_.resize(n_decorations);
             for (unsigned int ii = 0; ii < n_decorations; ++ii)
-                decoration_[ii] = targetDecoration[ii];
+                subLattice_[ii] = targetDecoration[ii];
         }
 
-        void append_(const std::vector<Euclidean<dimension>> & targetDecoration){
+        void append_(const std::vector<SubLattice<dimension>> & targetDecoration){
             auto n_decorations = targetDecoration.size();
             for (unsigned int ii = 0; ii < n_decorations; ++ii)
                 decoration_.push_back(targetDecoration[ii]);
         }
 
-        void append_(const Euclidean<dimension> &targetDecoration){
+        void append_(const SubLattice<dimension> &targetDecoration){
                 decoration_.push_back(targetDecoration);
         }
 
         unsigned int n_sites_() const{
-            unsigned int n = decoration_.size();
-            for (auto s : systemSize_)
-                n *= s;
+            unsigned int n = 0;
+            for (auto s : subLattice_)
+                n += s.n_sites_();
             return n;
         }
 
@@ -121,14 +199,7 @@ namespace classmag::geometry{
             }
             return result;
         }
-        /*
-        virtual std::vector<unsigned int> neighborClusterCoords(std::array<unsigned int, dimension> & clusterCoord){
-            std::vector<unsigned int> result;
 
-        }
-
-       // bool atRightEdgeof();
-        */
         virtual std::vector<unsigned int> neighborCellSites_(
             const unsigned int referenceSite) const{
             
@@ -213,22 +284,12 @@ namespace classmag::geometry{
 
             return correspondingSiteIndices;
         }
-    };
 
-    template <unsigned int dimension>
-    class PartiteLattice : public std::vector<Lattice<dimension>>{
-        
+        private:
+        const std::array<Euclidean<dimension>,dimension> bravais_;
+        const std::array<unsigned int,dimension> systemSize_; 
+        std::vector<Sublattice<dimension>> subLattice_;
     };
-
-    /*
-    class BCC_Lattice : public Lattice<3>{
-        public:
-        std::vector<unsigned int> neighborCellSites_(
-            const unsigned int referenceSite) const{
-            
-        }
-    };
-    */
 }
 
 #endif
