@@ -27,7 +27,7 @@ namespace classmag::geometry{
         return cluster;
     }
 
-    Lattice<3> bccLattice(const std::array<unsigned int, 3> &systemSize){
+    SubLattice<3> bccLattice(const std::array<unsigned int, 3> &systemSize){
         std::array<Euclidean<3>,3> bravais;
         auto e0 = Euclidean<3>{0.5, 0.5, 0.5};
         for(unsigned int ii = 0; ii < 3; ++ii){
@@ -35,20 +35,21 @@ namespace classmag::geometry{
             bravais[ii][ii] *= -1.0;
         }
 
-        auto lattice = Lattice<3>(bravais,systemSize);
+        auto lattice = SubLattice<3>(bravais,systemSize);
         return lattice;
     }
 
     Lattice<3> has0(const std::array<unsigned int, 3> &systemSize){
-        auto lattice = bccLattice(systemSize);
-        lattice.decorate_(icosahedralCluster());
+        auto sublattice = bccLattice(systemSize);
+        sublattice.decorate_(icosahedralCluster());
+        auto lattice = Lattice(sublattice);
         return lattice;
     }
 
     Lattice<3> has100(const std::array<unsigned int, 3> &systemSize){
         auto lattice = has0(systemSize);
         auto centralSite = Euclidean<3>({0.0,0.0,0.0});
-        lattice.append_(centralSite);
+        lattice.append_(bccLattice(systemSize));
         return lattice;
     }
 }

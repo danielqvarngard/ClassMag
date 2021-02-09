@@ -23,8 +23,6 @@ namespace classmag::geometry{
     template <unsigned int dimension>
     class SubLattice{
         private:
-        const std::array<Euclidean<dimension>,dimension> bravais_;
-        const std::array<unsigned int,dimension> systemSize_; 
         std::vector<Euclidean<dimension>> decoration_;
 
         public:
@@ -36,6 +34,10 @@ namespace classmag::geometry{
             decoration_(defaultDecoration<dimension>())
         {
         }
+
+        const std::array<Euclidean<dimension>,dimension> bravais_;
+        const std::array<unsigned int,dimension> systemSize_; 
+        
 
         Euclidean<dimension> position_(unsigned int site) const{
             auto periodicityConstant = 1;
@@ -102,6 +104,12 @@ namespace classmag::geometry{
             const std::array<unsigned int,dimension> &systemSize):
             bravais_(bravais),
             systemSize_(systemSize)
+        {
+        }
+
+        Lattice<dimension>(SubLattice<dimension> sl):
+        bravais_(sl.bravais_),
+        systemSize_(sl.systemSize_)
         {
         }
 
