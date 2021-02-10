@@ -293,10 +293,18 @@ namespace classmag::geometry{
             return correspondingSiteIndices;
         }
 
+        std::vector<unsigned int> partitions_(){
+            std::vector<unsigned int> result (subLattice_.size(), 0u);
+            for (auto ii = 0u; ii < subLattice_.size() - 1; ++ii){
+                result[ii + 1] = subLattice_[ii].n_sites_();
+            }
+            return result;
+        }
+
         private:
         const std::array<Euclidean<dimension>,dimension> bravais_;
         const std::array<unsigned int,dimension> systemSize_; 
-        std::vector<Sublattice<dimension>> subLattice_;
+        std::vector<SubLattice<dimension>> subLattice_;
     };
 }
 

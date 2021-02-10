@@ -13,7 +13,7 @@
 
 using namespace classmag;
 int main(int argc, char *argv[]){
-    montecarlo::MC_Profile mcp;
+    montecarlo::VectorModel_Profile mcp;
     auto n_thermalize = 10000;
     auto n_overrelax = 10;
     auto n_measure = 10000;

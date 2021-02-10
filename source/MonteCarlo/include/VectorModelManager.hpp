@@ -5,6 +5,7 @@
 #include <random>
 
 #include "Geometry/include/euclidean.hpp"
+#include "Base/include/magnetizationData.hpp"
 #include "Base/include/couplingLookup.hpp"
 #include "Base/include/simulationProcess.hpp"
 #include "Base/include/orderParameter.hpp"
@@ -16,7 +17,7 @@ namespace classmag::montecarlo{
     class VectorModelManager : public base::SimulationBase<spinDimension>{
         public:
         VectorModelManager(
-            MC_Profile &mcp,
+            VectorModel_Profile &mcp,
             const std::function<double(unsigned int, unsigned int)> interaction):
         base::SimulationBase<spinDimension>(mcp.n_sites_),
         mcp_(mcp),
@@ -143,7 +144,7 @@ namespace classmag::montecarlo{
         double beta_ = 1.0;
         
         private:
-        const MC_Profile mcp_;
+        const VectorModel_Profile mcp_;
         base::CouplingLookup lookup_;
         std::mt19937 rng_;
         base::OrderParameters<spinDimension> orderParameters_;
@@ -189,6 +190,26 @@ namespace classmag::montecarlo{
         void updateLattice_(){
             for (unsigned int site = 0; site < this->n_sites_; ++site)
                 updateSpin_(site);
+        }
+
+        base::MagnetizationData<spinDimension> magnetization_(){
+            base::MagnetizationData<spinDimension> result;
+            auto n_sublattices = mcp_.partitions_.size() - 1;
+            result.resize(n_sublattices);
+            result.fill_(0.0);
+
+            for (auto ii = 0u; ii < n_sublattices; ++ii){
+                for (
+                    auto site = mcp_.partitions_[ii]; 
+                    site < mcp_.partitions_[ii + 1]; 
+                    ++site){
+                    
+                    result[ii] += this->spin_[site];
+                }
+            }
+
+            return result;
+
         }
     };
 
