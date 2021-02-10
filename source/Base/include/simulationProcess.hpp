@@ -35,7 +35,7 @@ namespace classmag::base{
             spin_.resize(n_sites);
         };
 
-        geometry::SpinStructure<spinDimension> spin_;
+        SpinStructure<spinDimension> spin_;
         const unsigned int n_sites_;
     };
 }

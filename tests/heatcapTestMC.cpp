@@ -26,9 +26,7 @@ int main(int argc, char *argv[]){
         bravais[ii].fill(0.0);
         bravais[ii][ii] = 3.0;
     }
-    auto lattice = geometry::Lattice<3>(bravais,systemSize);
-    lattice.decorate_(geometry::icosahedralCluster());
-    lattice.append_({0.0, 0.0, 0.0});
+    auto lattice = geometry::has100(systemSize);
     const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
 
     mcp.measurement_ = n_measure;
@@ -37,6 +35,7 @@ int main(int argc, char *argv[]){
     mcp.n_sites_ = lattice.n_sites_();
     mcp.overrelax_ = n_overrelax;
     mcp.seed_ = 137;
+    mcp.getPartitions_(lattice);
 
 
     std::string dir = "../out/";
