@@ -1,4 +1,5 @@
 #include "include/predefLattices.hpp"
+#include <iostream>
 
 namespace classmag::geometry{
     inline double tsaiRadius(){
@@ -48,7 +49,6 @@ namespace classmag::geometry{
 
     Lattice<3> has100(const std::array<unsigned int, 3> &systemSize){
         auto lattice = has0(systemSize);
-        auto centralSite = Euclidean<3>({0.0,0.0,0.0});
         lattice.append_(bccLattice(systemSize));
         return lattice;
     }

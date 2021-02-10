@@ -19,7 +19,7 @@ void printLattice(const Lattice<dimension> lattice){
 int main(){
 
     const auto systemSize = std::array<unsigned int,3>({2,2,2});
-    auto lattice = has0(systemSize);
+    auto lattice = has100(systemSize);
     
     printLattice(lattice);
 };

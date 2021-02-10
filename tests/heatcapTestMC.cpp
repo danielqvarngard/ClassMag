@@ -15,19 +15,18 @@ using namespace classmag;
 int main(int argc, char *argv[]){
     montecarlo::VectorModel_Profile mcp;
     auto n_thermalize = 10000;
-    auto n_overrelax = 10;
+    auto n_overrelax = 1;
     auto n_measure = 10000;
-    auto n_skip = 2;
+    auto n_skip = 1;
     auto n_resamples = 100;
     unsigned int L = 4;
     const auto systemSize = std::array<unsigned int, 3>({L,L,L});
-    std::array<geometry::Euclidean<3>,3> bravais;
-    for (unsigned int ii = 0; ii < 3; ++ii){
-        bravais[ii].fill(0.0);
-        bravais[ii][ii] = 3.0;
-    }
-    auto lattice = geometry::has100(systemSize);
-    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
+
+    auto sublattice = geometry::cubicLattice<3>(systemSize);
+    auto lattice = geometry::Lattice<3>(sublattice);
+    const auto interaction = base::nearestNeighbor(-1.0,lattice,1.1);
+    //auto lattice = geometry::has100(systemSize);
+    //const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
 
     mcp.measurement_ = n_measure;
     mcp.thermalization_ = n_thermalize;
@@ -37,9 +36,10 @@ int main(int argc, char *argv[]){
     mcp.seed_ = 137;
     mcp.getPartitions_(lattice);
 
+    std::cout << mcp.n_sites_ << "\n";
 
     std::string dir = "../out/";
-    std::string filename = dir + "testMC_NN_new_";
+    std::string filename = dir + "testMC_cubic_";
     auto seed = 0;
     auto mc = montecarlo::VectorModelManager<3>(
         mcp,

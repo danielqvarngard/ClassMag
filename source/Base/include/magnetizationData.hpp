@@ -11,7 +11,7 @@ namespace classmag::base{
         public:
         void fill_(const double x){
             for (auto ii = 0u; ii < (*this).size(); ++ii)
-                this->[ii].fill_(x);
+                (*this)[ii].fill_(x);
         }
     };
 }

@@ -50,7 +50,7 @@ namespace classmag::base{
         auto opPair = std::pair<OrderParameter<3>,OrderParameter<3>>({opShell,opCenter});
         return opPair;
     };
-
+    #if FALSE
     std::vector<OrderParameter<3>, OrderParameter<3>> has100Mag(
     const std::array<unsigned int,3> &systemSize){
         
@@ -87,4 +87,5 @@ namespace classmag::base{
         auto opShell = OrderParameter<3>("Shell order", shellOrder);
         auto opCenter = OrderParameter<3>("Center order", centerOrder);  
     };
+    #endif
 }

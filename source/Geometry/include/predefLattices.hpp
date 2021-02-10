@@ -21,7 +21,7 @@ namespace classmag::geometry{
             bravais[ii][ii] = 1.0;
         }
 
-        auto lattice = Lattice<dim>(bravais,systemSize);
+        auto lattice = SubLattice<dim>(bravais,systemSize);
         return lattice;
     }
 }

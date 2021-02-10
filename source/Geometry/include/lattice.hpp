@@ -109,22 +109,19 @@ namespace classmag::geometry{
 
         Lattice<dimension>(SubLattice<dimension> sl):
         bravais_(sl.bravais_),
-        systemSize_(sl.systemSize_)
+        systemSize_(sl.systemSize_),
+        subLattice_({sl})
         {
         }
 
         Euclidean<dimension> position_(unsigned int site) const{
-            auto periodicityConstant = 1;
-            auto decorationNumber = site % decoration_.size();
-            const int cellNumber = site / decoration_.size();
-            Euclidean<dimension> translationVector = decoration_[decorationNumber];
 
             auto offset = 0u;
             auto sl = 0u;
             auto cont = true;
             while (cont){
                 if (sl + 1 < subLattice_.size()){
-                    if (site > offset + subLattice_[sl].n_sites){
+                    if (site + 1 > offset + subLattice_[sl].n_sites_()){
                         offset += subLattice_[sl].n_sites_();
                         ++sl;
                     }
@@ -151,7 +148,7 @@ namespace classmag::geometry{
         }
 
 
-        virtual double squareDistance_(unsigned int site1, unsigned int site2)const {
+        virtual double squareDistance_(unsigned int site1, unsigned int site2) const {
             std::vector<double> squareDistances(3*dimension);
             for (unsigned int index = 0; index < 3*dimension; ++index){
                 std::array<int, dimension> periods;
@@ -177,11 +174,11 @@ namespace classmag::geometry{
         void append_(const std::vector<SubLattice<dimension>> & targetDecoration){
             auto n_decorations = targetDecoration.size();
             for (unsigned int ii = 0; ii < n_decorations; ++ii)
-                decoration_.push_back(targetDecoration[ii]);
+                subLattice_.push_back(targetDecoration[ii]);
         }
 
         void append_(const SubLattice<dimension> &targetDecoration){
-                decoration_.push_back(targetDecoration);
+                subLattice_.push_back(targetDecoration);
         }
 
         unsigned int n_sites_() const{
@@ -192,7 +189,7 @@ namespace classmag::geometry{
         }
 
         unsigned int n_decorations_() const{
-            return decoration_.size();
+            return subLattice_.size();
         }
 
         std::array<unsigned int,dimension> cellCoordinates(unsigned int referenceSite){
@@ -211,7 +208,7 @@ namespace classmag::geometry{
         virtual std::vector<unsigned int> neighborCellSites_(
             const unsigned int referenceSite) const{
             
-            auto n_decorations = decoration_.size();
+            auto n_decorations = subLattice_.size();
             auto decorationIndex = referenceSite % n_decorations;
             std::vector<unsigned int> correspondingSiteIndices(2*dimension);
             auto wrappingNumber = 1;
@@ -251,7 +248,7 @@ namespace classmag::geometry{
                 (unsigned int direction, bool left){
                     auto a = (left? -1 : +1);
                 return (referenceSite + a * 
-                        decoration_.size() * wrappingNumber);
+                        subLattice_.size() * wrappingNumber);
             };
 
             auto wrappedSideIndex = 
@@ -259,7 +256,7 @@ namespace classmag::geometry{
                 (unsigned int direction, bool left){
                     auto a = (left? 1 : -1);
                 return (referenceSite + a *
-                        decoration_.size() * (wrappingNumber * 
+                        subLattice_.size() * (wrappingNumber * 
                             (systemSize_[direction] - 1)));
             };
 
@@ -293,7 +290,7 @@ namespace classmag::geometry{
             return correspondingSiteIndices;
         }
 
-        std::vector<unsigned int> partitions_(){
+        std::vector<unsigned int> partitions_() const{
             std::vector<unsigned int> result (subLattice_.size(), 0u);
             for (auto ii = 0u; ii < subLattice_.size() - 1; ++ii){
                 result[ii + 1] = subLattice_[ii].n_sites_();
