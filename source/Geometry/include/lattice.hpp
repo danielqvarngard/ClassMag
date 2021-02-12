@@ -148,25 +148,6 @@ namespace classmag::geometry{
                 return position;
         }
 
-        #if 0
-        virtual double squareDistance_(unsigned int site1, unsigned int site2) const {
-            std::vector<double> squareDistances(3*dimension);
-            for (unsigned int index = 0; index < 3*dimension; ++index){
-                std::array<int, dimension> periods;
-                periods.fill(0);
-                int multiplier = (index % 3) - 1;
-                periods[index/3] = multiplier;
-                auto v1 = position_(site1);
-                auto v2 = mirroredPosition_(site2,periods);
-                squareDistances[index] = (v1 - v2) * (v1 - v2);
-            }
-
-            double r = *std::min_element(squareDistances.begin(), squareDistances.end());
-            return r;
-        }
-        #endif
-
-        #if 1 
         virtual double squareDistance_(unsigned int site1, unsigned int site2) const {
             std::vector<double> squareDistances(pow(2,dimension));
             unsigned int a, b;
@@ -187,16 +168,13 @@ namespace classmag::geometry{
                 for(auto jj = 0u; jj < dimension; ++jj){
                     periods[jj] = static_cast<int>(floor(ii/(pow(2,jj)))) % 2;
                 }
-                std::cout << "\n";
                 auto va = mirroredPosition_(a, periods);
                 squareDistances[ii] = (va - vb) * (va - vb);
-                std::cout << squareDistances[ii] << "\n";
             }
 
             double r = *std::min_element(squareDistances.begin(), squareDistances.end());
             return r;
         }
-        #endif
 
         void decorate_(const std::vector<SubLattice<dimension>> & targetDecoration){
             auto n_decorations = targetDecoration.size();

@@ -220,7 +220,7 @@ namespace classmag::montecarlo{
         auto z = uniformDistribution_(rng_);
         
         auto cosine = heatBathCosine(beta_*fieldNorm,z);
-        /*if (cosine > 1.0)
+        /* if (cosine > 1.0)
             cosine = 1.0; */ // Uncomment if returns NaN
         auto sine = squareRoot(1 - cosine*cosine);
 

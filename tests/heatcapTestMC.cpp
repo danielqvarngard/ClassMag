@@ -22,22 +22,22 @@ int main(int argc, char *argv[]){
     unsigned int L = 4;
     const auto systemSize = std::array<unsigned int, 3>({L,L,L});
 
+    #if 0
     /* bcc lattice for testing: */
     auto sublattice1 = geometry::cubicLattice<3>(systemSize);
     auto lattice = geometry::Lattice<3>(sublattice1);
-    #if 1
     auto sublattice2 = geometry::cubicLattice<3>(systemSize);
     auto e = geometry::Euclidean<3>({0.5, 0.5, 0.5});
     sublattice2.decorate_({e});
 
     lattice.append_(sublattice2);
-    #endif
     const auto interaction = base::nearestNeighbor(-1.0,lattice,0.9);
+    #endif
     
-    /*
-    auto lattice = geometry::has0(systemSize);
+    
+    auto lattice = geometry::has100(systemSize);
     const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
-    */
+   
     mcp.measurement_ = n_measure;
     mcp.thermalization_ = n_thermalize;
     mcp.skips_ = n_skip;
