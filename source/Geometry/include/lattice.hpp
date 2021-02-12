@@ -148,29 +148,27 @@ namespace classmag::geometry{
                 return position;
         }
 
-        virtual double squareDistance_(unsigned int site1, unsigned int site2) const {
+        double asymDistance_(unsigned int site1, unsigned int site2) const {
             std::vector<double> squareDistances(pow(2,dimension));
-            unsigned int a, b;
-            if (site1 < site2){
-                a = site1; 
-                b = site2;
-            }
-            else if (site2 < site1){
-                a = site2;
-                b = site1;
-            }
-            else
-                return 0.0;
-            
-            auto vb = position_(b);
+
+            auto vb = position_(site1);
             std::array<int, dimension> periods;
             for (auto ii = 0u; ii < pow(2,dimension); ++ii){
                 for(auto jj = 0u; jj < dimension; ++jj){
                     periods[jj] = static_cast<int>(floor(ii/(pow(2,jj)))) % 2;
                 }
-                auto va = mirroredPosition_(a, periods);
+                auto va = mirroredPosition_(site2, periods);
                 squareDistances[ii] = (va - vb) * (va - vb);
             }
+
+            double r = *std::min_element(squareDistances.begin(), squareDistances.end());
+            return r;
+        }
+
+        virtual double squareDistance_(unsigned int site1, unsigned int site2) const {
+            std::vector<double> squareDistances(2);
+            squareDistances[0] = asymDistance_(site1, site2);
+            squareDistances[1] = asymDistance_(site2, site1);
 
             double r = *std::min_element(squareDistances.begin(), squareDistances.end());
             return r;
