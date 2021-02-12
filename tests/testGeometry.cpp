@@ -27,20 +27,20 @@ int main(){
     auto n_measure = 10000;
     auto n_skip = 1;
     auto n_resamples = 100;
-    unsigned int L = 2;
+    unsigned int L = 3;
     const auto systemSize = std::array<unsigned int, 3>({L,L,L});
 
     /* bcc lattice for testing: */
     auto sublattice1 = geometry::cubicLattice<3>(systemSize);
     auto lattice = geometry::Lattice<3>(sublattice1);
-    #if 1
+    #if 0
     auto sublattice2 = geometry::cubicLattice<3>(systemSize);
     auto e = geometry::Euclidean<3>({0.5, 0.5, 0.5});
     sublattice2.decorate_({e});
 
     lattice.append_(sublattice2);
     #endif
-    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.9);
+    const auto interaction = base::nearestNeighbor(-1.0,lattice,1.01);
     
     /*
     auto lattice = geometry::has0(systemSize);
