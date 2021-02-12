@@ -22,12 +22,22 @@ int main(int argc, char *argv[]){
     unsigned int L = 4;
     const auto systemSize = std::array<unsigned int, 3>({L,L,L});
 
-    auto sublattice = geometry::cubicLattice<3>(systemSize);
-    auto lattice = geometry::Lattice<3>(sublattice);
-    const auto interaction = base::nearestNeighbor(-1.0,lattice,1.1);
-    //auto lattice = geometry::has100(systemSize);
-    //const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
+    /* bcc lattice for testing: */
+    auto sublattice1 = geometry::cubicLattice<3>(systemSize);
+    auto lattice = geometry::Lattice<3>(sublattice1);
+    #if 1
+    auto sublattice2 = geometry::cubicLattice<3>(systemSize);
+    auto e = geometry::Euclidean<3>({0.5, 0.5, 0.5});
+    sublattice2.decorate_({e});
 
+    lattice.append_(sublattice2);
+    #endif
+    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.9);
+    
+    /*
+    auto lattice = geometry::has0(systemSize);
+    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
+    */
     mcp.measurement_ = n_measure;
     mcp.thermalization_ = n_thermalize;
     mcp.skips_ = n_skip;
@@ -39,7 +49,7 @@ int main(int argc, char *argv[]){
     std::cout << mcp.n_sites_ << "\n";
 
     std::string dir = "../out/";
-    std::string filename = dir + "testMC_cubic_";
+    std::string filename = dir + "testMC_nanbug_";
     auto seed = 0;
     auto mc = montecarlo::VectorModelManager<3>(
         mcp,
@@ -70,14 +80,22 @@ int main(int argc, char *argv[]){
     for (unsigned int jj = 0; jj < n_orderParameters; ++jj)
         opc[jj].resize(n_measure);
     
+    #if 1
     auto temperatures = {
         1.5000, 1.2500, 1.0000, 0.8000, 0.7000, 0.6000, 0.5800, 0.5600, 0.5400, 0.5200, 0.5000, 
         0.4900, 0.4800, 0.4600, 0.4400, 0.4200, 0.4000, 0.3000, 0.2000, 0.1800, 0.1600, 0.1400,
-        0.1200, 0.1100, 0.1000, 0.0900, 0.0800, 0.0600, 0.0400, 0.0200
+        0.1200, 0.1100, 0.1000, 0.0900, 0.0800, 0.0600, 0.0400, 0.0380, 0.0360, 0.0340, 0.0320,
+        0.0300, 0.0280, 0.0260, 0.0240, 0.0220, 0.0200
     };
+    #endif
+
+    #if 0
+    auto temperatures = {1.5, 1.25, 1.0};
+    #endif
 
     auto fp = std::ofstream(filename);
     auto zeroPatience = 1;
+    mc.printCoordinations_();
     for (auto T : temperatures){
         mc.beta_ = 1.0/T;
         std::vector<double> energy(n_measure);

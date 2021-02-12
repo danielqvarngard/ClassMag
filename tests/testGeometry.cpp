@@ -1,13 +1,17 @@
 #include "Geometry/include/euclidean.hpp"
 #include "Geometry/include/lattice.hpp"
 #include "Geometry/include/predefLattices.hpp"
+#include "Base/include/nearestNeighbor.hpp"
+#include "MonteCarlo/include/VectorModelManager.hpp"
+#include "MonteCarlo/include/mcProfile.hpp"
 #include <array>
 #include <iostream>
+#include <algorithm>
 
-using namespace classmag::geometry;
+using namespace classmag;
 
 template<unsigned int dimension>
-void printLattice(const Lattice<dimension> lattice){
+void printLattice(const geometry::Lattice<dimension> lattice){
     for (unsigned int ii = 0; ii < lattice.n_sites_(); ++ii){
         auto e = lattice.position_(ii);
         for (auto d : e)
@@ -17,9 +21,49 @@ void printLattice(const Lattice<dimension> lattice){
 };
 
 int main(){
+    montecarlo::VectorModel_Profile mcp;
+    auto n_thermalize = 10000;
+    auto n_overrelax = 1;
+    auto n_measure = 10000;
+    auto n_skip = 1;
+    auto n_resamples = 100;
+    unsigned int L = 2;
+    const auto systemSize = std::array<unsigned int, 3>({L,L,L});
 
-    const auto systemSize = std::array<unsigned int,3>({2,2,2});
-    auto lattice = has100(systemSize);
+    /* bcc lattice for testing: */
+    auto sublattice1 = geometry::cubicLattice<3>(systemSize);
+    auto lattice = geometry::Lattice<3>(sublattice1);
+    #if 1
+    auto sublattice2 = geometry::cubicLattice<3>(systemSize);
+    auto e = geometry::Euclidean<3>({0.5, 0.5, 0.5});
+    sublattice2.decorate_({e});
+
+    lattice.append_(sublattice2);
+    #endif
+    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.9);
     
-    printLattice(lattice);
+    /*
+    auto lattice = geometry::has0(systemSize);
+    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
+    */
+    mcp.measurement_ = n_measure;
+    mcp.thermalization_ = n_thermalize;
+    mcp.skips_ = n_skip;
+    mcp.n_sites_ = lattice.n_sites_();
+    mcp.overrelax_ = n_overrelax;
+    mcp.seed_ = 137;
+    mcp.getPartitions_(lattice);
+
+    std::cout << mcp.n_sites_ << "\n";
+
+    std::string dir = "../out/";
+    std::string filename = dir + "testMC_nanbug_";
+    auto seed = 0;
+    auto mc = montecarlo::VectorModelManager<3>(
+        mcp,
+        interaction);
+
+    mc.printCoordinations_();
+
+    std::cout << lattice.n_decorations_() << "\n";
 };

@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm> // *min_element
+#include <math.h> // floor
 
 namespace classmag::geometry{
 
@@ -147,7 +148,7 @@ namespace classmag::geometry{
                 return position;
         }
 
-
+        #if 0
         virtual double squareDistance_(unsigned int site1, unsigned int site2) const {
             std::vector<double> squareDistances(3*dimension);
             for (unsigned int index = 0; index < 3*dimension; ++index){
@@ -163,6 +164,39 @@ namespace classmag::geometry{
             double r = *std::min_element(squareDistances.begin(), squareDistances.end());
             return r;
         }
+        #endif
+
+        #if 1 
+        virtual double squareDistance_(unsigned int site1, unsigned int site2) const {
+            std::vector<double> squareDistances(pow(2,dimension));
+            unsigned int a, b;
+            if (site1 < site2){
+                a = site1; 
+                b = site2;
+            }
+            else if (site2 < site1){
+                a = site2;
+                b = site1;
+            }
+            else
+                return 0.0;
+            
+            auto vb = position_(b);
+            std::array<int, dimension> periods;
+            for (auto ii = 0u; ii < pow(2,dimension); ++ii){
+                for(auto jj = 0u; jj < dimension; ++jj){
+                    periods[jj] = static_cast<int>(floor(ii/(pow(2,jj)))) % 2;
+                }
+                std::cout << "\n";
+                auto va = mirroredPosition_(a, periods);
+                squareDistances[ii] = (va - vb) * (va - vb);
+                std::cout << squareDistances[ii] << "\n";
+            }
+
+            double r = *std::min_element(squareDistances.begin(), squareDistances.end());
+            return r;
+        }
+        #endif
 
         void decorate_(const std::vector<SubLattice<dimension>> & targetDecoration){
             auto n_decorations = targetDecoration.size();
@@ -189,6 +223,9 @@ namespace classmag::geometry{
         }
 
         unsigned int n_decorations_() const{
+            auto result = 0u;
+            for (auto sl : subLattice_)
+                result += sl.n_decorations_();
             return subLattice_.size();
         }
 

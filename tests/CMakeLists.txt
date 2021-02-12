@@ -16,6 +16,8 @@ target_link_libraries(
     testGeometry.exe
     PRIVATE
     ClassMag_Geometry
+    ClassMag_Base
+    ClassMag_MonteCarlo
 )
 
 if (FALSE)
