@@ -47,8 +47,4 @@ namespace classmag::montecarlo{
             std::pair<double, double> result = {meanEstimate, varianceEstimate};
             return result;
     }
-
-    DefaultBoostrapOut defaultBootstrap(const std::vector<double> &x){
-        
-    }
 }

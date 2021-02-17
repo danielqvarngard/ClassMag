@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
     #endif
     
     
-    auto lattice = geometry::has100(systemSize);
+    auto lattice = geometry::chas100(systemSize);
     const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
    
     mcp.measurement_ = n_measure;
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
     std::cout << mcp.n_sites_ << "\n";
 
     std::string dir = "../out/";
-    std::string filename = dir + "testMC_nanbug_";
+    std::string filename = dir + "testMC_testmag_";
     auto seed = 0;
     auto mc = montecarlo::VectorModelManager<3>(
         mcp,
@@ -82,10 +82,9 @@ int main(int argc, char *argv[]){
     
     #if 1
     auto temperatures = {
-        1.5000, 1.2500, 1.0000, 0.8000, 0.7000, 0.6000, 0.5800, 0.5600, 0.5400, 0.5200, 0.5000, 
+        1.2500, 1.0000, 0.8000, 0.7000, 0.6000, 0.5800, 0.5600, 0.5400, 0.5200, 0.5000, 
         0.4900, 0.4800, 0.4600, 0.4400, 0.4200, 0.4000, 0.3000, 0.2000, 0.1800, 0.1600, 0.1400,
-        0.1200, 0.1100, 0.1000, 0.0900, 0.0800, 0.0600, 0.0400, 0.0380, 0.0360, 0.0340, 0.0320,
-        0.0300, 0.0280, 0.0260, 0.0240, 0.0220, 0.0200
+        0.1200, 0.1100, 0.1000, 0.0900, 0.0800, 0.0600, 0.0400
     };
     #endif
 

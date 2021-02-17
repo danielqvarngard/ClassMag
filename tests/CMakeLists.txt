@@ -20,7 +20,7 @@ target_link_libraries(
     ClassMag_MonteCarlo
 )
 
-if (FALSE)
+if (TRUE)
 add_executable(
     testMC.exe
     testMC.cpp

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#define LATTICEFUNCTION geometry::has100
+#define LATTICEFUNCTION geometry::has0
 
 #include "Geometry/include/lattice.hpp"
 #include "Geometry/include/predefLattices.hpp"
@@ -13,94 +13,81 @@
 
 using namespace classmag;
 int main(int argc, char *argv[]){
-
+    montecarlo::VectorModel_Profile mcp;
     auto n_thermalize = 10000;
-    auto n_overrelax = 5;
-    auto n_measure = 10000;
-    auto n_skip = 2;
+    auto n_overrelax = 1;
+    auto n_measure = 1000;
+    auto n_skip = 1;
     auto n_resamples = 100;
-    unsigned int L = 6;
-    auto const systemSize = std::array<unsigned int, 3>({L,L,L});
-    auto lattice = LATTICEFUNCTION(systemSize);
-    int kf_label = 18;
-    auto kf = static_cast<double>(kf_label);
-    const auto interaction = base::rkkyInteraction(kf,lattice,4.0);
+    unsigned int L = 2;
+    const auto systemSize = std::array<unsigned int, 3>({L,L,L});
+
+    #if 0
+    /* bcc lattice for testing: */
+    auto sublattice1 = geometry::cubicLattice<3>(systemSize);
+    auto lattice = geometry::Lattice<3>(sublattice1);
+    auto sublattice2 = geometry::cubicLattice<3>(systemSize);
+    auto e = geometry::Euclidean<3>({0.5, 0.5, 0.5});
+    sublattice2.decorate_({e});
+
+    lattice.append_(sublattice2);
+    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.9);
+    #endif
+    
+    
+    auto lattice = geometry::chas100(systemSize);
+    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
+   
+    mcp.measurement_ = n_measure;
+    mcp.thermalization_ = n_thermalize;
+    mcp.skips_ = n_skip;
+    mcp.n_sites_ = lattice.n_sites_();
+    mcp.overrelax_ = n_overrelax;
+    mcp.seed_ = 138;
+    mcp.getPartitions_(lattice);
+    auto n_sublattices = mcp.partitions_.size() - 1;
+
+    std::cout << mcp.n_sites_ << "\n";
 
     std::string dir = "../out/";
-    std::string filename = dir + "testMC_RKKY_";
-    filename += std::to_string(kf_label);
-    filename += "_";
-    auto seed = 0;
+    std::string filename = dir + "testMC_testmag_";
     auto mc = montecarlo::VectorModelManager<3>(
-        (lattice.n_sites_()),
-        interaction,
-        seed);
+        mcp,
+        interaction);
     
-    const auto mag = base::magnetization<3>();
-    mc.addOrderParameter_(mag);
-    auto n_orderParameters = 1;
-    
-    if (lattice.n_decorations_() == 12){
-        filename += "has0_";
-        const auto cluster = base::clusterOrder<3,3>(lattice);
-        mc.addOrderParameter_(cluster);
-        ++n_orderParameters;
-    }
-    else if (lattice.n_decorations_() == 13){
-        filename += "has100_";
-        const auto clusterPair = base::has100Params(systemSize);
-        mc.addOrderParameter_(clusterPair.first);
-        mc.addOrderParameter_(clusterPair.second);
-        n_orderParameters = n_orderParameters + 2;
-    }
     filename += "L_";
     filename += std::to_string(L);
     filename += ".mcout";
-
-    std::vector<std::vector<double>> opc(n_orderParameters);
-    for (unsigned int jj = 0; jj < n_orderParameters; ++jj)
-        opc[jj].resize(n_measure);
     
+    #if 1
     auto temperatures = {
-        0.0005, 0.0004, 0.00035, 0.000325, 0.0003, 0.000275, 0.00025, 0.000225, 0.0002, 0.000175,
-        0.00015, 0.000125, 0.0001
+        1.2500, 1.0000, 0.8000, 0.7000, 0.6000, 0.5800, 0.5600, 0.5400, 0.5200, 0.5000, 
+        0.4900, 0.4800, 0.4600, 0.4400, 0.4200, 0.4000, 0.3000, 0.2000, 0.1800, 0.1600, 0.1400,
+        0.1200, 0.1100, 0.1000, 0.0900, 0.0800, 0.0600, 0.0400
     };
+    #endif
+
+    #if 0
+    auto temperatures = {1.5, 1.25, 1.0};
+    #endif
 
     auto fp = std::ofstream(filename);
     auto zeroPatience = 1;
     for (auto T : temperatures){
         mc.beta_ = 1.0/T;
-        std::vector<double> energy(n_measure);
         mc.update_(n_thermalize,n_overrelax);
+        std::vector<base::MagnetizationData<3,2>> magdat(n_measure);
         for (unsigned int ii = 0; ii < n_measure; ++ii){
             mc.update_(n_skip,n_overrelax);
-            energy[ii] = mc.energy_();
-            auto mag = mc.measure_();
-            for (unsigned int jj = 0; jj < n_orderParameters; ++jj){
-                opc[jj][ii] = mag[jj];
-            }
+            magdat[ii] = mc.magnetization_();
         }
-
-        auto meanEstimate = [](const std::vector<double> &x){return montecarlo::mean(x);};
-        auto varianceEstimate = [](const std::vector<double> &x){return montecarlo::variance(x);};
-        std::vector<double> estimates(2*n_orderParameters);
-
         fp << T << " ";
-        for (unsigned int jj = 0; jj < n_orderParameters; ++jj){
-            auto meanval = montecarlo::bootstrap(opc[jj],meanEstimate,n_resamples);
-            auto n_sites = static_cast<double>(lattice.n_sites_());
-            fp << meanval.first/n_sites << " ";
-            auto varval = montecarlo::bootstrap(opc[jj],varianceEstimate,n_resamples);
-            fp << varval.first/(T*n_sites) << " ";
-        }
-        {
-        auto meanval = montecarlo::bootstrap(energy,meanEstimate,n_resamples);
-        auto n_sites = static_cast<double>(lattice.n_sites_());
-        fp << meanval.first/n_sites << " ";
-        fp << meanval.second/n_sites << " ";
-        auto varval = montecarlo::bootstrap(energy,varianceEstimate,n_resamples);
-        fp << varval.first/(T*T*n_sites) << " ";
-        fp << varval.second/(T*T*n_sites);
+        auto sus = montecarlo::trChiBootstrap(magdat, 1.0/T, n_resamples);
+        for (auto ii = 0u; ii < n_sublattices; ++ii){
+            fp << sus[ii].first;
+            fp << " ";
+            fp << sus[ii].second;
+            fp << " ";
         }
         fp << "\n";
         std::cout << zeroPatience << "/" << temperatures.size();

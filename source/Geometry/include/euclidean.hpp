@@ -14,6 +14,14 @@ namespace classmag::geometry{
             for (unsigned int ii = 0; ii < dimension; ++ii)
                 (*this)[ii] = d;
         }
+
+        double sum_(){
+            auto result = 0.0;
+            for (auto ii = 0u; ii < dimension; ++ii)
+                result += (*this)[ii];
+            return result;
+        }
+
         Euclidean& operator=(const Euclidean &src){
             for (unsigned int ii = 0; ii < dimension; ++ii)
                 (*this)[ii] = src[ii];

@@ -142,6 +142,26 @@ namespace classmag::montecarlo{
         }
 
         double beta_ = 1.0;
+
+        std::vector<geometry::Euclidean<spinDimension>> magnetization_(){
+            auto n_sublattices = mcp_.partitions_.size() - 1;
+            geometry::Euclidean<spinDimension> initialvalue;
+            initialvalue.fill(0.0);
+            std::vector<geometry::Euclidean<spinDimension>>  result(n_sublattices, initialvalue);
+
+            for (auto ii = 0u; ii < n_sublattices; ++ii){
+                for (
+                    auto site = mcp_.partitions_[ii]; 
+                    site < mcp_.partitions_[ii + 1]; 
+                    ++site){
+                    
+                    result[ii] += this->spin_[site];
+                }
+            }
+
+            return result;
+
+        }
         
         private:
         const VectorModel_Profile mcp_;
@@ -192,25 +212,7 @@ namespace classmag::montecarlo{
                 updateSpin_(site);
         }
 
-        base::MagnetizationData<spinDimension> magnetization_(){
-            base::MagnetizationData<spinDimension> result;
-            auto n_sublattices = mcp_.partitions_.size() - 1;
-            result.resize(n_sublattices);
-            result.fill_(0.0);
-
-            for (auto ii = 0u; ii < n_sublattices; ++ii){
-                for (
-                    auto site = mcp_.partitions_[ii]; 
-                    site < mcp_.partitions_[ii + 1]; 
-                    ++site){
-                    
-                    result[ii] += this->spin_[site];
-                }
-            }
-
-            return result;
-
-        }
+        
     };
 
     template<>
