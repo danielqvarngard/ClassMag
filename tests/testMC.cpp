@@ -16,10 +16,10 @@ int main(int argc, char *argv[]){
     montecarlo::VectorModel_Profile mcp;
     auto n_thermalize = 10000;
     auto n_overrelax = 1;
-    auto n_measure = 1000;
+    auto n_measure = 10000;
     auto n_skip = 1;
     auto n_resamples = 100;
-    unsigned int L = 2;
+    unsigned int L = 5;
     const auto systemSize = std::array<unsigned int, 3>({L,L,L});
 
     #if 0
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
         mcp,
         interaction);
     
-    filename += "L_";
+    filename += "L_bugtest";
     filename += std::to_string(L);
     filename += ".mcout";
     

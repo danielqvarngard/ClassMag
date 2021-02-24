@@ -20,11 +20,34 @@ target_link_libraries(
     ClassMag_MonteCarlo
 )
 
+add_executable(
+    testDisorder.exe
+    testDisorder.cpp
+    ${CMAKE_SOURCE_DIR}/source/Geometry/predefLattices.cpp
+    ${CMAKE_SOURCE_DIR}/source/Geometry/include/predefLattices.hpp
+    ${CMAKE_SOURCE_DIR}/source/Geometry/include/euclidean.hpp
+)
+
+target_include_directories(
+    testDisorder.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+target_link_libraries(
+    testDisorder.exe
+    PRIVATE
+    ClassMag_Geometry
+    ClassMag_Base
+    ClassMag_MonteCarlo
+)
+
 if (TRUE)
 add_executable(
     testMC.exe
     testMC.cpp
 )
+endif()
 
 target_include_directories(
     testMC.exe
@@ -38,7 +61,7 @@ target_link_libraries(
     ClassMag_MonteCarlo
     ClassMag_Geometry
 )
-endif()
+
 
 add_executable(
     heatcapTestMC.exe

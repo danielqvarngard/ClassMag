@@ -13,6 +13,7 @@ namespace classmag::geometry{
     Lattice<3> has0(const std::array<unsigned int, 3> &systemSize);
     Lattice<3> has100(const std::array<unsigned int, 3> &systemSize);
     Lattice<3> chas0(const std::array<unsigned int, 3> &systemSize);
+    Lattice<3> chas0_bipartite(const std::array<unsigned int, 3> &systemSize);
     Lattice<3> chas100(const std::array<unsigned int, 3> &systemSize);
 
     template<unsigned int dim>

@@ -27,7 +27,7 @@ int main(){
     auto n_measure = 10000;
     auto n_skip = 1;
     auto n_resamples = 100;
-    unsigned int L = 2;
+    auto L = 2u;
     const auto systemSize = std::array<unsigned int, 3>({L,L,L});
 
     /* bcc lattice for testing: */

@@ -186,7 +186,8 @@ namespace classmag::montecarlo{
             field.fill(0.0);
             for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
                 double coupling = lookup_.coupling_(site,ii);
-                field += coupling*this->spin_[ii];
+                if (coupling != 0.0)
+                    field += coupling*this->spin_[ii];
             }
             return field;
         }

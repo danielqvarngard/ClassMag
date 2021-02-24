@@ -2,6 +2,8 @@
 #define CLASSMAG_BASE_RKKY_HPP
 
 #include <math.h>
+#include <functional>
+#include <utility>
 
 #include "Geometry/include/lattice.hpp"
 #include "Base/include/spinStructure.hpp"

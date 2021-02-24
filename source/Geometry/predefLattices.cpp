@@ -70,6 +70,17 @@ namespace classmag::geometry{
         return lattice;
     }
 
+    Lattice<3> chas0_bipartite(const std::array<unsigned int, 3> &systemSize){
+        auto sublatticeA = cubicLattice<3>(systemSize);
+        sublatticeA.decorate_(icosahedralCluster());
+        auto e = Euclidean<3>({0.5, 0.5, 0.5});
+        auto sublatticeB = cubicLattice<3>(systemSize);
+        sublatticeB.decorate_(icosahedralCluster(e));
+        auto lattice = Lattice(sublatticeA);
+        lattice.append_(sublatticeB);
+        return lattice;
+    }
+
     Lattice<3> chas100(const std::array<unsigned int, 3> &systemSize){
         auto lattice = chas0(systemSize);
         auto sublattice = cubicLattice<3>(systemSize);
