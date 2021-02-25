@@ -47,4 +47,31 @@ namespace classmag::montecarlo{
             std::pair<double, double> result = {meanEstimate, varianceEstimate};
             return result;
     }
+
+
+    DefaultBootstrapOut defaultBootstrap(
+        const std::vector<double> &x, 
+        const unsigned int resamples){
+        auto size = x.size();
+
+        std::uniform_int_distribution<unsigned int> distr(0,size - 1);
+        std::mt19937 rng(std::random_device{}());
+        std::vector<double> means(resamples);
+        std::vector<double> variances(resamples);
+        for (auto resample = 0u; resample < resamples; ++resample){
+            std::vector<double> y(size);
+            for (auto entry = 0u; entry < size; ++entry)
+                y[entry] = x[distr(rng)];
+            means[resample] = mean(y);
+            variances[resample] = variance(y);
+        }
+
+        DefaultBootstrapOut result;
+        result.meanEstimate = mean(means);
+        result.meanDeviation = std::sqrt(variance(means));
+        result.varianceEstimate = mean(variances);
+        result.varianceDeviation = std::sqrt(variance(variances));
+
+        return result;
+    }  
 }

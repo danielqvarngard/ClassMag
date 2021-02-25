@@ -4,6 +4,8 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/orderParameter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/couplingLookup.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/rkky.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/hasxStagMag.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/hasxStagMag.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/magnetizationData.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/rkky.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/nearestNeighbor.hpp

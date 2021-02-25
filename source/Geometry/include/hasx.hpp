@@ -8,8 +8,8 @@ namespace classmag::geometry{
         auto result = chas0_bipartite(size);
         auto disp = Euclidean<3>({0.5, 0.5, 0.5});
 
-        result.append_(disorderedCubic(size, occupancy));
-        result.append_(disorderedCubic(size, occupancy, disp));
+        result.append_(disorderedCubic<3>(size, occupancy));
+        result.append_(disorderedCubic<3>(size, occupancy, disp));
         return result;
     }
 }

@@ -6,6 +6,7 @@
 #include <vector>
 #include <utility>
 #include <functional>
+#include <cmath>
 #include "Base/include/magnetizationData.hpp"
 
 namespace classmag::montecarlo{
@@ -20,7 +21,7 @@ namespace classmag::montecarlo{
         std::function<double(const std::vector<double> &x)> estimator,
         const unsigned int n_resamples);
 
-    struct DefaultBoostrapOut
+    struct DefaultBootstrapOut
     {
     public:
         double meanEstimate;
@@ -45,7 +46,9 @@ namespace classmag::montecarlo{
         base::MagnetizationData<spinDimension, subLattices> varianceVariance_;
     };
 
-    DefaultBoostrapOut defaultBootstrap(const std::vector<double> &x);    
+    DefaultBootstrapOut defaultBootstrap(
+        const std::vector<double> &x,
+        const unsigned int resamples);    
 
     template <unsigned int spinDimension, unsigned int subLattices>
     base::MagnetizationData<spinDimension, subLattices>
@@ -82,7 +85,7 @@ namespace classmag::montecarlo{
     base::MagnetizationData<spinDimension, subLattices>
     vectorVariance(
         const std::vector<base::MagnetizationData<spinDimension, subLattices>> &x){
-            
+
         auto mean = vectorMean(x);
         return vectorVariance(x,mean);
     }

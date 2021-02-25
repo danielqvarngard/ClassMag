@@ -304,9 +304,9 @@ namespace classmag::geometry{
         }
 
         std::vector<unsigned int> partitions_() const{
-            std::vector<unsigned int> result (subLattice_.size(), 0u);
-            for (auto ii = 0u; ii < subLattice_.size() - 1; ++ii){
-                result[ii + 1] = subLattice_[ii].n_sites_();
+            std::vector<unsigned int> result (subLattice_.size() + 1, 0u);
+            for (auto ii = 0u; ii < subLattice_.size(); ++ii){
+                result[ii + 1] = subLattice_[ii].n_sites_() + result[ii];
             }
             return result;
         }

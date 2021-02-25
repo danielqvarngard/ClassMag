@@ -80,3 +80,8 @@ target_link_libraries(
     ClassMag_MonteCarlo
     ClassMag_Geometry
 )
+
+add_executable(
+    repl.exe
+    test.cpp
+)

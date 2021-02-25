@@ -82,8 +82,6 @@ namespace classmag::base{
                 auto loopIndices = lattice.neighborCellSites_(site);
                 auto n_neighbors = static_cast<double>(loopIndices.size());
                 for (auto neighborSite : loopIndices){
-                    if (neighborSite < 0 || neighborSite > lattice.n_sites_() - 1)
-                        std::cout << "DASHULT MC BULT\n";
                     result += spins[site]*spins[neighborSite]/n_neighbors;
                 }
             }
