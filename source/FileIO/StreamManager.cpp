@@ -25,6 +25,7 @@ namespace classmag::fileio{
         (*this) << newline_;
     }
 
+    #if 0
     std::vector<double> IStreamManager::get_CSV_row_(){
         std::vector<double> result;
         std::string line, entry;
@@ -38,4 +39,5 @@ namespace classmag::fileio{
         }
         return result;
     }
+    #endif
 }

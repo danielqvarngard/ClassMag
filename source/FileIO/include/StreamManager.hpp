@@ -64,6 +64,7 @@ namespace classmag::fileio{
         }
     };
 
+    #if 0
     class IStreamManager{
         private:
         std::ifstream is_;
@@ -87,6 +88,7 @@ namespace classmag::fileio{
             }
         }
     };
+    #endif
 
 }
 

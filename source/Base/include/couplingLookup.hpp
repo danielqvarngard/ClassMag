@@ -13,6 +13,7 @@ namespace classmag::base{
             CouplingLookup(
                 const unsigned int n_sites, 
                 const std::function<double(int, int)> interaction);
+            CouplingLookup(const CouplingLookup &src);
             double coupling_(unsigned int site1, unsigned int site2) const;
     };
 }

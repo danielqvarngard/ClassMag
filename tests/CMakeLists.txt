@@ -85,3 +85,24 @@ add_executable(
     repl.exe
     test.cpp
 )
+
+add_executable(
+    pt.exe
+    testPT.cpp
+)
+
+target_link_libraries(
+    pt.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+)
+
+target_include_directories(
+    pt.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)

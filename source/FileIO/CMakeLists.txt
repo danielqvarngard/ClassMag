@@ -1,4 +1,4 @@
-if (FALSE)
+if (TRUE)
 add_library(
     ClassMag_FileIO
     ${CMAKE_CURRENT_SOURCE_DIR}/StreamManager.cpp
@@ -8,7 +8,7 @@ add_library(
 )
 endif()
 
-if (TRUE)
+if (FALSE)
 add_library(
     ClassMag_FileIO
     ${CMAKE_CURRENT_SOURCE_DIR}/filesystem.cpp
