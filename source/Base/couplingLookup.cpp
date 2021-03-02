@@ -1,7 +1,7 @@
 #include "include/couplingLookup.hpp"
 
 namespace classmag::base{
-    base::CouplingLookup::CouplingLookup(
+    CouplingLookup::CouplingLookup(
         const unsigned int n_sites, 
         const std::function<double(const int,const int)> interaction):
         n_sites_(n_sites)
@@ -13,8 +13,14 @@ namespace classmag::base{
                 int site2 = ii % n_sites;
                 couplingTable_[ii] = interaction(site1,site2);
             }
-
     }
+
+    CouplingLookup::CouplingLookup(const CouplingLookup &src):
+    n_sites_(src.n_sites_),
+    couplingTable_(src.couplingTable_)
+    {
+    }
+
     double CouplingLookup::coupling_(unsigned int site1, unsigned int site2) const{
         return couplingTable_[n_sites_*site1 + site2];
     }

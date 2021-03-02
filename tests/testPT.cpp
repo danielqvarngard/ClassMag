@@ -24,4 +24,9 @@ int main(int argc, char* argv[]){
     mcp.overrelax_ = 2;
     mcp.n_sites_ = lattice.n_sites_();
     auto mc = montecarlo::VectorModelManager<3>(mcp,interaction);
+    auto mcs = std::vector<montecarlo::VectorModelManager<3>>(betas.size(),mc);
+
+    for (auto ii = 0u; ii < mcs.size(); ++ii){
+        mcs[ii].seed_(ii);
+    }
 }

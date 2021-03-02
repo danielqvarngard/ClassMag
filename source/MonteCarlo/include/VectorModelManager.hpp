@@ -29,7 +29,13 @@ namespace classmag::montecarlo{
                 this->spin_[ii] = randomUnitVector_();
         }
 
-        VectorModelManager(const VectorModelManager &vm) = delete;
+        VectorModelManager(const VectorModelManager &vm):
+        base::SimulationBase<spinDimension>(vm.mcp_.n_sites_),
+        mcp_(vm.mcp_),
+        lookup_(vm.lookup_),
+        rng_(std::mt19937(vm.mcp_.seed_)),
+        normalDistribution_(std::normal_distribution<double>())
+        {};
 
         void addOrderParameter_(
             const base::OrderParameter<spinDimension> &op){
@@ -161,6 +167,10 @@ namespace classmag::montecarlo{
 
             return result;
 
+        }
+
+        void seed_(const int seed){
+            rng_ = std::mt19937(seed);
         }
         
         private:
