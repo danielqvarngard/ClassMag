@@ -15,20 +15,20 @@ using namespace classmag;
 int main(){
     auto percentage = 100u;
     auto occupancy = static_cast<double>(percentage)/100.0;
-    auto L = 4u;
+    auto L = 6u;
     const std::array<unsigned int,3> size({L,L,L});
-    auto lattice = geometry::hasx(size, occupancy);
+    const auto lattice = geometry::hasx(size, occupancy);
     auto partitions = lattice.partitions_();
     auto n_shell = static_cast<double>(partitions[2]);
     auto n_center = static_cast<double>(lattice.n_sites_()) - n_shell;
     
     montecarlo::VectorModel_Profile mcp;
-    auto n_resamples = 100;
-    mcp.measurement_ = 50000;
-    mcp.thermalization_ = 50000;
+    auto n_resamples = 10;
+    mcp.measurement_ = 10000;
+    mcp.thermalization_ = 10000;
     mcp.skips_ = 1;
     mcp.n_sites_ = lattice.n_sites_();
-    mcp.overrelax_ = 2;
+    mcp.overrelax_ = 0;
     mcp.seed_ = 138;
     mcp.getPartitions_(lattice);
     auto n_sublattices = mcp.partitions_.size() - 1;
@@ -63,9 +63,8 @@ int main(){
 
     #if 1
     auto temperatures = {
-        1.2500, 1.0000, 0.8000, 0.7000, 0.6000, 0.5000, 
-        0.4000, 0.3000, 0.2000, 0.1800, 0.1600, 0.1400,
-        0.1200, 0.1100, 0.1000, 0.0900, 0.0800, 0.0600, 0.0400
+        0.7000, 0.5000, 0.4000, 0.2000, 0.1500, 0.1200,
+        0.1100, 0.1000, 0.0900, 0.0800, 0.0600, 0.0400
     };
     #endif
 

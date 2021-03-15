@@ -17,16 +17,16 @@ namespace classmag::montecarlo{
         public:
         PermutationManager(const PermutationManager &) = delete;
 
-        unsigned int variable_(unsigned int processIndex);
+        inline unsigned int variable_(const unsigned int processIndex) const;
         std::vector<unsigned int> variable_();
-        unsigned int process_(unsigned int variableIndex);
+        inline unsigned int process_(const unsigned int variableIndex) const;
 
         std::vector<double> processOrdered_(const std::vector<double> &variableordered);
         std::vector<double> variableOrdered_(const std::vector<double> &processordered);
         fileio::VectorTarget variableOrdered_(const fileio::VectorTarget &processordered);
         protected:
         PermutationManager(unsigned int size);
-        void switchProcess_(unsigned int a, unsigned int b);
+        inline void switchProcess_(unsigned int a, unsigned int b);
 
         private:
         std::vector<PermutationEntry> sn_;

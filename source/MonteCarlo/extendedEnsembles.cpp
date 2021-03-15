@@ -4,11 +4,9 @@ namespace classmag::montecarlo{
     PermutationManager::PermutationManager(unsigned int size):
     sn_(std::vector<PermutationEntry>(size))
     {   
-        auto p = 0u;
-        for(auto e : sn_){
-            e.processIndex = p;
-            e.variableIndex = p;
-            ++p;
+        for(auto p = 0u; p < sn_.size(); ++p){
+            sn_[p].processIndex = p;
+            sn_[p].variableIndex = p;
         }
     }
 
@@ -21,16 +19,16 @@ namespace classmag::montecarlo{
         sn_[var_b].processIndex = temp;
     }
 
-    unsigned int PermutationManager::process_(unsigned int variableIndex){
+    inline unsigned int PermutationManager::process_(const unsigned int variableIndex) const{
         return sn_[variableIndex].processIndex;
     }
 
-    unsigned int PermutationManager::variable_(unsigned int processIndex){
+    inline unsigned int PermutationManager::variable_(const unsigned int processIndex) const{
         return sn_[processIndex].variableIndex;
     }
 
     std::vector<unsigned int> PermutationManager::variable_(){
-        std::vector<unsigned int> result;
+        std::vector<unsigned int> result(sn_.size());
 
         for (auto ii = 0u; ii < sn_.size(); ++ii){
             result[ii] = variable_(ii);
@@ -68,7 +66,7 @@ namespace classmag::montecarlo{
     }
 
     ParallelTemperer::ParallelTemperer(const std::vector<double> &betas):
-    PermutationManager{static_cast<unsigned int>(betas.size())},
+    PermutationManager(static_cast<unsigned int>(betas.size())),
     betas_(betas)
     {
 
@@ -80,14 +78,14 @@ namespace classmag::montecarlo{
 
     void ParallelTemperer::update_(const std::vector<double> &energies){
         //TODO: add size check / refactor as template 
-        for (auto ii = 0u; ii < betas_.size() - 1; ii = ii + 2){
+        for (auto ii = 0u; ii < betas_.size() - 1; ii += 2){
             auto deltaBeta = betas_[ii+1] - betas_[ii];
             auto deltaE = energies[process_(ii+1)] - energies[process_(ii)];
             if (boltzmannFactor(deltaBeta,deltaE) > distr_(mt_))
                 switchProcess_(ii + 1, ii);
         }
 
-        for (auto ii = 1u; ii < betas_.size() - 1; ii = ii + 2){
+        for (auto ii = 1u; ii < betas_.size() - 1; ii += 2){
             auto deltaBeta = betas_[ii+1] - betas_[ii];
             auto deltaE = energies[process_(ii+1)] - energies[process_(ii)];
             if (boltzmannFactor(deltaBeta,deltaE) > distr_(mt_))
@@ -97,8 +95,7 @@ namespace classmag::montecarlo{
 
     std::vector<double> ParallelTemperer::reorderedBetas_(){
         auto permIndices = variable_();
-        std::vector<double> result;
-        result.resize(betas_.size());
+        std::vector<double> result(betas_.size());
         for (auto ii = 0u; ii < betas_.size(); ++ii)
             result[ii] = betas_[permIndices[ii]];
         return result;

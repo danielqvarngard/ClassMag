@@ -15,7 +15,7 @@ namespace classmag::base{
             auto r2 = lattice.squareDistance_(site1,site2);
             if (lattice.squareDistance_(site1,site2)  < cutoff*cutoff && (site1 != site2)){
                 auto x = 2*kf*sqrt(r2);
-                auto coupling  = -(x*cos(x) - sin(x))/(pow(x,4.0));
+                auto coupling  = (x*cos(x) - sin(x))/(pow(x,4.0));
                 return coupling;
             }
             else{

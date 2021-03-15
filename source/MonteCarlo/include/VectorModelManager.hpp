@@ -35,7 +35,10 @@ namespace classmag::montecarlo{
         lookup_(vm.lookup_),
         rng_(std::mt19937(vm.mcp_.seed_)),
         normalDistribution_(std::normal_distribution<double>())
-        {};
+        {
+            for (unsigned int ii = 0; ii < mcp_.n_sites_; ++ii)
+                this->spin_[ii] = randomUnitVector_();
+        };
 
         void addOrderParameter_(
             const base::OrderParameter<spinDimension> &op){
@@ -69,6 +72,10 @@ namespace classmag::montecarlo{
                 overRelax_(n_overRelax);
                 updateLattice_();
             }
+        }
+
+        void update_(const unsigned int n_times){
+            update_(n_times, mcp_.overrelax_);
         }
 
         virtual void update_() override{
