@@ -11,7 +11,8 @@ namespace classmag::geometry{
     SubLattice<dimension> disorderedCubic(
         const std::array<unsigned int, dimension> &systemSize,
         const double occupancy,
-        const Euclidean<dimension> &displacement
+        const Euclidean<dimension> &displacement,
+        const int seed
     ){
         std::array<unsigned int, dimension> tempSize;
         tempSize.fill(1u);
@@ -27,7 +28,7 @@ namespace classmag::geometry{
         std::vector<Euclidean<dimension>> acceptedSites;
         std::uniform_real_distribution<double> uniformDistribution = 
             std::uniform_real_distribution<double>(0,1);
-        std::mt19937 rng_(std::random_device{}());
+        std::mt19937 rng_(seed);
 
         for (auto ii = 0u; ii < proposeSites.n_sites_(); ++ii){
             if (uniformDistribution(rng_) < occupancy)
@@ -36,6 +37,16 @@ namespace classmag::geometry{
 
         result.decorate_(acceptedSites);
         return result;
+    }
+
+    template<unsigned int dimension>
+    SubLattice<dimension> disorderedCubic(
+        const std::array<unsigned int, dimension> &systemSize,
+        const double occupancy,
+        const Euclidean<dimension> &displacement
+    ){
+        const int randomSeed = std::random_device(){};
+        return disorderedCubic<dimension>(systemSize, occupancy, displacement, randomSeed);
     }
 
     template<unsigned int dimension>

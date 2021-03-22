@@ -1,5 +1,6 @@
 #include "Geometry/include/hasx.hpp"
 #include "Base/include/nearestNeighbor.hpp"
+#include "Base/include/rkky.hpp"
 #include "Base/include/hasxStagMag.hpp"
 #include "MonteCarlo/include/VectorModelManager.hpp"
 #include "MonteCarlo/include/mcProfile.hpp"
@@ -13,9 +14,9 @@
 using namespace classmag;
 
 int main(){
-    auto percentage = 100u;
+    auto percentage = 63u;
     auto occupancy = static_cast<double>(percentage)/100.0;
-    auto L = 6u;
+    auto L = 5u;
     const std::array<unsigned int,3> size({L,L,L});
     const auto lattice = geometry::hasx(size, occupancy);
     auto partitions = lattice.partitions_();
@@ -33,7 +34,7 @@ int main(){
     mcp.getPartitions_(lattice);
     auto n_sublattices = mcp.partitions_.size() - 1;
 
-    const auto interaction = base::nearestNeighbor(-1.0,lattice,0.385);
+    const auto interaction = base::rkkyInteraction(19.8158,lattice, 2.0*L);
     auto mc = montecarlo::VectorModelManager<3>(
         mcp,
         interaction);
@@ -47,9 +48,9 @@ int main(){
     std::cout << mcp.n_sites_ << "\n";
 
     std::string dir = "../out/";
-    std::string filename = dir + "stagmag_";
-    
-    filename += "L_";
+    std::string filename = dir + "dis";
+    filename += std::to_string(percentage);
+    filename += "_L_";
     filename += std::to_string(L);
     filename += ".mcout";
     
@@ -63,8 +64,7 @@ int main(){
 
     #if 1
     auto temperatures = {
-        0.7000, 0.5000, 0.4000, 0.2000, 0.1500, 0.1200,
-        0.1100, 0.1000, 0.0900, 0.0800, 0.0600, 0.0400
+        0.001, 0.0008, 0.0006, 0.0005, 0.00045, 0.0004, 0.00035, 0.0003, 0.00025
     };
     #endif
 
