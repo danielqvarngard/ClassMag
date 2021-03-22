@@ -45,7 +45,7 @@ namespace classmag::geometry{
         const double occupancy,
         const Euclidean<dimension> &displacement
     ){
-        const int randomSeed = std::random_device(){};
+        const int randomSeed = std::rand();
         return disorderedCubic<dimension>(systemSize, occupancy, displacement, randomSeed);
     }
 
