@@ -15,15 +15,6 @@
 using namespace classmag;
 
 int main(int argc, char** argv){
-    const int percentage = 63u;
-    auto occupancy = static_cast<double>(percentage)/100.0;
-    const auto L = 4u;
-    const std::array<unsigned int, 3> size({L,L,L});
-    const auto lattice = geometry::hasx(size, occupancy);
-    auto partitions = lattice.partitions_();
-    auto n_shell = static_cast<double>(partitions[2]);
-    auto n_center = static_cast<double>(lattice.n_sites_()) - n_shell;
-
     MPI_Init(NULL,NULL);
 
     int world_size;
@@ -31,6 +22,15 @@ int main(int argc, char** argv){
 	
 	int world_rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+    const int percentage = 63u;
+    auto occupancy = static_cast<double>(percentage)/100.0;
+    const auto L = 4u;
+    const std::array<unsigned int, 3> size({L,L,L});
+    const auto lattice = geometry::hasx(size, occupancy, world_rank);
+    auto partitions = lattice.partitions_();
+    auto n_shell = static_cast<double>(partitions[2]);
+    auto n_center = static_cast<double>(lattice.n_sites_()) - n_shell;
+
     std::string dir = "../out/";
     std::string filename = dir;
     filename += "has" + std::to_string(percentage);
