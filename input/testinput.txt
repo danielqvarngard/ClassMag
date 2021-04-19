@@ -1,0 +1,3 @@
+s = 2;
+r = 5
+Linear Size = 6 
