@@ -21,8 +21,7 @@ namespace classmag::base{
         double alpha);
     double ewaldRealB(double r, double alpha);
     double ewaldRealB(geometry::Euclidean<3> r, double alpha);
-    double ewaldRealC(double r, double alpha);
-    double ewaldRealC(geometry::Euclidean<3> r, double alpha);
+    geometry::Matrix<3,3> ewaldRealC(geometry::Euclidean<3> r, double alpha);
 
     class EwaldTable{
 

@@ -15,17 +15,10 @@ namespace classmag::base{
         return result;
     }
 
-    double ewaldRealB(geometry::Euclidean<3> r, double alpha){
-        return ewaldRealB(geometry::norm(r), alpha);
-    }
-
-    double ewaldRealC(double r, double alpha){
-        auto result = 3.0 * erfc(sqrt(alpha)*r)/(pow(r,5.0));
-        result += 2.0*sqrt(alpha/pi()) * (2.0 * alpha + 3/(r*r)) * exp(-alpha*r*r)/(r*r);
-        return result;
-    }
-
-    double ewaldRealC(geometry::Euclidean<3> r, double alpha){
-        return ewaldRealC(geometry::norm(r), alpha);
+    geometry::Matrix<3,3> ewaldRealC(geometry::Euclidean<3> r, double alpha){
+        auto x = norm(r);
+        auto c = 3.0 * erfc(sqrt(alpha)*x)/(pow(x,5.0));
+        c += 2.0*sqrt(alpha/pi()) * (2.0 * alpha + 3/(r*r)) * exp(-alpha*r*r)/(r*r);
+        return c * geometry::extprod(r,r);
     }
 }
