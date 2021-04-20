@@ -23,8 +23,11 @@ void printLattice(const geometry::Lattice<dimension> lattice){
 
 int main(){
 
-    
-
+    auto m = geometry::eye<3>();
+    auto v = geometry::Euclidean<3>{1.0, 2.0, 3.0};
+    m[2][2] = 3.0;
+    auto u = m*v;
+    std::cout << u[0] << u[1] << u[2] << "\n";
     #if 0
     montecarlo::VectorModel_Profile mcp;
     auto n_thermalize = 10000;

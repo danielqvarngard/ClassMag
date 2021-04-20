@@ -49,6 +49,21 @@ namespace classmag::geometry{
         }
     }
 
+    template<unsigned int m>
+    matrix<m,m> eye(){
+        matrix<m,m> result;
+        
+        for (auto ii = 0u; ii < m; ++ii){
+            for (auto jj = 0u; jj < m; ++jj){
+                if (ii == jj)
+                    result[ii][jj] = 1.0;
+                else
+                    result[ii][jj] = 0.0;
+            }
+        }
+        return result;
+    }
+
 }
 
 #endif
