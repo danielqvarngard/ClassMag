@@ -1,9 +1,12 @@
 #include "include/dipole.hpp"
 
 namespace classmag::base{
-    double ewaldRec(geometry::Euclidean<3> r, geometry::Euclidean<3> k, double alpha){
+    geometry::Matrix<3,3> ewaldRec(
+        geometry::Euclidean<3> r, 
+        geometry::Euclidean<3> k, 
+        double alpha){
         auto x = geometry::norm(k);
-        return 4 * pi() * cos(k*r) * exp(-x*x/(4*alpha));
+        return 4.0 * pi() * cos(k*r) * exp(-x*x/(4*alpha)) * geometry::extprod(k,k);
     }
 
     double ewaldRealB(double r, double alpha){
