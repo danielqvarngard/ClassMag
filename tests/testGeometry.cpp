@@ -1,12 +1,13 @@
+#include <array>
+#include <iostream>
+#include <algorithm>
 #include "Geometry/include/euclidean.hpp"
+#include "Geometry/include/matrix.hpp"
 #include "Geometry/include/lattice.hpp"
 #include "Geometry/include/predefLattices.hpp"
 #include "Base/include/nearestNeighbor.hpp"
 #include "MonteCarlo/include/VectorModelManager.hpp"
 #include "MonteCarlo/include/mcProfile.hpp"
-#include <array>
-#include <iostream>
-#include <algorithm>
 
 using namespace classmag;
 
@@ -21,6 +22,10 @@ void printLattice(const geometry::Lattice<dimension> lattice){
 };
 
 int main(){
+
+    
+
+    #if 0
     montecarlo::VectorModel_Profile mcp;
     auto n_thermalize = 10000;
     auto n_overrelax = 1;
@@ -31,7 +36,7 @@ int main(){
     const auto systemSize = std::array<unsigned int, 3>({L,L,L});
 
     /* bcc lattice for testing: */
-    #if 0
+    
     auto sublattice1 = geometry::cubicLattice<3>(systemSize);
     auto lattice = geometry::Lattice<3>(sublattice1);
     auto sublattice2 = geometry::cubicLattice<3>(systemSize);
@@ -40,7 +45,7 @@ int main(){
 
     lattice.append_(sublattice2);
     const auto interaction = base::nearestNeighbor(-1.0,lattice,1.01);
-    #endif
+    
     
     
     auto lattice = geometry::chas100(systemSize);
@@ -68,4 +73,5 @@ int main(){
     printLattice(lattice);
 
     std::cout << lattice.n_decorations_() << "\n";
+    #endif
 };
