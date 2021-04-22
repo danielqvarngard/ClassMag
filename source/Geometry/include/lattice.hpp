@@ -218,9 +218,10 @@ namespace classmag::geometry{
             return result;
         }
 
+    
         virtual std::vector<unsigned int> neighborCellSites_(
             const unsigned int referenceSite) const{
-            
+            // Deprecated!
             auto n_decorations = subLattice_.size();
             auto decorationIndex = referenceSite % n_decorations;
             std::vector<unsigned int> correspondingSiteIndices(2*dimension);
@@ -316,6 +317,9 @@ namespace classmag::geometry{
         const std::array<unsigned int,dimension> systemSize_; 
         std::vector<SubLattice<dimension>> subLattice_;
     };
+
+    
+
 }
 
 #endif

@@ -2,6 +2,8 @@ add_library(
     ClassMag_Geometry
     SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/predefLattices.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/reciprocal.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/reciprocal.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/disorderedLattices.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/predefLattices.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/lattice.hpp
