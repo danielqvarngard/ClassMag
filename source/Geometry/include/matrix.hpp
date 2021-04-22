@@ -11,13 +11,13 @@ namespace classmag::geometry{
         public:
         Matrix<m,n>& operator=(const Matrix<m,n>& A){
             for (auto ii = 0u; ii < m; ++ii)
-                (*this)[m] = A[m];
+                (*this)[ii] = A[ii];
             return *this;
         }
 
         Matrix<m,n>& operator+=(const Matrix<m,n>& A){
             for (auto ii = 0u; ii < m; ++ii)
-                (*this)[m] += A[m];
+                (*this)[ii] += A[ii];
             return *this;
         }
     };
@@ -32,10 +32,49 @@ namespace classmag::geometry{
     }
 
     template<unsigned int m, unsigned int n>
-    Matrix<m,m> operator*(const double &c, const Matrix<m,n>& A){
-        Matrix<m,m> result;
+    Matrix<m,n> operator*(const double &c, const Matrix<m,n>& A){
+        Matrix<m,n> result;
         for (auto ii = 0u; ii < m; ++ii){
             result[ii] = c*A[ii];
+        }
+        return result;
+    }
+
+    template<unsigned int m, unsigned int n>
+    Matrix<m,n> operator*(const Matrix<m,n>& A, const double &c){
+        Matrix<m,n> result;
+        for (auto ii = 0u; ii < m; ++ii){
+            result[ii] = c*A[ii];
+        }
+        return result;
+    }
+
+    template<unsigned int m, unsigned int n>
+    Matrix<m,n> operator+(const Matrix<m,n>& A, const Matrix<m,n>& B){
+        Matrix<m,n> result;
+        for (auto ii = 0u; ii < m; ++ii){
+            for (auto jj = 0u; jj < n; ++jj)
+                result[ii][jj] = A[ii][jj] + B[ii][jj];
+        }
+        return result;
+    }
+
+    template<unsigned int m, unsigned int n>
+    Matrix<m,n> operator+(const double &c, const Matrix<m,n>& A){
+        Matrix<m,n> result;
+        for (auto ii = 0u; ii < m; ++ii){
+            for (auto jj = 0u; jj < n; ++jj)
+                result[ii][jj] = c + A[ii][jj];
+        }
+        return result;
+    }
+
+    template<unsigned int m, unsigned int n>
+    Matrix<m,n> operator+(const Matrix<m,n>& A, const double &c){
+        Matrix<m,n> result;
+        for (auto ii = 0u; ii < m; ++ii){
+            for (auto jj = 0u; jj < n; ++jj)
+                result[ii][jj] = c + A[ii][jj];
         }
         return result;
     }
@@ -56,6 +95,7 @@ namespace classmag::geometry{
                 result[ii][jj] = e1[ii]*e2[ii];
             }
         }
+        return result;
     }
 
     template<unsigned int m>
