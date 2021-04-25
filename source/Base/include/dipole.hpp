@@ -23,6 +23,12 @@ namespace classmag::base{
     double ewaldRealB(double r, double alpha);
     double ewaldRealB(geometry::Euclidean<3> r, double alpha);
     geometry::Matrix<3,3> ewaldRealC(geometry::Euclidean<3> r, double alpha);
+    struct EwaldProfile{
+        geometry::Lattice<3> lattice_;
+        double alpha_;
+        double magnitude_;
+    };
+    void addDipole(MatrixLookup<3> &ml, EwaldProfile &ep);
 }
 
 #endif
