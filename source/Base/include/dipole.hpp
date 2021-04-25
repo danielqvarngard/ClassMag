@@ -27,8 +27,10 @@ namespace classmag::base{
         geometry::Lattice<3> lattice_;
         double alpha_;
         double magnitude_;
+        double realCutoff_;
+        double recCutoff_;
     };
-    void addDipole(MatrixLookup<3> &ml, EwaldProfile &ep);
+    void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &profile);
 }
 
 #endif

@@ -21,4 +21,11 @@ namespace classmag::base{
         c += 2.0*sqrt(alpha/pi()) * (2.0 * alpha + 3/(r*r)) * exp(-alpha*r*r)/(r*r);
         return c * geometry::extprod(r,r);
     }
+
+    void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &mp){
+        auto nsq = mp.lattice_.n_sites_() * mp.lattice_.n_sites_();
+        for (auto ii = 0u; ii < nsq; ++ii){
+            
+        }
+    }
 }
