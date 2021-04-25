@@ -25,7 +25,8 @@ namespace classmag::base{
     void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &mp){
         auto nsq = mp.lattice_.n_sites_() * mp.lattice_.n_sites_();
         for (auto ii = 0u; ii < nsq; ++ii){
-            
+            auto site1 = ii % mp.lattice_.n_sites_();
+            auto site2 = (ii - site1)/mp.lattice_.n_sites_();
         }
     }
 }
