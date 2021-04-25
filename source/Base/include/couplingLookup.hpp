@@ -27,7 +27,7 @@ namespace classmag::base{
         n_sites_(n_sites),
         couplingTable_(
             std::vector<geometry::matrix<spinDim,spinDim>>(
-                n_sites, 0.0*geometry::eye<spinDim>())
+                n_sites*n_sites, 0.0*geometry::eye<spinDim>())
             )
         {};
 
