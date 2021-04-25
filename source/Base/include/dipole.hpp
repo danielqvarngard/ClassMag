@@ -5,6 +5,7 @@
 #include "Geometry/include/matrix.hpp"
 #include "Geometry/include/lattice.hpp"
 #include "numerics.hpp"
+#include "couplingLookup.hpp"
 
 namespace classmag::base{
     geometry::Euclidean<3> unscaledDipole(
@@ -22,10 +23,6 @@ namespace classmag::base{
     double ewaldRealB(double r, double alpha);
     double ewaldRealB(geometry::Euclidean<3> r, double alpha);
     geometry::Matrix<3,3> ewaldRealC(geometry::Euclidean<3> r, double alpha);
-
-    class EwaldTable{
-
-    };
 }
 
 #endif
