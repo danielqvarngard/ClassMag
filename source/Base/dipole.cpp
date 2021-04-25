@@ -26,7 +26,6 @@ namespace classmag::base{
         const unsigned int site2,
         const EwaldProfile &mp){
         
-
     }
 
     void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &ep){
