@@ -27,15 +27,15 @@ namespace classmag::base{
         geometry::Lattice<3> lattice_;
         double alpha_;
         double magnitude_;
-        double realCutoff_;
-        double recCutoff_;
+        double realMirrors_;
+        double recMirrors_;
     };
 
     geometry::Matrix<3,3> dipoleMatrix(
         const unsigned int site1, 
         const unsigned int site2,
         const EwaldProfile &ep);
-        
+
     void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &ep);
 }
 

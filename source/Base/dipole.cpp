@@ -25,7 +25,8 @@ namespace classmag::base{
         const unsigned int site1,
         const unsigned int site2,
         const EwaldProfile &mp){
-        
+        auto result = geometry::eye<3>();
+        return result;
     }
 
     void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &ep){
