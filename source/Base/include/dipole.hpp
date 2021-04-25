@@ -30,7 +30,13 @@ namespace classmag::base{
         double realCutoff_;
         double recCutoff_;
     };
-    void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &profile);
+
+    geometry::Matrix<3,3> dipoleMatrix(
+        const unsigned int site1, 
+        const unsigned int site2,
+        const EwaldProfile &ep);
+        
+    void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &ep);
 }
 
 #endif
