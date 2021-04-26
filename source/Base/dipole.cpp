@@ -43,6 +43,14 @@ namespace classmag::base{
             result += ewaldRealB(r, ep.alpha_) * geometry::eye<3>() + 
                 ewaldRealC(r, ep.alpha_);
         }
+
+        range = integerSweepPositive<3>(ep.recMirrors_);
+        auto reclattice = geometry::reciprocalBasis(ep.lattice_.getBravais_());
+        auto r = ep.lattice_.position_(site1) - ep.lattice_.position_(site2);
+        for (auto n : range){
+            auto k = geometry::linearCombination<3,3>(n,reclattice);
+            result += ewaldRec(r,k,ep.alpha_);
+        }
         return result;
     }
 

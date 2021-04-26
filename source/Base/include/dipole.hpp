@@ -4,6 +4,7 @@
 #include "Geometry/include/euclidean.hpp"
 #include "Geometry/include/matrix.hpp"
 #include "Geometry/include/lattice.hpp"
+#include "Geometry/include/reciprocal.hpp"
 #include "numerics.hpp"
 #include "couplingLookup.hpp"
 
