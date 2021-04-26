@@ -33,8 +33,8 @@ namespace classmag::base{
         corner.fill(-1.0 * nmax);
         auto result = std::vector<geometry::Euclidean<dimension>>(offsets.size() + 1);
         result[0] = corner;
-        for (auto ii = 1u; ii < result.size(); ++ii){
-            result[ii] = corner + offsets[ii - 1];
+        for (auto ii = 0u; ii < result.size(); ++ii){
+            result[ii + 1] = corner + offsets[ii];
         }
         return result;
     }
