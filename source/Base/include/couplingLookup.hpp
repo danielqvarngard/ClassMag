@@ -31,7 +31,7 @@ namespace classmag::base{
             )
         {};
 
-        geometry::matrix<spinDim,spinDim> coupling_(unsigned int ii, unsigned int jj){
+        geometry::Matrix<spinDim,spinDim> coupling_(unsigned int ii, unsigned int jj){
             return couplingTable_[site1 + n_sites_ * site2];
         };
         

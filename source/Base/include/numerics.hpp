@@ -8,7 +8,23 @@
 
 namespace classmag::base{
     double pi();
+    
     std::vector<double> shanks(std::vector<double> &x);
+    
+    template<unsigned int dimension>
+    std::vector<geometry::Euclidean<dimension>> integerSweepPositive(unsigned int nmax){
+        auto n_elems = static_cast<unsigned int>(pow(nmax,dimension + 1)) - 1u;
+        auto result = std::vector<geometry::Euclidean<dimension>>(n_elems);
+        for (auto ii = 0u; ii < n_elems; ++ii){
+            for (auto jj = 0u; jj < dimension; ++jj){
+                auto numerator = ii + 1u;
+                auto denominator = static_cast<unsigned int>(pow(nmax,jj));
+                result[ii][jj] = (numerator/denominator) % nmax;
+            }
+        }
+        return result;
+    }
+    
 }
 
 #endif
