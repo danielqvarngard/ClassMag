@@ -21,11 +21,13 @@ namespace classmag::base{
         c += 2.0*sqrt(alpha/pi()) * (2.0 * alpha + 3/(r*r)) * exp(-alpha*r*r)/(r*r);
         return c * geometry::extprod(r,r);
     }
+
     geometry::Matrix<3,3> dipoleMatrix(
         const unsigned int site1,
         const unsigned int site2,
-        const EwaldProfile &mp){
+        const EwaldProfile &ep){
         auto result = geometry::eye<3>();
+        auto realRange = integerSweepPositive<3>(ep.realMirrors_);
         return result;
     }
 

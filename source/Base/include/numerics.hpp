@@ -25,6 +25,21 @@ namespace classmag::base{
         return result;
     }
     
+
+    template<unsigned int dimension>
+    std::vector<geometry::Euclidean<dimension>> integerSweepFull(unsigned int nmax){
+        auto result = integerSweepPositive<dimension>(nmax);
+        auto negative = result;
+        for (auto ii = 0u; ii < negative.size(); ++ii){
+            negative[ii] *= -1.0;
+        }
+        result.insert(std::end(result), std::begin(negative), std::end(negative));
+        auto origin = geometry::Euclidean<dimension>();
+        origin.fill(0.0);
+        result.push_back(origin);
+        return result;
+    }
+    
 }
 
 #endif
