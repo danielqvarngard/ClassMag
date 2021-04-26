@@ -26,15 +26,21 @@ namespace classmag::base{
         return c * geometry::extprod(r,r);
     }
 
+    geometry::Matrix<3,3> ewaldSelf(const EwaldProfile &ep){
+        return 2.0 * M_PI/3.0 * pow(ep.alpha_/M_PI,1.5) * geometry::eye<3>();
+    }
+
     geometry::Matrix<3,3> dipoleMatrix(
         const unsigned int site1,
         const unsigned int site2,
         const EwaldProfile &ep){
-        auto result = geometry::eye<3>();
+        auto result = 0.0*geometry::eye<3>();
         auto range = std::vector<geometry::Euclidean<3>>();
-        
-        if (site1 == site2)
+
+        if (site1 == site2){
             range = integerSweepExclude<3>(ep.realMirrors_);
+            result += ewaldSelf(ep);
+        }
         else
             range = integerSweepFull<3>(ep.realMirrors_);
         
