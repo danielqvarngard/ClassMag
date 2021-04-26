@@ -34,7 +34,10 @@ namespace classmag::base{
         auto range = integerSweepFull<3>(ep.realMirrors_);
         for (auto n : range){
             const auto size = ep.lattice_.getSize_();
-            auto mirrorvector = geometry::elementwise<unsigned int,3>(size,n);
+            auto mirrorcoefficients = geometry::elementwise<unsigned int,3>(size,n);
+            auto mirrorvector = geometry::linearCombination<3,3>(
+                mirrorcoefficients,
+                ep.lattice_.getBravais_());
             auto r = ep.lattice_.position_(site1) - 
                 (ep.lattice_.position_(site2) - mirrorvector);
             result += ewaldRealB(r, ep.alpha_) * geometry::eye<3>() + 
