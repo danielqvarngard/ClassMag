@@ -119,6 +119,10 @@ namespace classmag::geometry{
             return bravais_;
         }
 
+        std::array<unsigned int, dimension> getSize_() const {
+            return systemSize_;
+        }
+
         Euclidean<dimension> position_(unsigned int site) const{
 
             auto offset = 0u;

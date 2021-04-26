@@ -15,6 +15,10 @@ namespace classmag::base{
         return result;
     }
 
+    double ewaldRealB(geometry::Euclidean<3> e, double alpha){
+        return ewaldRealB(geometry::norm(e), alpha);
+    }
+
     geometry::Matrix<3,3> ewaldRealC(geometry::Euclidean<3> r, double alpha){
         auto x = norm(r);
         auto c = 3.0 * erfc(sqrt(alpha)*x)/(pow(x,5.0));
@@ -29,7 +33,12 @@ namespace classmag::base{
         auto result = geometry::eye<3>();
         auto range = integerSweepFull<3>(ep.realMirrors_);
         for (auto n : range){
-            
+            const auto size = ep.lattice_.getSize_();
+            auto mirrorvector = geometry::elementwise<unsigned int,3>(size,n);
+            auto r = ep.lattice_.position_(site1) - 
+                (ep.lattice_.position_(site2) - mirrorvector);
+            result += ewaldRealB(r, ep.alpha_) * geometry::eye<3>() + 
+                ewaldRealC(r, ep.alpha_);
         }
         return result;
     }
