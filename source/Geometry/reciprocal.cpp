@@ -12,6 +12,7 @@ namespace classmag::geometry{
             auto norm_factor = 2.0 * M_PI / (bravais[ii] * cr);
             result[ii] = cr * norm_factor;
         }
+        return result;
     }
      
 }
