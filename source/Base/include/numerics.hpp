@@ -28,7 +28,7 @@ namespace classmag::base{
 
     template<unsigned int dimension>
     std::vector<geometry::Euclidean<dimension>> integerSweepFull(unsigned int nmax){
-        auto offsets = integerSweepPositive<dimension>(nmax);
+        auto offsets = integerSweepPositive<dimension>(2u * nmax);
         auto corner = geometry::Euclidean<dimension>();
         corner.fill(-1.0 * nmax);
         auto result = std::vector<geometry::Euclidean<dimension>>(offsets.size() + 1);
