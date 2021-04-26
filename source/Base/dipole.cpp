@@ -31,7 +31,13 @@ namespace classmag::base{
         const unsigned int site2,
         const EwaldProfile &ep){
         auto result = geometry::eye<3>();
-        auto range = integerSweepFull<3>(ep.realMirrors_);
+        auto range = std::vector<geometry::Euclidean<3>>();
+        
+        if (site1 == site2)
+            range = integerSweepExclude<3>(ep.realMirrors_);
+        else
+            range = integerSweepFull<3>(ep.realMirrors_);
+        
         for (auto n : range){
             const auto size = ep.lattice_.getSize_();
             auto mirrorcoefficients = geometry::elementwise<unsigned int,3>(size,n);
@@ -44,7 +50,7 @@ namespace classmag::base{
                 ewaldRealC(r, ep.alpha_);
         }
 
-        range = integerSweepPositive<3>(ep.recMirrors_);
+        range = integerSweepExclude<3>(ep.recMirrors_);
         auto reclattice = geometry::reciprocalBasis(ep.lattice_.getBravais_());
         auto r = ep.lattice_.position_(site1) - ep.lattice_.position_(site2);
         for (auto n : range){

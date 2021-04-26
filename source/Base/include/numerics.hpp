@@ -38,6 +38,26 @@ namespace classmag::base{
         }
         return result;
     }
+
+    template<unsigned int dimension>
+    std::vector<geometry::Euclidean<dimension>> integerSweepExclude(unsigned int nmax){
+        auto offsets = integerSweepPositive<dimension>(2u * nmax);
+        auto corner = geometry::Euclidean<dimension>();
+        corner.fill(-1.0 * nmax);
+        auto result = std::vector<geometry::Euclidean<dimension>>(offsets.size());
+        result[0] = corner;
+        auto originIndex = 0u;
+        for (auto ii = 0u; ii < dimension; ++ii){
+            originIndex += static_cast<unsigned int>(pow(2*nmax,ii)) * nmax;
+        }
+        for (auto ii = 0u; ii < originIndex; ++ii){
+            result[ii + 1] = corner + offsets[ii];
+        }
+        for (auto ii = originIndex + 1u; ii < offsets.size(); ++ii){
+            result[ii] = corner + offsets[ii];
+        }
+        return result;
+    }
     
 }
 

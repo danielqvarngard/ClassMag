@@ -32,6 +32,8 @@ namespace classmag::base{
         double recMirrors_;
     };
 
+    geometry::Matrix<3,3> ewaldSelf(EwaldProfile &ep);  
+
     geometry::Matrix<3,3> dipoleMatrix(
         const unsigned int site1, 
         const unsigned int site2,
