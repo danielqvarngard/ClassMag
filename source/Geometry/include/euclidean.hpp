@@ -193,6 +193,18 @@ namespace classmag::geometry{
         }
         return result;
     }
+
+    template<unsigned int dimension, unsigned int n_coeffs>
+    Euclidean<dimension> linearCombination(
+        const Euclidean<n_coeffs> &coefficients,
+        const std::array<Euclidean<dimension>,n_coeffs> &vectors){
+        Euclidean<dimension> result;
+        result.fill(0.0);
+        for (auto ii = 0u; ii < n_coeffs; ++ii){
+            result += coefficients[ii]*vectors[ii];
+        }
+        return result;
+    }
 }
 
 
