@@ -27,7 +27,10 @@ namespace classmag::base{
         const unsigned int site2,
         const EwaldProfile &ep){
         auto result = geometry::eye<3>();
-        auto realRange = integerSweepPositive<3>(ep.realMirrors_);
+        auto range = integerSweepFull<3>(ep.realMirrors_);
+        for (auto n : range){
+            
+        }
         return result;
     }
 

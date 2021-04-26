@@ -160,6 +160,39 @@ namespace classmag::geometry{
             e[ii] = e_copy[(ii + 1) % dimension];
         }
     }
+
+    template<unsigned int dimension>
+    Euclidean<dimension> elementwise(
+        const Euclidean<dimension> &e1, 
+        const Euclidean<dimension> &e2){
+        Euclidean<dimension> result;
+        for (auto ii = 0u; ii < dimension; ++ii){
+            result[ii] = e1[ii]*e2[ii];
+        }
+        return result;
+    }
+
+    template<typename T, unsigned int dimension>
+    Euclidean<dimension> elementwise(
+        const Euclidean<dimension> &e, 
+        const std::array<T, dimension> &array){
+        Euclidean<dimension> result;
+        for (auto ii = 0u; ii < dimension; ++ii){
+            result[ii] = e[ii]*static_cast<double>(array[ii]);
+        }
+        return result;
+    }
+
+    template<typename T, unsigned int dimension>
+    Euclidean<dimension> elementwise(
+        const std::array<T, dimension> &array,
+        const Euclidean<dimension> &e){
+        Euclidean<dimension> result;
+        for (auto ii = 0u; ii < dimension; ++ii){
+            result[ii] = e[ii]*static_cast<double>(array[ii]);
+        }
+        return result;
+    }
 }
 
 
