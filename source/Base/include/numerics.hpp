@@ -28,15 +28,14 @@ namespace classmag::base{
 
     template<unsigned int dimension>
     std::vector<geometry::Euclidean<dimension>> integerSweepFull(unsigned int nmax){
-        auto result = integerSweepPositive<dimension>(nmax);
-        auto negative = result;
-        for (auto ii = 0u; ii < negative.size(); ++ii){
-            negative[ii] *= -1.0;
+        auto offsets = integerSweepPositive<dimension>(nmax);
+        auto corner = geometry::Euclidean<dimension>();
+        corner.fill(-1.0 * nmax);
+        auto result = std::vector<geometry::Euclidean<dimension>>(offsets.size() + 1);
+        result[0] = corner;
+        for (auto ii = 1u; ii < result.size(); ++ii){
+            result[ii] = corner + offsets[ii - 1];
         }
-        result.insert(std::end(result), std::begin(negative), std::end(negative));
-        auto origin = geometry::Euclidean<dimension>();
-        origin.fill(0.0);
-        result.push_back(origin);
         return result;
     }
     
