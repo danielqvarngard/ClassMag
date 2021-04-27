@@ -15,10 +15,9 @@ namespace classmag::base{
         }
         V *= abs(bravais[0] * geometry::cross(bravais[1], bravais[2]));
 
-        auto x = geometry::norm(k);
         return (4.0 * pi() / V) *
-            (cos(k*r) / (x * x)) * 
-            exp(-x*x/(4*ep.alpha_)) * geometry::extprod(k,k);
+            (cos(k*r) / (k * k)) * 
+            exp(-(k * k)/(4 * ep.alpha_)) * geometry::extprod(k,k);
     }
 
     double ewaldRealB(const double r, const EwaldProfile &ep){
