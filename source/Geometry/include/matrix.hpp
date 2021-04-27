@@ -113,6 +113,10 @@ namespace classmag::geometry{
         return result;
     }
 
+    template<unsigned int m = 2>
+    double det(std::array<Euclidean<2>,2> &M){
+        return M[1][1]*M[2][2] - M[1][2]*M[2][1];
+    }
 }
 
 #endif

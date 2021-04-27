@@ -6,7 +6,17 @@ namespace classmag::base{
         const geometry::Euclidean<3> &k, 
         const EwaldProfile &ep){
         auto x = geometry::norm(k);
-        return 4.0 * pi() * cos(k*r) * exp(-x*x/(4*ep.alpha_)) * geometry::extprod(k,k);
+        
+        auto size = ep.lattice_.getSize_();
+        auto bravais = ep.lattice_.getBravais_();
+
+        auto V = 1.0;
+        for (unsigned int ii = 0u; ii < 3; ++ii){
+            V *= size[ii];
+        }
+        V *= bravais[0] * geometry::cross(bravais[1], bravais[2]);
+
+        return (4.0 * pi() / V) * (cos(k*r) / (x * x)) * exp(-x*x/(4*ep.alpha_)) * geometry::extprod(k,k);
     }
 
     double ewaldRealB(const double r, const EwaldProfile &ep){
