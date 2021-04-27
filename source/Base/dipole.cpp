@@ -37,7 +37,7 @@ namespace classmag::base{
     }
 
     geometry::Matrix<3,3> ewaldSelf(const EwaldProfile &ep){
-        return 2.0 * M_PI/3.0 * pow(ep.alpha_/M_PI,1.5) * geometry::eye<3>();
+        return 2.0 * pi()/3.0 * pow(ep.alpha_/pi(),1.5) * geometry::eye<3>();
     }
 
     geometry::Matrix<3,3> dipoleMatrix(
