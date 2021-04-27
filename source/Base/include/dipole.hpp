@@ -9,6 +9,15 @@
 #include "couplingLookup.hpp"
 
 namespace classmag::base{
+
+    struct EwaldProfile{
+        geometry::Lattice<3> lattice_;
+        double alpha_;
+        double magnitude_;
+        double realMirrors_;
+        double recMirrors_;
+    };
+
     geometry::Euclidean<3> unscaledDipole(
         geometry::Euclidean<3> &s1, 
         geometry::Euclidean<3> &s2, 
@@ -18,19 +27,14 @@ namespace classmag::base{
     double dipoleMagnitude(double moment);
 
     geometry::Matrix<3,3> ewaldRec(
-        geometry::Euclidean<3> r,
-        geometry::Euclidean<3> k, 
-        double alpha);
-    double ewaldRealB(double r, double alpha);
-    double ewaldRealB(geometry::Euclidean<3> r, double alpha);
-    geometry::Matrix<3,3> ewaldRealC(geometry::Euclidean<3> r, double alpha);
-    struct EwaldProfile{
-        geometry::Lattice<3> lattice_;
-        double alpha_;
-        double magnitude_;
-        double realMirrors_;
-        double recMirrors_;
-    };
+        const geometry::Euclidean<3> &r,
+        const geometry::Euclidean<3> &k, 
+        const EwaldProfile &ep);
+    double ewaldRealB(const double r, const EwaldProfile &ep);
+    double ewaldRealB(const geometry::Euclidean<3> &r, const EwaldProfile &ep);
+    geometry::Matrix<3,3> ewaldRealC(
+        const geometry::Euclidean<3> &r, 
+        const EwaldProfile &ep);
 
     geometry::Matrix<3,3> ewaldSelf(const EwaldProfile &ep);  
 

@@ -88,7 +88,7 @@ namespace classmag::geometry{
     #endif
 
     template<unsigned int m>
-    Matrix<m,m> extprod(Euclidean<m>& e1, Euclidean<m>& e2){
+    Matrix<m,m> extprod(const Euclidean<m>& e1, const Euclidean<m>& e2){
         Matrix<m,m> result;
         for (auto ii = 0u; ii < m; ++ii){
             for (auto jj = 0u; jj < m; ++ii){
