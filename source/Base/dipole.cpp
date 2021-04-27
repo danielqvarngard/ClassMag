@@ -51,7 +51,7 @@ namespace classmag::base{
 
         if (site1 == site2){
             range = integerSweepExclude<3>(ep.realMirrors_);
-            result += ewaldSelf(ep);
+            result += (-1.0) * ewaldSelf(ep);
         }
         else
             range = integerSweepFull<3>(ep.realMirrors_);
@@ -65,7 +65,7 @@ namespace classmag::base{
             auto r = ep.lattice_.position_(site1) - 
                 (ep.lattice_.position_(site2) - mirrorvector);
             result += ewaldRealB(r, ep) * geometry::eye<3>() + 
-                ewaldRealC(r, ep);
+                (-1.0) * ewaldRealC(r, ep);
         }
 
         range = integerSweepExclude<3>(ep.recMirrors_);
