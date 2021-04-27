@@ -39,7 +39,7 @@ namespace classmag::base{
     }
 
     geometry::Matrix<3,3> ewaldSelf(const EwaldProfile &ep){
-        return 2.0 * pi()/3.0 * pow(ep.alpha_/pi(),1.5) * geometry::eye<3>();
+        return -2.0 * pi()/3.0 * pow(ep.alpha_/pi(),1.5) * geometry::eye<3>();
     }
 
     geometry::Matrix<3,3> dipoleMatrix(
@@ -51,7 +51,7 @@ namespace classmag::base{
 
         if (site1 == site2){
             range = integerSweepExclude<3>(ep.realMirrors_);
-            result += (-1.0) * ewaldSelf(ep);
+            result += ewaldSelf(ep);
         }
         else
             range = integerSweepFull<3>(ep.realMirrors_);
