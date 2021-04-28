@@ -69,6 +69,9 @@ namespace classmag::base{
 
         range = integerSweepExclude<3>(ep.recMirrors_);
         auto reclattice = geometry::reciprocalBasis(ep.lattice_.getBravais_());
+        for (auto ii = 0u; ii < 3; ++ii){
+            reclattice[ii] *= 1.0/ep.lattice_.getSize_()[ii];
+        }
         auto r = ep.lattice_.position_(site1) - ep.lattice_.position_(site2);
         for (auto n : range){
             auto k = geometry::linearCombination<3,3>(n,reclattice);
