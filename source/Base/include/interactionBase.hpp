@@ -1,9 +1,9 @@
 #include "couplingLookup.hpp"
-#include "Geometry/include/lattice.hpp"
+#include "Geometry/include/euclidean.hpp"
 
 namespace classmag::base{
-    template<unsigned int dimension>
-    class InteractionBase{
+    template<unsigned int spinDimension> 
+    class Interaction{
         public:
         virtual CouplingLookup generateTable(
             geometry::Lattice<dimension> lat){
@@ -11,8 +11,10 @@ namespace classmag::base{
         };
         virtual CouplingLookup generateTable(
             geometry::Lattice<dimension> lat, double cutoff);
+
+        virtual geometry::Euclidean<spinDimension>
         protected:
-        InteractionBase(){
+        Interaction(){
 
         }
     };
