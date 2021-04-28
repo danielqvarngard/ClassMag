@@ -106,3 +106,24 @@ target_include_directories(
     PRIVATE
     ${CMAKE_SOURCE_DIR}/source
 )
+
+add_executable(
+    testEwald.exe
+    testEwald.cpp
+)
+
+target_link_libraries(
+    testEwald.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+)
+
+target_include_directories(
+    pt.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
