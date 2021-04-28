@@ -10,6 +10,11 @@ namespace classmag::base{
     double pi();
     
     std::vector<double> shanks(std::vector<double> &x);
+
+    std::vector<double> linspace(
+        const double min, 
+        const double max, 
+        const unsigned int stepCount);
     
     template<unsigned int dimension>
     std::vector<geometry::Euclidean<dimension>> integerSweepPositive(unsigned int nmax){
