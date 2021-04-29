@@ -2,10 +2,16 @@
 
 #include "Base/include/dipole.hpp"
 using namespace classmag;
+
+template<unsigned int dim>
+void printEuclidean(geometry::Euclidean<dim> &e){
+    for (auto d : e)
+        std::cout << d << " ";
+    std::cout << "\n";
+}
+
 int main(int argc, char* argv[]){
-    const auto nmin = 3u, nmax = 10u;
-    const auto alphaset = base::linspace(0.5, 1.5, 9u);
-    for (auto ii = nmin; ii < nmax; ++ii){
-        
-    }
+    auto swf = base::integerSweepExclude<3>(3u);
+    for (auto e : swf)
+        printEuclidean(e);
 }
