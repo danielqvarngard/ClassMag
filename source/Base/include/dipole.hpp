@@ -18,10 +18,10 @@ namespace classmag::base{
 
         };
         geometry::Lattice<3> lattice_;
-        double alpha_;
-        double magnitude_;
-        double realMirrors_;
-        double recMirrors_;
+        double alpha_ = 1.0;
+        double magnitude_ = 1.0;
+        unsigned int realMirrors_ = 0u;
+        unsigned int recMirrors_ = 0u;
     };
 
     geometry::Euclidean<3> unscaledDipole(

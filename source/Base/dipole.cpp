@@ -32,7 +32,7 @@ namespace classmag::base{
 
     geometry::Matrix<3,3> ewaldRealC(const geometry::Euclidean<3> &r, const EwaldProfile &ep){
         auto x = norm(r);
-        auto c = 3.0 * erfc(sqrt(ep.alpha_)*x)/(pow(x,5.0));
+        auto c = 3.0 * erfc(sqrt(ep.alpha_)*x)/(x*x*x*x*x);
         c += 2.0*sqrt(ep.alpha_/pi()) * (2.0 * ep.alpha_ + 3/(r*r)) * exp(-ep.alpha_*r*r)/(r*r);
         return c * geometry::extprod(r,r);
     }
@@ -54,6 +54,7 @@ namespace classmag::base{
         }
         else
             range = integerSweepFull<3>(ep.realMirrors_);
+        
         for (auto n : range){
             const auto size = ep.lattice_.getSize_();
             auto mirrorcoefficients = geometry::elementwise<unsigned int,3>(size,n);
@@ -63,12 +64,12 @@ namespace classmag::base{
             auto r = ep.lattice_.position_(site1) - 
                 (ep.lattice_.position_(site2) - mirrorvector);
             result += ewaldRealB(r, ep) * geometry::eye<3>() + 
-                (-1.0) * ewaldRealC(r, ep);
+                ((-1.0) * ewaldRealC(r, ep));
         }
         range = integerSweepExclude<3>(ep.recMirrors_);
         auto reclattice = geometry::reciprocalBasis(ep.lattice_.getBravais_());
         for (auto ii = 0u; ii < 3; ++ii){
-            reclattice[ii] *= 1.0/ep.lattice_.getSize_()[ii];
+            reclattice[ii] *= (M_PI/3.0)/ep.lattice_.getSize_()[ii]; // wtf is this prefactor
         }
         auto r = ep.lattice_.position_(site1) - ep.lattice_.position_(site2);
         for (auto n : range){

@@ -92,7 +92,7 @@ namespace classmag::geometry{
         Matrix<m,m> result;
         for (auto ii = 0u; ii < m; ++ii){
             for (auto jj = 0u; jj < m; ++jj){
-                result[ii][jj] = e1[ii]*e2[ii];
+                result[ii][jj] = e1[ii]*e2[jj];
             }
         }
         return result;
@@ -116,6 +116,15 @@ namespace classmag::geometry{
     template<unsigned int m = 2>
     double det(std::array<Euclidean<2>,2> &M){
         return M[1][1]*M[2][2] - M[1][2]*M[2][1];
+    }
+
+    template<unsigned int dim>
+    double trace(const Matrix<dim,dim> &m){
+        auto result = 0.0;
+        for (auto ii = 0u; ii < dim; ++ii){
+            result += m[ii][ii];
+        }
+        return result;
     }
 }
 
