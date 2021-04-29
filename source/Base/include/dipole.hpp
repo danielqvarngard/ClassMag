@@ -11,6 +11,12 @@
 namespace classmag::base{
 
     struct EwaldProfile{
+        public:
+        EwaldProfile(geometry::Lattice<3> lat):
+            lattice_(lat)
+            {
+
+        };
         geometry::Lattice<3> lattice_;
         double alpha_;
         double magnitude_;

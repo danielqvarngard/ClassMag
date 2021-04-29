@@ -54,7 +54,6 @@ namespace classmag::base{
         }
         else
             range = integerSweepFull<3>(ep.realMirrors_);
-        
         for (auto n : range){
             const auto size = ep.lattice_.getSize_();
             auto mirrorcoefficients = geometry::elementwise<unsigned int,3>(size,n);
@@ -66,7 +65,6 @@ namespace classmag::base{
             result += ewaldRealB(r, ep) * geometry::eye<3>() + 
                 (-1.0) * ewaldRealC(r, ep);
         }
-
         range = integerSweepExclude<3>(ep.recMirrors_);
         auto reclattice = geometry::reciprocalBasis(ep.lattice_.getBravais_());
         for (auto ii = 0u; ii < 3; ++ii){

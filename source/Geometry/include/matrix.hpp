@@ -91,7 +91,7 @@ namespace classmag::geometry{
     Matrix<m,m> extprod(const Euclidean<m>& e1, const Euclidean<m>& e2){
         Matrix<m,m> result;
         for (auto ii = 0u; ii < m; ++ii){
-            for (auto jj = 0u; jj < m; ++ii){
+            for (auto jj = 0u; jj < m; ++jj){
                 result[ii][jj] = e1[ii]*e2[ii];
             }
         }
