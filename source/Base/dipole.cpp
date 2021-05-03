@@ -1,6 +1,23 @@
 #include "include/dipole.hpp"
 
 namespace classmag::base{
+    double optimAlpha(
+        const unsigned int N, 
+        const unsigned int V,
+        const double tauR, 
+        const double tauF)
+    {
+        auto arg = (tauR * pi() * N)/(tauF * V * V);
+        return pow(arg, 1.0/6.0);
+    }
+
+    double optimAlpha(
+        const unsigned int N, 
+        const unsigned int V)
+    {
+        return optimAlpha(N, V, 1.0, 1.0);
+    }
+
     geometry::Matrix<3,3> ewaldRec(
         const geometry::Euclidean<3> &r, 
         const geometry::Euclidean<3> &k, 

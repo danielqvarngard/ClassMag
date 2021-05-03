@@ -5,34 +5,46 @@
 using namespace classmag;
 
 template<unsigned int dim>
-void printEuclidean(geometry::Euclidean<dim> &e){
+void print(geometry::Euclidean<dim> &e){
     for (auto d : e)
         std::cout << d << " ";
     std::cout << "\n";
+}
+
+void print(std::vector<double> &v){
+    for (auto d : v)
+        std::cout << d << " ";
+    std::cout << "\n";
+}
+
+double volume(const geometry::Lattice<3> &lat){
+    auto bravais = lat.getBravais_();
+    auto size = lat.getSize_();
+    auto V = static_cast<double>(size[0]*size[1]*size[2]);
+    V *= abs(bravais[0] * geometry::cross(bravais[1],bravais[2]));
+    return V;
 }
 
 int main(int argc, char* argv[]){
     auto size = std::array<unsigned int,3>{8u, 8u, 8u};
     auto lat = geometry::Lattice(geometry::cubicLattice<3>(size));
     auto ep = base::EwaldProfile(lat);
-    ep.alpha_ = 1.0;
+    ep.alpha_ = base::optimAlpha(lat.n_sites_(),volume(lat));
     ep.magnitude_ = 2.0;
     #if 1
     auto nmin = 2u;
-    auto nmax = 30u;
+    auto nmax = 10u;
+    std::vector<double> result;
     for (auto ii = nmin; ii <= nmax; ++ii){
-        auto trq = 1.0;
         ep.realMirrors_ = ii;
         ep.recMirrors_ = ii;
-        ep.alpha_ = 1;
-        auto mat  = base::dipoleMatrix(0u, 1u, ep);
-        ep.realMirrors_ = ii;
-        ep.recMirrors_ = ii;
-        trq *= geometry::trace(mat);
-        ep.alpha_ = 0.99;
-        auto mat2 = base::dipoleMatrix(0u, 1u, ep);
-        trq *= 1.0/(geometry::trace(mat2));
-        std::cout << 100.0 * abs(1.0 - trq) << "\n"; 
+        auto mat = base::dipoleMatrix(0u, 0u, ep);
+        auto trq = geometry::trace(mat);
+        result.push_back(trq);
     }
     #endif
+    for (auto ii = 0u; ii < result.size(); ++ii){
+        result[ii] *= 1.0/result[result.size() - 1u];
+    }
+    print(result);
 }

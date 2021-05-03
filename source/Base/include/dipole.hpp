@@ -32,6 +32,16 @@ namespace classmag::base{
     double dipoleMagnitude(double moment, double latticeConstant);
     double dipoleMagnitude(double moment);
 
+    double optimAlpha(
+        const unsigned int N, 
+        const unsigned int V,
+        const double tauR, 
+        const double tauF);
+
+    double optimAlpha(
+        const unsigned int N, 
+        const unsigned int V);
+
     geometry::Matrix<3,3> ewaldRec(
         const geometry::Euclidean<3> &r,
         const geometry::Euclidean<3> &k, 
