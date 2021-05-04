@@ -9,6 +9,7 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/numerics.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/numerics.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dipole.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/linearCoupling.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/dipole.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/hasxStagMag.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/magnetizationData.hpp

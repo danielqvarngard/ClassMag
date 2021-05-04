@@ -1,4 +1,5 @@
 #include "include/dipole.hpp"
+#include "include/linearCoupling.hpp"
 
 namespace classmag::base{
     double optimAlpha(
@@ -50,7 +51,7 @@ namespace classmag::base{
     geometry::Matrix<3,3> ewaldRealC(const geometry::Euclidean<3> &r, const EwaldProfile &ep){
         auto x = norm(r);
         auto c = 3.0 * erfc(sqrt(ep.alpha_)*x)/(x*x*x*x*x);
-        c += 2.0*sqrt(ep.alpha_/pi()) * (2.0 * ep.alpha_ + 3/(r*r)) * exp(-ep.alpha_*r*r)/(r*r);
+        c += 2.0*sqrt(ep.alpha_/pi()) * (2.0 * ep.alpha_ + 3/(x*x)) * exp(-ep.alpha_*x*x)/(x*x);
         return c * geometry::extprod(r,r);
     }
 
@@ -97,11 +98,21 @@ namespace classmag::base{
     }
 
     void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &ep){
+        // Deprecated, use DenseCouplings instead, will remove in future commit
         auto nsq = ep.lattice_.n_sites_() * ep.lattice_.n_sites_();
         for (auto ii = 0u; ii < nsq; ++ii){
             auto site1 = ii % ep.lattice_.n_sites_();
             auto site2 = (ii - site1)/ep.lattice_.n_sites_();
             targetLookup.couplingTable_[ii] += dipoleMatrix(site1, site2, ep);
+        }
+    }
+
+    void addDipole(CouplingsMatrixDense<3> &target, const EwaldProfile& ep){
+        for (auto ii = 0u; ii < ep.lattice_.n_sites_(); ++ii){
+            for (auto jj = ii; jj < ep.lattice_.n_sites_(); ++jj){
+                auto x = dipoleMatrix(ii,jj,ep);
+                target.add(ii,jj,x);
+            }
         }
     }
 }

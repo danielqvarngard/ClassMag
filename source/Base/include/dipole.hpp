@@ -60,6 +60,7 @@ namespace classmag::base{
         const EwaldProfile &ep);
 
     void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &ep);
+    void addDipole(CouplingsMatrixDense<3> &target, const EwaldProfile& ep);
 }
 
 #endif
