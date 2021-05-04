@@ -8,7 +8,7 @@ namespace classmag::base{
     template<unsigned int dim>
     class LinearCouplings{
         public:
-        virtual Euclidean<dim> field(
+        virtual geometry::Euclidean<dim> field(
             const unsigned int site, 
             const SpinStructure<dim>& spins) const
         {
@@ -16,7 +16,7 @@ namespace classmag::base{
         }
         
         protected:
-        linearCoupling()
+        LinearCouplings()
         {
 
         }
@@ -83,7 +83,7 @@ namespace classmag::base{
     template<unsigned int dim>
     class CouplingScalarDense : public CouplingsDense<double, dim>
     {
-        
+
     };
 }
 
