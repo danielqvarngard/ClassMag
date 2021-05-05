@@ -7,6 +7,7 @@
 #include "Geometry/include/reciprocal.hpp"
 #include "numerics.hpp"
 #include "couplingLookup.hpp"
+#include "linearCoupling.hpp"
 
 namespace classmag::base{
 
