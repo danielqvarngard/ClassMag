@@ -140,7 +140,7 @@ namespace classmag::montecarlo{
             for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
                 auto z = 0.0;
                 for (unsigned int jj = 0; jj < this->n_sites_; ++jj){
-                    z += lookup_.coupling_(ii,jj);
+                    z += lookup_.coupling(ii,jj);
                 }
                 std::cout << z << " ";
             }

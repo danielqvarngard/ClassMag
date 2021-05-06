@@ -131,4 +131,20 @@ target_include_directories(
 add_executable(
     testAbstraction.exe
     testAbstraction.cpp
+)   
+
+target_link_libraries(
+    testAbstraction.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+)
+
+target_include_directories(
+    testAbstraction.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
 )
