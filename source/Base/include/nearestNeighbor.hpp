@@ -9,7 +9,13 @@ namespace classmag::base{
     template<unsigned int dimension>
     struct NNProfile{
         public:
-        geometry::Lattice<dimension>& lattice;
+        NNProfile(const geometry::Lattice<dimension>& latref):
+        lattice(latref)
+        {
+
+        }
+
+        const geometry::Lattice<dimension>& lattice;
         double cutoff;
         double magnitude;
     };
@@ -51,7 +57,7 @@ namespace classmag::base{
         for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
             for (auto jj = ii; jj < nnp.lattice.n_sites_(); ++jj){
                 if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff)
-                    target.add(ii,jj, nnp.magnitude);
+                    target.add(ii, jj, nnp.magnitude);
             }
         }
     };

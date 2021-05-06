@@ -1,6 +1,8 @@
 #ifndef CLASSMAG_BASE_LINEARCOUPLING_HPP
 #define CLASSMAG_BASE_LINEARCOUPLING_HPP
 
+#include <iostream>
+
 #include "Geometry/include/matrix.hpp"
 #include "spinStructure.hpp"
 
@@ -12,7 +14,9 @@ namespace classmag::base{
             const unsigned int site, 
             const SpinStructure<dim>& spins) const
         {
-            
+            auto result = geometry::Euclidean<dim>();
+            result.fill(0.0);
+            return result;
         }
         
         protected:
@@ -38,6 +42,8 @@ namespace classmag::base{
             return result;
         }
 
+        
+
         inline void add(
             const unsigned int a, 
             const unsigned int b,
@@ -45,6 +51,15 @@ namespace classmag::base{
         {
             couplingvalues[index(a,b)] += x;
         }
+
+        protected:
+
+        std::vector<T> couplingvalues;
+        CouplingsDense(){
+
+        };
+
+        unsigned int n_sites;
 
         private:
         inline unsigned int columnIndex(const unsigned int a) const
@@ -65,25 +80,42 @@ namespace classmag::base{
             return couplingvalues[index(a,b)];
         };
         
-        unsigned int n_sites;
-        std::vector<T> couplingvalues;
+        
 
-        protected:
-        CouplingsDense(){
-
-        };
     };
     
     template<unsigned int dim>
     class CouplingsMatrixDense : public CouplingsDense<geometry::Matrix<dim, dim>, dim>
     {
-        // ISK
+        public:
+        CouplingsMatrixDense(){
+
+        };
+
+        CouplingsMatrixDense(const unsigned int n_sites)
+        {
+            this->n_sites = n_sites;
+            auto n_elems = (n_sites * (n_sites + 1))/2u;
+            this->couplingvalues.resize(n_elems);
+            for (auto ii = 0u; ii < n_elems; ++ii){
+                this->couplingvalues[ii] = 0.0 * geometry::eye<3>();
+            }
+        }
     };
 
     template<unsigned int dim>
     class CouplingScalarDense : public CouplingsDense<double, dim>
     {
-
+        public:
+        CouplingScalarDense(const unsigned int n_sites)
+        {
+            this->n_sites = n_sites;
+            auto n_elems = (n_sites * (n_sites + 1))/2u;
+            this->couplingvalues.resize(n_elems);
+            for (auto ii = 0u; ii < n_elems; ++ii){
+                this->couplingvalues[ii] = 0.0;
+            }
+        }
     };
 }
 

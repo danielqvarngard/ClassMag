@@ -183,7 +183,7 @@ namespace classmag::montecarlo{
         
         private:
         const VectorModel_Profile mcp_;
-        const base::LinearCouplings<dim>& lookup_;
+        const base::LinearCouplings<spinDimension>& lookup_;
         std::mt19937 rng_;
         base::OrderParameters<spinDimension> orderParameters_;
 
