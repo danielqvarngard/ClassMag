@@ -8,10 +8,10 @@ namespace classmag::montecarlo{
         public:
         unsigned int thermalization_;
         unsigned int measurement_;
-        unsigned int skips_;
-        unsigned int overrelax_;
+        unsigned int skips_ = 1u;
+        unsigned int overrelax_ = 0u;
         unsigned int n_sites_;
-        unsigned int seed_;
+        unsigned int seed_ = 0u;
         std::vector<unsigned int> partitions_ = {0u};
 
         template<unsigned int dimension>

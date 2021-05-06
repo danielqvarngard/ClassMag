@@ -42,7 +42,7 @@ namespace classmag::base{
         const NNProfile<dimension>& nnp)
     {
         for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
-            for (auto jj = ii; jj < nnp.lattice.n_sites_(); ++jj){
+            for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
                 if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff)
                     target.add(ii,jj, nnp.magnitude*geometry::eye<spinDim>());
             }
@@ -55,7 +55,7 @@ namespace classmag::base{
         const NNProfile<dimension>& nnp)
     {
         for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
-            for (auto jj = ii; jj < nnp.lattice.n_sites_(); ++jj){
+            for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
                 if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff)
                     target.add(ii, jj, nnp.magnitude);
             }
