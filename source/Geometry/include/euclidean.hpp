@@ -117,7 +117,7 @@ namespace classmag::geometry{
     }
 
     template<unsigned int dimension>
-    double norm(const Euclidean<dimension> e){
+    double norm(const Euclidean<dimension> &e){
         return sqrt(e*e);
     }
 

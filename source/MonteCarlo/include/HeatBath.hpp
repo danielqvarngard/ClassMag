@@ -157,6 +157,15 @@ namespace classmag::montecarlo{
 
         double beta_ = 1.0;
 
+        geometry::Euclidean<spinDimension> spinsum_() const{
+            auto result = geometry::Euclidean<spinDimension>();
+            result.fill(0.0);
+            for (auto ii = 0u; ii < this->n_sites_; ++ii){
+                result += this->spin_[ii];
+            }
+            return result;
+        }
+
         std::vector<geometry::Euclidean<spinDimension>> magnetization_(){
             auto n_sublattices = mcp_.partitions_.size() - 1;
             geometry::Euclidean<spinDimension> initialvalue;

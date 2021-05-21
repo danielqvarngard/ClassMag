@@ -13,7 +13,7 @@ namespace classmag::fileio{
         VectorTarget(const unsigned int n):
         messageLength_(n)
         {
-
+            data_.resize(n);
         }
 
         std::vector<std::vector<double>> data_;

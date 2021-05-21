@@ -148,3 +148,42 @@ target_include_directories(
     PRIVATE
     ${CMAKE_SOURCE_DIR}/source
 )
+
+add_executable(
+    testMPI.exe
+    testMPI.cpp
+)   
+
+target_link_libraries(
+    testMPI.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+)
+
+target_include_directories(
+    testMPI.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+if(0)
+add_executable(
+    fileio.exe
+    fileio.cpp
+)   
+
+target_link_libraries(
+    fileio.exe
+    PRIVATE
+    ClassMag_FileIO
+)
+
+target_include_directories(
+    fileio.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+endif()

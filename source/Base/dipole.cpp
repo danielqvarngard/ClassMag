@@ -94,7 +94,7 @@ namespace classmag::base{
             auto k = geometry::linearCombination<3,3>(n,reclattice);
             result += ewaldRec(r,k,ep);
         }
-        return result;
+        return (-1.0) * result;
     }
 
     void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &ep){

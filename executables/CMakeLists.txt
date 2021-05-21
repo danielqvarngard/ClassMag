@@ -14,3 +14,20 @@ target_link_libraries(
     PRIVATE
     ClassMag_MonteCarlo
 )
+
+add_executable(
+    isingpt.mpix
+    isingpt.cpp
+)
+
+target_include_directories(
+    isingpt.mpix
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+target_link_libraries(
+    isingpt.mpix
+    PRIVATE
+    ClassMag_ParallelTempering
+)

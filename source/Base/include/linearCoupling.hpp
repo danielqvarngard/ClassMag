@@ -18,6 +18,10 @@ namespace classmag::base{
             result.fill(0.0);
             return result;
         }
+
+        virtual inline unsigned int get_n() const {
+            return 0u;
+        }
         
         protected:
         LinearCouplings()
@@ -52,6 +56,15 @@ namespace classmag::base{
             couplingvalues[index(a,b)] += x;
         }
 
+        inline T coupling(const unsigned int a, const unsigned int b) const
+        {
+            return couplingvalues[index(a,b)];
+        };
+
+        virtual inline unsigned int get_n() const override{
+            return n_sites;
+        }
+
         protected:
 
         std::vector<T> couplingvalues;
@@ -74,14 +87,6 @@ namespace classmag::base{
             else
                 return (a + columnIndex(b));
         }
-        
-        inline T coupling(const unsigned int a, const unsigned int b) const
-        {
-            return couplingvalues[index(a,b)];
-        };
-        
-        
-
     };
     
     template<unsigned int dim>
