@@ -100,6 +100,11 @@ namespace classmag::geometry{
     template <unsigned int dimension>
     class Lattice{
         public:
+
+        Lattice<dimension>(){
+
+        }
+
         Lattice<dimension>(
             const std::array<Euclidean<dimension>,dimension> &bravais,
             const std::array<unsigned int,dimension> &systemSize):
@@ -320,9 +325,17 @@ namespace classmag::geometry{
             return result;
         }
 
+        void set_bravais(const std::array<Euclidean<dimension>,dimension>&bravais){
+            bravais_ = bravais;
+        }
+
+        void set_size(const std::array<unsigned int, dimension>& size){
+            systemSize_ = size;
+        }
+
         private:
-        const std::array<Euclidean<dimension>,dimension> bravais_;
-        const std::array<unsigned int,dimension> systemSize_; 
+        std::array<Euclidean<dimension>,dimension> bravais_;
+        std::array<unsigned int,dimension> systemSize_; 
         std::vector<SubLattice<dimension>> subLattice_;
     };
 

@@ -5,6 +5,8 @@
 #include <sstream>
 #include <array>
 #include <vector>
+#include <map>
+#include <stdexcept>
 
 std::string readEntryName(const std::string &row){
     std::stringstream stream;
@@ -93,18 +95,65 @@ void printmatrix(std::vector<std::array<T, dim>> &matrix){
     }
 }
 
+enum StringLabels{
+    PDI_INVALID = -1,
+    PDI_FOO = 1,
+    PDI_BAR = 2
+};
+
+std::map<const std::string, int> mapsetup(){
+    std::map<const std::string, int> result;
+    result["foo"] = PDI_FOO;
+    result["bar"] = PDI_BAR;
+    return result;
+}
+
+
 int main(int argc, char* argv[]){
+    #if 0
+    const auto mappus = mapsetup();
+    const std::string str = "bat";
+    auto it = mappus.find(str);
+    if (it != mappus.end()){
+        switch (mappus.at(str))
+        {
+        case PDI_FOO:
+            std::cout << "foo detected\n";
+            break;
+        case PDI_BAR:
+            std::cout << "bar detected\n";
+            break;
+        default:
+            break;
+        }
+    }
+    else
+        std::cout << "bullshit string asshole\n";
+
+    #endif
+    #if 1
     std::ifstream ifp;
     for (auto ii = 0; ii < argc; ++ii){
         if (!std::strcmp(argv[ii], "-input")){
-            std::cout << "Input flag detected\n";
-            ifp.open(argv[ii + 1], std::ifstream::in);
+            try
+            {
+                ifp.open(argv[ii + 1], std::ifstream::in);
+                if(!ifp.is_open() || !ifp.good())
+                    throw std::runtime_error("File not found.");
+                std::cout << "Alles godt?\n";
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+                abort();
+            }
+            
+            
         }
     }
-
+    std::cout << "get going\n";
     int s = 0;
     int r = 0;
-
     if (ifp.is_open() && ifp.good()){
         std::cout << "ifp.is_open()\n";
         
@@ -127,5 +176,6 @@ int main(int argc, char* argv[]){
 
         }
     }
+    #endif
     return 0;
 }
