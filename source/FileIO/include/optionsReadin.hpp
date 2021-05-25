@@ -1,3 +1,6 @@
+#ifndef CLASSMAG_FILEIO_OPTIONSREADIN_HPP
+#define CLASSMAG_FILEIO_OPTIONSREADIN_HPP
+
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
@@ -5,6 +8,10 @@
 #include <sstream>
 
 #include "Base/include/linearCoupling.hpp"
+
+#include "readLattice.hpp"
+#include "readMCO.hpp"
+#include "readSpins.hpp"
 
 namespace classmag::fileio{
 
@@ -120,3 +127,5 @@ namespace classmag::fileio{
 
     }
 }
+
+#endif
