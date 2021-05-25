@@ -72,7 +72,7 @@ namespace classmag::fileio{
             abort();
         }
         
-        
+        return lattice;
     }
 }
 
