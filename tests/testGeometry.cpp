@@ -5,6 +5,7 @@
 #include "Geometry/include/matrix.hpp"
 #include "Geometry/include/lattice.hpp"
 #include "Geometry/include/predefLattices.hpp"
+#include "Base/include/numerics.hpp"
 #include "Base/include/nearestNeighbor.hpp"
 #include "MonteCarlo/include/VectorModelManager.hpp"
 #include "MonteCarlo/include/mcProfile.hpp"
@@ -21,13 +22,24 @@ void printLattice(const geometry::Lattice<dimension> lattice){
     }
 };
 
+template<unsigned int dim>
+void printDecorations(const std::vector<geometry::Euclidean<dim>>& v){
+    for (auto e : v){
+        for(auto x : e){
+            std::cout << x << " ";
+        }
+        std::cout << "\n";
+    }
+}
+
 int main(){
 
-    auto m = geometry::eye<3>();
-    auto v = geometry::Euclidean<3>{1.0, 2.0, 3.0};
-    m += (m + m);
-    auto u = m*v;
-    std::cout << u[0] << u[1] << u[2] << "\n";
+    auto positive = base::integerSweepPositive<3>(1);
+    auto full = base::integerSweepFull<3>(1);
+    auto exclude = base::integerSweepExclude<3>(1);
+    exclude.resize(2);
+    exclude = base::integerSweepExclude<3>(1);
+    printDecorations(full);
     #if 0
     montecarlo::VectorModel_Profile mcp;
     auto n_thermalize = 10000;

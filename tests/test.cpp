@@ -134,7 +134,7 @@ int main(int argc, char* argv[]){
     #if 1
     std::ifstream ifp;
     for (auto ii = 0; ii < argc; ++ii){
-        if (!std::strcmp(argv[ii], "-input")){
+        if (!strcmp(argv[ii], "-input")){
             try
             {
                 ifp.open(argv[ii + 1], std::ifstream::in);

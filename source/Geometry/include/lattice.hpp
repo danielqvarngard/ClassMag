@@ -325,11 +325,11 @@ namespace classmag::geometry{
             return result;
         }
 
-        void set_bravais(const std::array<Euclidean<dimension>,dimension>&bravais){
+        void setBravais_(const std::array<Euclidean<dimension>,dimension>&bravais){
             bravais_ = bravais;
         }
 
-        void set_size(const std::array<unsigned int, dimension>& size){
+        void setSize_(const std::array<unsigned int, dimension>& size){
             systemSize_ = size;
         }
 

@@ -32,6 +32,7 @@ namespace classmag::fileio{
     template<unsigned int latDim>
     geometry::Lattice<latDim> readLattice(const std::string& latticefile){
         auto strmap = mapsetup();
+        geometry::Lattice<latDim> lattice;
         try
         {
             std::ifstream ifp("latticefile");
@@ -50,12 +51,15 @@ namespace classmag::fileio{
                 if (it != strmap.end()){
                     switch (strmap.at(str))
                     {
-                    case PDI_FOO:
-                        std::cout << "foo detected\n";
+                    case PDI_GEO_SIZE:
+                        getline(ifp,str);
+                        lattice.setSize_(readRow<unsigned int,latDim>(str));
                         break;
-                    case PDI_BAR:
-                        std::cout << "bar detected\n";
+                    case PDI_GEO_BRAVAIS:
+                        lattice.setBravais_(readMatrix<double,latDim>(ifp));
                         break;
+                    case PDI_GEO_DECORATION:
+                        lattice.decorate_(readMatrix<double,latDim>(ifp));
                     default:
                         break;
                     }
