@@ -12,31 +12,7 @@
 namespace classmag::fileio{
 
     template<unsigned int latDim>
-    void readNNProfile(base::NNProfile<latDim>& nnp, std::ifstream& ifp){
-        auto read = true;
-        while (ifp.good() && read){
-            std::string line;
-            getline(ifp, line);
-            auto entry = readEntryName(line);
-            auto it = strmap.find(entry);
-            if (it != strmap.end()){
-                switch (strmap.at(entry))
-                {
-                case NNParams::BREAK:
-                    read = false;
-                    break;
-                case NNParams::MAGNITUDE:
-                    nnp.magnitude = readValue<double>(line);
-                    break;
-                case NNParams::CUTOFF:
-                    nnp.cutoff = readValue<double>(line);
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
-    }
+    void readNNProfile(base::NNProfile<latDim>& nnp, std::ifstream& ifp);
 
     template<unsigned int latDim, unsigned int spinDim>
     int readLinearInteractions(base::LinearCouplings<spinDim>& target, std::string& filename){
@@ -75,6 +51,34 @@ namespace classmag::fileio{
         
         return 0;
     };
+
+    template<unsigned int latDim>
+    void readNNProfile(base::NNProfile<latDim>& nnp, std::ifstream& ifp)
+    {
+        auto read = true;
+        while (ifp.good() && read){
+            std::string line;
+            getline(ifp, line);
+            auto entry = readEntryName(line);
+            auto it = strmap.find(entry);
+            if (it != strmap.end()){
+                switch (strmap.at(entry))
+                {
+                case NNParams::BREAK:
+                    read = false;
+                    break;
+                case NNParams::MAGNITUDE:
+                    nnp.magnitude = readValue<double>(line);
+                    break;
+                case NNParams::CUTOFF:
+                    nnp.cutoff = readValue<double>(line);
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+    }
 }
 
 #endif
