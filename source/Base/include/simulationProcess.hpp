@@ -52,7 +52,7 @@ namespace classmag::base{
         }
 
         SpinStructure<spinDimension> spin_;
-        unsigned int n_sites_;
+        unsigned int n_sites_ = 0u;
     };
 }
 
