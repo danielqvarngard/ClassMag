@@ -40,6 +40,10 @@ namespace classmag::base{
         }
         
         protected:
+        SimulationBase(){
+
+        };
+
         SimulationBase(unsigned int n_sites):
         n_sites_(n_sites)
         {

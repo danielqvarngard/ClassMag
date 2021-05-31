@@ -17,6 +17,27 @@ namespace classmag::montecarlo{
     template<unsigned int spinDimension>
     class HeatBath : public base::SimulationBase<spinDimension>{
         public:
+        HeatBath():
+        base::SimulationBase<spinDimension>(),
+        rng_(std::mt19937(mcp_.seed_)),
+        normalDistribution_(std::normal_distribution<double>()),
+        mcp_(VectorModel_Profile())
+        {
+
+        };
+
+        HeatBath(
+            const base::LinearCouplings<spinDimension> &c):
+        base::SimulationBase<spinDimension>(c.get_n()),
+        mcp_(VectorModel_Profile()),
+        lookup_(c),
+        rng_(std::mt19937(mcp_.seed_)),
+        normalDistribution_(std::normal_distribution<double>())
+        {
+            for (unsigned int ii = 0; ii < this->n_sites_; ++ii)
+                this->spin_[ii] = randomUnitVector_();
+        }
+
         HeatBath(
             VectorModel_Profile &mcp,
             const base::LinearCouplings<spinDimension> &c):
@@ -191,8 +212,8 @@ namespace classmag::montecarlo{
         }
         
         private:
-        const VectorModel_Profile mcp_;
-        const base::LinearCouplings<spinDimension>& lookup_;
+        VectorModel_Profile mcp_;
+        base::LinearCouplings<spinDimension>& lookup_;
         std::mt19937 rng_;
         base::OrderParameters<spinDimension> orderParameters_;
 
