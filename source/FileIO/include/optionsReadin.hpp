@@ -2,18 +2,38 @@
 #define CLASSMAG_FILEIO_OPTIONSREADIN_HPP
 
 #include <iostream>
-#include <fstream>
-#include <stdio.h>
-#include <string.h>
-#include <sstream>
 
 #include "Base/include/linearCoupling.hpp"
+#include "MonteCarlo/include/HeatBath.hpp"
 
 #include "readLattice.hpp"
 #include "readMCO.hpp"
 #include "readSpins.hpp"
 
 namespace classmag::fileio{
+
+    enum class OptState{
+        INVALID,
+        LATTICE,
+        LATTICEFILE,
+        SPINS,
+        SPINFILE,
+        MCSETTINGS,
+        ASDSETTINGS
+    };
+
+    std::map<const std::string, OptState> mapBranch(){
+        std::map<const std::string, OptState> result;
+        result["Lattice"] = OptState::LATTICE;
+        result["Lattice file"] = OptState::LATTICEFILE;
+        result["Lattice File"] = OptState::LATTICEFILE;
+        result["Spins"] = OptState::SPINS;
+        result["Spin file"] = OptState::SPINFILE;
+        result["Spin File"] = OptState::SPINFILE;
+        result["Monte Carlo settings"] = OptState::MCSETTINGS;
+        result["Monte Carlo Settings"] = OptState::MCSETTINGS;
+        return result;
+    }
 
     template<typename T, unsigned int dim>
     void printrow(std::array<T, dim> &row){
@@ -35,6 +55,11 @@ namespace classmag::fileio{
         std::string str;
         getline(ifp,str);
         readEntryName(str);
+
+    }
+
+    template<unsigned int latDim, unsigned int spinDim>
+    int readOptions(montecarlo::HeatBath<spinDim>& mc, const std::string& filename){
 
     }
 }

@@ -8,24 +8,24 @@
 #include "stringExtractions.hpp"
 
 namespace classmag::fileio{
-    enum GeometryOptions{
-        PDI_GEO_INVALID = -11,
-        PDI_GEO_SIZE = 11,
-        PDI_GEO_SUBLATTICE = 12,
-        PDI_GEO_BRAVAIS = 13,
-        PDI_GEO_DECORATION = 14,
-        PDI_GEO_PREDEFINED = 15
+    enum class GeoState{
+        INVALID,
+        SIZE,
+        SUBLATTICE,
+        BRAVAIS,
+        DECORATION,
+        PREDEFINED
     };
 
-    std::map<const std::string, int> mapsetup(){
-        std::map<const std::string, int> result;
-        result["Size"] = PDI_GEO_INVALID;
-        result["Sublattice"] = PDI_GEO_SIZE;
-        result["Bravais"] = PDI_GEO_BRAVAIS;
-        result["Bravais vectors"] = PDI_GEO_BRAVAIS;
-        result["Decoration"] = PDI_GEO_DECORATION;
-        result["Predefined"] = PDI_GEO_PREDEFINED;
-        result["Predefined lattice"] = PDI_GEO_PREDEFINED;
+    std::map<const std::string, GeoState> mapsetup(){
+        std::map<const std::string, GeoState> result;
+        result["Size"] = GeoState::SIZE;
+        result["Sublattice"] = GeoState::SUBLATTICE;
+        result["Bravais"] = GeoState::BRAVAIS;
+        result["Bravais vectors"] = GeoState::BRAVAIS;
+        result["Decoration"] = GeoState::DECORATION;
+        result["Predefined"] = GeoState::PREDEFINED;
+        result["Predefined lattice"] = GeoState::PREDEFINED;
         return result;
     }
 
@@ -47,18 +47,18 @@ namespace classmag::fileio{
                 str_stream << str;
                 std::string entry;
                 auto entry = readEntryName(entry);
-                auto it = map.find(str);
+                auto it = strmap.find(str);
                 if (it != strmap.end()){
                     switch (strmap.at(str))
                     {
-                    case PDI_GEO_SIZE:
+                    case GeoState::SIZE:
                         getline(ifp,str);
                         lattice.setSize_(readRow<unsigned int,latDim>(str));
                         break;
-                    case PDI_GEO_BRAVAIS:
+                    case GeoState::BRAVAIS:
                         lattice.setBravais_(readMatrix<double,latDim>(ifp));
                         break;
-                    case PDI_GEO_DECORATION:
+                    case GeoState::DECORATION:
                         lattice.decorate_(readMatrix<double,latDim>(ifp));
                     default:
                         break;

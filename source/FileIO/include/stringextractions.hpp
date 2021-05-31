@@ -7,6 +7,7 @@
 #include <array>
 #include <vector>
 #include <stdexcept>
+#include <map>
 
 namespace classmag::fileio{
     std::string readEntryName(const std::string &row){
