@@ -52,6 +52,24 @@ namespace classmag::fileio{
         RMIRRORS
     };
 
+    std::map<const std::string&, RKKYParams> setupRKKY(){
+        std::map<const std::string&,RKKYParams> result;
+        result["Magnitude"] = RKKYParams::MAGNITUDE;
+        result["kf"] = RKKYParams::KF;
+        result["Fermi wavevector"] = RKKYParams::KF;
+        result["Fermi Wavevector"] = RKKYParams::KF;
+        result["Cutoff"] = RKKYParams::CUTOFF;
+        result["Cutoff radius"] = RKKYParams::CUTOFF;
+        result["Cutoff Radius"] = RKKYParams::CUTOFF;
+        result["Alpha"] = RKKYParams::ALPHA;
+        result["k Mirrors"] = RKKYParams::KMIRRORS;
+        result["k mirrors"] = RKKYParams::KMIRRORS;
+        result["Reciprocal Mirrors"] = RKKYParams::KMIRRORS;
+        result["Reciprocal mirrors"] = RKKYParams::KMIRRORS;
+        result["Real Mirrors"] = RKKYParams::RMIRRORS;
+        result["Real mirrors"] = RKKYParams::RMIRRORS; 
+    }
+
     enum class DipoleParams{
         INVALID,
         MAGNITUDE,
@@ -60,6 +78,21 @@ namespace classmag::fileio{
         KMIRRORS,
         RMIRRORS
     };
+
+    std::map<const std::string&, DipoleParams> setupDipole(){
+        std::map<const std::string&,DipoleParams> result;
+        result["Magnitude"] = DipoleParams::MAGNITUDE;
+        result["Cutoff"] = DipoleParams::CUTOFF;
+        result["Cutoff radius"] = DipoleParams::CUTOFF;
+        result["Cutoff Radius"] = DipoleParams::CUTOFF;
+        result["Alpha"] = DipoleParams::ALPHA;
+        result["k Mirrors"] = DipoleParams::KMIRRORS;
+        result["k mirrors"] = DipoleParams::KMIRRORS;
+        result["Reciprocal Mirrors"] = DipoleParams::KMIRRORS;
+        result["Reciprocal mirrors"] = DipoleParams::KMIRRORS;
+        result["Real Mirrors"] = DipoleParams::RMIRRORS;
+        result["Real mirrors"] = DipoleParams::RMIRRORS; 
+    }
 
     template<unsigned int latDim, unsigned int spinDim>
     int readLinearInteractions(base::LinearCouplings<spinDim>& target, std::string& filename){
