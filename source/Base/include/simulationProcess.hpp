@@ -48,6 +48,7 @@ namespace classmag::base{
 
         void set_n_sites_(unsigned int sites){
             n_sites_ = sites;
+            spin_.resize(n_sites_);
         }
 
         SpinStructure<spinDimension> spin_;
