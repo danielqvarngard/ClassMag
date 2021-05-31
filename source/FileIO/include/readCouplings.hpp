@@ -2,10 +2,19 @@
 #define CLASSMAG_FILEIO_COUPLINGS_HPP
 
 #include "Base/include/simulationProcess.hpp"
+#include "Base/include/nearestNeighbor.hpp"
+#include "Base/include/rkky.hpp"
+#include "Base/include/dipole.hpp"
 #include "couplingStringMaps.hpp"
 #include "stringExtractions.hpp"
+#include "readLattice.hpp"
 
 namespace classmag::fileio{
+
+    template<unsigned int latDim>
+    void readNNProfile(base::NNProfile<latDim>& nnp, std::ifstream& ifp){
+
+    }
 
     template<unsigned int latDim, unsigned int spinDim>
     int readLinearInteractions(base::LinearCouplings<spinDim>& target, std::string& filename){
@@ -16,6 +25,8 @@ namespace classmag::fileio{
                 std::string errormsg = "Error opening coupling file " + filename;
                 throw std::runtime_error(errormsg); 
             }
+            auto strmap = setupCouplingMap();
+            auto lat = readLattice<latDim>(filename);
             while (ifp.good()){
                 std::string str;
                 std::stringstream str_stream;
@@ -27,15 +38,10 @@ namespace classmag::fileio{
                 if (it != strmap.end()){
                     switch (strmap.at(str))
                     {
-                    case GeoState::SIZE:
-                        getline(ifp,str);
-                        lattice.setSize_(readRow<unsigned int,latDim>(str));
+                    case CouplingType::NN:
+                        auto nnp = base::NNProfile(lat);
+                        readNNProfile(nnp,ifp);
                         break;
-                    case GeoState::BRAVAIS:
-                        lattice.setBravais_(readMatrix<double,latDim>(ifp));
-                        break;
-                    case GeoState::DECORATION:
-                        lattice.decorate_(readMatrix<double,latDim>(ifp));
                     default:
                         break;
                     }

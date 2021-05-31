@@ -3,10 +3,12 @@
 
 #include <string>
 #include <map>
+#include "stringExtractions.hpp"
 
 namespace classmag::fileio{
     enum class CouplingType{
         INVALID,
+        BREAK,
         NN,
         RKKY,
         DIPOLE
@@ -27,12 +29,14 @@ namespace classmag::fileio{
 
     enum class NNParams{
         INVALID,
+        BREAK,
         MAGNITUDE,
         CUTOFF
     };
 
     std::map<const std::string&, NNParams> setupNN(){
         std::map<const std::string&, NNParams> result;
+        result[breakstring()] = NNParams::BREAK;
         result["Magnitude"] = NNParams::MAGNITUDE;
         result["NN Magnitude"] = NNParams::MAGNITUDE;
         result["NN magnitude"] = NNParams::MAGNITUDE;
@@ -44,6 +48,7 @@ namespace classmag::fileio{
 
     enum class RKKYParams{
         INVALID,
+        BREAK,
         MAGNITUDE,
         KF,
         CUTOFF,
@@ -54,6 +59,7 @@ namespace classmag::fileio{
 
     std::map<const std::string&, RKKYParams> setupRKKY(){
         std::map<const std::string&,RKKYParams> result;
+        result[breakstring()] = RKKYParams::BREAK;
         result["Magnitude"] = RKKYParams::MAGNITUDE;
         result["kf"] = RKKYParams::KF;
         result["Fermi wavevector"] = RKKYParams::KF;
@@ -72,6 +78,7 @@ namespace classmag::fileio{
 
     enum class DipoleParams{
         INVALID,
+        BREAK,
         MAGNITUDE,
         CUTOFF,
         ALPHA,
@@ -81,6 +88,7 @@ namespace classmag::fileio{
 
     std::map<const std::string&, DipoleParams> setupDipole(){
         std::map<const std::string&,DipoleParams> result;
+        result[breakstring()] = DipoleParams::BREAK;
         result["Magnitude"] = DipoleParams::MAGNITUDE;
         result["Cutoff"] = DipoleParams::CUTOFF;
         result["Cutoff radius"] = DipoleParams::CUTOFF;

@@ -10,6 +10,11 @@
 #include <map>
 
 namespace classmag::fileio{
+
+    inline std::string breakstring(){
+        return "};";
+    }
+
     std::string readEntryName(const std::string &row){
         std::stringstream stream;
         stream << row;
