@@ -35,7 +35,7 @@ namespace classmag::fileio{
         geometry::Lattice<latDim> lattice;
         try
         {
-            std::ifstream ifp("latticefile");
+            std::ifstream ifp(latticefile);
             if (!ifp.is_open() || !ifp.good()){
                 std::string errormsg = "Error opening lattice file " + latticefile;
                 throw std::runtime_error(errormsg); 

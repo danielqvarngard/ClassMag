@@ -8,6 +8,7 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/readLattice.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/readMCO.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/readSpins.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/readCouplings.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/stringExtractions.hpp
 )
 endif()

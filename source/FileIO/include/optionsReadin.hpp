@@ -58,10 +58,7 @@ namespace classmag::fileio{
 
     }
 
-    template<unsigned int latDim, unsigned int spinDim>
-    int readOptions(montecarlo::HeatBath<spinDim>& mc, const std::string& filename){
-
-    }
+    
 }
 
 #endif
