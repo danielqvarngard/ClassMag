@@ -22,8 +22,10 @@ namespace classmag::montecarlo{
     };
 
     double heatBathCosine(double fieldStrength, double z){
-        double logArgument = 1.0 + z * (exponential(2.0 * fieldStrength) - 1.0);
-        auto cosine = (1.0/fieldStrength) * logarithm(logArgument) - 1.0;
+        double logArgument = 
+            exponential(-2.0 * fieldStrength) - 
+            z * (exponential(-2.0 * fieldStrength) - 1.0);
+        auto cosine = (1.0/fieldStrength) * logarithm(logArgument) + 1.0;
         return cosine;
     }
 }
