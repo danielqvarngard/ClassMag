@@ -13,7 +13,29 @@ namespace classmag::fileio{
 
     template<unsigned int latDim>
     void readNNProfile(base::NNProfile<latDim>& nnp, std::ifstream& ifp){
-
+        auto read = true;
+        while (ifp.good() && read){
+            std::string line;
+            getline(ifp, line);
+            auto entry = readEntryName(line);
+            auto it = strmap.find(entry);
+            if (it != strmap.end()){
+                switch (strmap.at(entry))
+                {
+                case NNParams::BREAK:
+                    read = false;
+                    break;
+                case NNParams::MAGNITUDE:
+                    nnp.magnitude = readValue<double>(line);
+                    break;
+                case NNParams::CUTOFF:
+                    nnp.cutoff = readValue<double>(line);
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
     }
 
     template<unsigned int latDim, unsigned int spinDim>
@@ -28,15 +50,12 @@ namespace classmag::fileio{
             auto strmap = setupCouplingMap();
             auto lat = readLattice<latDim>(filename);
             while (ifp.good()){
-                std::string str;
-                std::stringstream str_stream;
-                getline(ifp, str);
-                str_stream << str;
-                std::string entry;
-                auto entry = readEntryName(entry);
-                auto it = strmap.find(str);
+                std::string line;
+                getline(ifp, line);
+                auto entry = readEntryName(line);
+                auto it = strmap.find(entry);
                 if (it != strmap.end()){
-                    switch (strmap.at(str))
+                    switch (strmap.at(entry))
                     {
                     case CouplingType::NN:
                         auto nnp = base::NNProfile(lat);

@@ -50,6 +50,28 @@ namespace classmag::fileio{
             return false;
     }
 
+    template<typename T>
+    T readValue(const std::string& line){
+        std::stringstream stream;
+        T result;
+        stream << line;
+        unsigned int ii = 0;
+        while (!stream.eof()){
+            std::string temp_str;
+            T value;
+            stream >> temp_str;
+            if (std::stringstream(temp_str) >> value){
+                result = value;
+                ++ii;
+            }
+        }
+        if (ii > 1){
+            std::cerr << "Multiple values read to single adress\n";
+            abort();
+        }
+        return result;
+    }
+
     template<typename T, unsigned int dim>
     std::array<T, dim> readRow(const std::string line){
         std::stringstream stream;
