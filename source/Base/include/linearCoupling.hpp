@@ -2,9 +2,13 @@
 #define CLASSMAG_BASE_LINEARCOUPLING_HPP
 
 #include <iostream>
+#include <stdexcept>
 
 #include "Geometry/include/matrix.hpp"
 #include "spinStructure.hpp"
+#include "nearestNeighbor.hpp"
+#include "rkky.hpp"
+#include "dipole.hpp"
 
 namespace classmag::base{
     template<unsigned int dim>
@@ -21,6 +25,11 @@ namespace classmag::base{
 
         virtual inline unsigned int get_n() const {
             return 0u;
+        }
+
+        template<unsigned int latDim>
+        virtual void addNN(const base::NNProfile<latDim>& nnp){
+
         }
         
         protected:

@@ -57,6 +57,7 @@ namespace classmag::fileio{
     {
         auto read = true;
         while (ifp.good() && read){
+            auto strmap = setupNN();
             std::string line;
             getline(ifp, line);
             auto entry = readEntryName(line);
