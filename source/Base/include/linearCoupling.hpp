@@ -115,6 +115,17 @@ namespace classmag::base{
                 this->couplingvalues[ii] = 0.0 * geometry::eye<3>();
             }
         }
+
+        template<unsigned int latDim>
+        virtual void addNN(const NNProfile<latDim>& nnp) override
+        {
+            for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
+                for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
+                    if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff)
+                        this->add(ii,jj, nnp.magnitude*geometry::eye<dim>());
+                }
+            }
+        }
     };
 
     template<unsigned int dim>
@@ -130,6 +141,17 @@ namespace classmag::base{
                 this->couplingvalues[ii] = 0.0;
             }
         }
+
+        template<unsigned int dimension, unsigned int spinDim>
+        virtual void addNN(const NNProfile<dimension>& nnp) override
+        {
+            for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
+                for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
+                    if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff)
+                        this->add(ii, jj, nnp.magnitude);
+                }
+            }
+        };
     };
 }
 
