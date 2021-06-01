@@ -60,7 +60,6 @@ namespace classmag::base{
         const unsigned int site2,
         const DipoleProfile &ep);
 
-    void addDipole(MatrixLookup<3> &targetLookup, const DipoleProfile &ep);
     void addDipole(CouplingsMatrixDense<3> &target, const DipoleProfile& ep);
 }
 

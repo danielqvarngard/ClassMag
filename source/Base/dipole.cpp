@@ -22,7 +22,7 @@ namespace classmag::base{
     geometry::Matrix<3,3> ewaldRec(
         const geometry::Euclidean<3> &r, 
         const geometry::Euclidean<3> &k, 
-        const EwaldProfile &ep){
+        const DipoleProfile &ep){
         
         auto size = ep.lattice_.getSize_();
         auto bravais = ep.lattice_.getBravais_();
@@ -38,31 +38,31 @@ namespace classmag::base{
             exp(-(k * k)/(4 * ep.alpha_)) * geometry::extprod(k,k);
     }
 
-    double ewaldRealB(const double r, const EwaldProfile &ep){
+    double ewaldRealB(const double r, const DipoleProfile &ep){
         auto result = erfc(sqrt(ep.alpha_)*r)/(r*r*r);
         result += 2.0*sqrt(ep.alpha_/pi())*exp(-ep.alpha_*r*r)/(r*r);
         return result;
     }
 
-    double ewaldRealB(const geometry::Euclidean<3> &e, const EwaldProfile &ep){
+    double ewaldRealB(const geometry::Euclidean<3> &e, const DipoleProfile &ep){
         return ewaldRealB(geometry::norm(e), ep);
     }
 
-    geometry::Matrix<3,3> ewaldRealC(const geometry::Euclidean<3> &r, const EwaldProfile &ep){
+    geometry::Matrix<3,3> ewaldRealC(const geometry::Euclidean<3> &r, const DipoleProfile &ep){
         auto x = norm(r);
         auto c = 3.0 * erfc(sqrt(ep.alpha_)*x)/(x*x*x*x*x);
         c += 2.0*sqrt(ep.alpha_/pi()) * (2.0 * ep.alpha_ + 3/(x*x)) * exp(-ep.alpha_*x*x)/(x*x);
         return c * geometry::extprod(r,r);
     }
 
-    geometry::Matrix<3,3> ewaldSelf(const EwaldProfile &ep){
+    geometry::Matrix<3,3> ewaldSelf(const DipoleProfile &ep){
         return -2.0 * pi()/3.0 * pow(ep.alpha_/pi(),1.5) * geometry::eye<3>();
     }
 
     geometry::Matrix<3,3> dipoleMatrix(
         const unsigned int site1,
         const unsigned int site2,
-        const EwaldProfile &ep){
+        const DipoleProfile &ep){
         auto result = 0.0*geometry::eye<3>();
         auto range = std::vector<geometry::Euclidean<3>>();
 
@@ -97,17 +97,7 @@ namespace classmag::base{
         return (-1.0) * result;
     }
 
-    void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &ep){
-        // Deprecated, use DenseCouplings instead, will remove in future commit
-        auto nsq = ep.lattice_.n_sites_() * ep.lattice_.n_sites_();
-        for (auto ii = 0u; ii < nsq; ++ii){
-            auto site1 = ii % ep.lattice_.n_sites_();
-            auto site2 = (ii - site1)/ep.lattice_.n_sites_();
-            targetLookup.couplingTable_[ii] += dipoleMatrix(site1, site2, ep);
-        }
-    }
-
-    void addDipole(CouplingsMatrixDense<3> &target, const EwaldProfile& ep){
+    void addDipole(CouplingsMatrixDense<3> &target, const DipoleProfile& ep){
         for (auto ii = 0u; ii < ep.lattice_.n_sites_(); ++ii){
             for (auto jj = ii; jj < ep.lattice_.n_sites_(); ++jj){
                 auto x = dipoleMatrix(ii,jj,ep);
