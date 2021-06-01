@@ -28,7 +28,7 @@ double volume(const geometry::Lattice<3> &lat){
 int main(int argc, char* argv[]){
     auto size = std::array<unsigned int,3>{8u, 8u, 8u};
     auto lat = geometry::Lattice(geometry::cubicLattice<3>(size));
-    auto ep = base::EwaldProfile(lat);
+    auto ep = base::DipoleProfile(lat);
     ep.alpha_ = base::optimAlpha(lat.n_sites_(),volume(lat));
     ep.magnitude_ = 2.0;
     #if 1

@@ -11,9 +11,9 @@
 
 namespace classmag::base{
 
-    struct EwaldProfile{
+    struct DipoleProfile{
         public:
-        EwaldProfile(geometry::Lattice<3> lat):
+        DipoleProfile(geometry::Lattice<3> lat):
             lattice_(lat)
             {
 
@@ -46,22 +46,22 @@ namespace classmag::base{
     geometry::Matrix<3,3> ewaldRec(
         const geometry::Euclidean<3> &r,
         const geometry::Euclidean<3> &k, 
-        const EwaldProfile &ep);
-    double ewaldRealB(const double r, const EwaldProfile &ep);
-    double ewaldRealB(const geometry::Euclidean<3> &r, const EwaldProfile &ep);
+        const DipoleProfile &ep);
+    double ewaldRealB(const double r, const DipoleProfile &ep);
+    double ewaldRealB(const geometry::Euclidean<3> &r, const DipoleProfile &ep);
     geometry::Matrix<3,3> ewaldRealC(
         const geometry::Euclidean<3> &r, 
-        const EwaldProfile &ep);
+        const DipoleProfile &ep);
 
-    geometry::Matrix<3,3> ewaldSelf(const EwaldProfile &ep);  
+    geometry::Matrix<3,3> ewaldSelf(const DipoleProfile &ep);  
 
     geometry::Matrix<3,3> dipoleMatrix(
         const unsigned int site1, 
         const unsigned int site2,
-        const EwaldProfile &ep);
+        const DipoleProfile &ep);
 
-    void addDipole(MatrixLookup<3> &targetLookup, const EwaldProfile &ep);
-    void addDipole(CouplingsMatrixDense<3> &target, const EwaldProfile& ep);
+    void addDipole(MatrixLookup<3> &targetLookup, const DipoleProfile &ep);
+    void addDipole(CouplingsMatrixDense<3> &target, const DipoleProfile& ep);
 }
 
 #endif
