@@ -49,15 +49,6 @@ namespace classmag::fileio{
         }
     }
 
-    template<unsigned int latDim, unsigned int spinDim>
-    base::LinearCouplings<spinDim> readModel(const std::string& filename){
-        std::ifstream ifp(filename);
-        std::string str;
-        getline(ifp,str);
-        readEntryName(str);
-
-    }
-
     
 }
 
