@@ -179,7 +179,9 @@ namespace classmag::geometry{
             return r;
         }
 
-        virtual double squareDistance_(unsigned int site1, unsigned int site2) const {
+        virtual double squareDistance_(
+            const unsigned int site1, 
+            const unsigned int site2) const override{
             std::vector<double> squareDistances(2);
             squareDistances[0] = asymDistance_(site1, site2);
             squareDistances[1] = asymDistance_(site2, site1);
