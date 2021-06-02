@@ -1,13 +1,14 @@
 #ifndef CLASSMAG_GEOMETRY_LATTICE_HPP
 #define CLASSMAG_GEOMETRY_LATTICE_HPP
-
-#include "euclidean.hpp"
 #include <array>
 #include <utility>
 #include <vector>
 #include <iostream>
 #include <algorithm> // *min_element
 #include <math.h> // floor
+
+#include "euclidean.hpp"
+#include "pointMetric.hpp"
 
 namespace classmag::geometry{
 
@@ -98,7 +99,7 @@ namespace classmag::geometry{
     };
 
     template <unsigned int dimension>
-    class Lattice{
+    class Lattice : public PointMetric{
         public:
 
         Lattice<dimension>(){

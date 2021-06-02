@@ -8,6 +8,12 @@ namespace classmag::geometry{
             return 0.0;
         }
 
+        virtual double squareDistance_(
+            const unsigned int site1, 
+            const unsigned int site2) const {
+            return 0.0;
+        }
+
         protected:
         PointMetric(){
 
