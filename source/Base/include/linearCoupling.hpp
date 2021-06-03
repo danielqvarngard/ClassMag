@@ -23,6 +23,10 @@ namespace classmag::base{
         virtual inline unsigned int get_n() const {
             return 0u;
         }
+
+        virtual inline void add(){
+
+        }
         
         protected:
         LinearCouplings()
@@ -49,10 +53,10 @@ namespace classmag::base{
 
         
 
-        inline void add(
+        virtual inline void add(
             const unsigned int a, 
             const unsigned int b,
-            const T& x)
+            const T& x) override
         {
             couplingvalues[index(a,b)] += x;
         }
