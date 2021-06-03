@@ -6,16 +6,16 @@
 #include "Geometry/include/lattice.hpp"
 
 namespace classmag::base{
-    template<unsigned int dimension>
+    
     struct NNProfile{
         public:
-        NNProfile(const geometry::Lattice<dimension>& latref):
+        NNProfile(const geometry::PointMetric& latref):
         lattice(latref)
         {
 
         }
 
-        const geometry::Lattice<dimension>& lattice;
+        const geometry::PointMetric& lattice;
         double cutoff;
         double magnitude;
     };

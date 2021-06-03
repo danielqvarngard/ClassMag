@@ -10,9 +10,7 @@
 #include "readLattice.hpp"
 
 namespace classmag::fileio{
-
-    template<unsigned int latDim>
-    void readNNProfile(base::NNProfile<latDim>& nnp, std::ifstream& ifp);
+    void readNNProfile(base::NNProfile& nnp, std::ifstream& ifp);
 
     template<unsigned int latDim, unsigned int spinDim>
     int readLinearInteractions(base::LinearCouplings<spinDim>& target, std::string& filename){
@@ -53,8 +51,7 @@ namespace classmag::fileio{
         return 0;
     };
 
-    template<unsigned int latDim>
-    void readNNProfile(base::NNProfile<latDim>& nnp, std::ifstream& ifp)
+    void readNNProfile(base::NNProfile& nnp, std::ifstream& ifp)
     {
         auto read = true;
         while (ifp.good() && read){

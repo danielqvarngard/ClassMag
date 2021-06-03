@@ -27,8 +27,7 @@ namespace classmag::base{
             return 0u;
         }
 
-        template<unsigned int latDim>
-        virtual void addNN(const base::NNProfile<latDim>& nnp){
+        virtual void addNN(const base::NNProfile& nnp){
 
         }
         
@@ -116,8 +115,7 @@ namespace classmag::base{
             }
         }
 
-        template<unsigned int latDim>
-        virtual void addNN(const NNProfile<latDim>& nnp) override
+        virtual void addNN(const NNProfile& nnp) override
         {
             for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
                 for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
@@ -142,8 +140,7 @@ namespace classmag::base{
             }
         }
 
-        template<unsigned int dimension, unsigned int spinDim>
-        virtual void addNN(const NNProfile<dimension>& nnp) override
+        virtual void addNN(const NNProfile& nnp) override
         {
             for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
                 for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
