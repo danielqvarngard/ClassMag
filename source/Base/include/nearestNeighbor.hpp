@@ -2,11 +2,11 @@
 #define CLASSMAG_BASE_NEARESTNEIGHBOR_HPP
 
 #include <functional>
-#include "linearCoupling.hpp"
+//#include "linearCoupling.hpp"
 #include "Geometry/include/lattice.hpp"
 
 namespace classmag::base{
-    
+
     struct NNProfile{
         public:
         NNProfile(const geometry::PointMetric& latref):
@@ -36,6 +36,8 @@ namespace classmag::base{
         return interaction;
     };
 
+    #if 0
+
     template<unsigned int dimension, unsigned int spinDim>
     void addNN(
         CouplingsMatrixDense<spinDim>& target, 
@@ -61,6 +63,7 @@ namespace classmag::base{
             }
         }
     };
+    #endif
 }
 
 #endif

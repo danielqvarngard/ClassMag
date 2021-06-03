@@ -7,6 +7,10 @@ namespace classmag::geometry{
         virtual double distance_(const unsigned int ii, const unsigned int jj) const{
             return 0.0;
         }
+        
+        virtual unsigned int n_sites_() const{
+            return 0u;
+        };
 
         virtual double squareDistance_(
             const unsigned int site1, 

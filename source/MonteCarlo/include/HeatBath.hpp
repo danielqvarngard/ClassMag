@@ -27,7 +27,7 @@ namespace classmag::montecarlo{
         };
 
         HeatBath(
-            const base::LinearCouplings<spinDimension> &c):
+            base::LinearCouplings<spinDimension> &c):
         base::SimulationBase<spinDimension>(c.get_n()),
         mcp_(VectorModel_Profile()),
         lookup_(c),
@@ -40,7 +40,7 @@ namespace classmag::montecarlo{
 
         HeatBath(
             VectorModel_Profile &mcp,
-            const base::LinearCouplings<spinDimension> &c):
+            base::LinearCouplings<spinDimension> &c):
         base::SimulationBase<spinDimension>(mcp.n_sites_),
         mcp_(mcp),
         lookup_(c),

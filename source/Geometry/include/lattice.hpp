@@ -207,7 +207,7 @@ namespace classmag::geometry{
                 subLattice_.push_back(targetDecoration);
         }
 
-        unsigned int n_sites_() const{
+        virtual unsigned int n_sites_() const override{
             unsigned int n = 0;
             for (auto s : subLattice_)
                 n += s.n_sites_();
