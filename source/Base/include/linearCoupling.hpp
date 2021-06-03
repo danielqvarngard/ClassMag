@@ -6,9 +6,6 @@
 
 #include "Geometry/include/matrix.hpp"
 #include "spinStructure.hpp"
-#include "nearestNeighbor.hpp"
-#include "rkky.hpp"
-#include "dipole.hpp"
 
 namespace classmag::base{
     template<unsigned int dim>
@@ -25,10 +22,6 @@ namespace classmag::base{
 
         virtual inline unsigned int get_n() const {
             return 0u;
-        }
-
-        virtual void addNN(const base::NNProfile& nnp){
-
         }
         
         protected:
@@ -114,16 +107,6 @@ namespace classmag::base{
                 this->couplingvalues[ii] = 0.0 * geometry::eye<3>();
             }
         }
-
-        virtual void addNN(const NNProfile& nnp) override
-        {
-            for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
-                for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
-                    if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff)
-                        this->add(ii,jj, nnp.magnitude*geometry::eye<dim>());
-                }
-            }
-        }
     };
 
     template<unsigned int dim>
@@ -139,16 +122,6 @@ namespace classmag::base{
                 this->couplingvalues[ii] = 0.0;
             }
         }
-
-        virtual void addNN(const NNProfile& nnp) override
-        {
-            for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
-                for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
-                    if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff)
-                        this->add(ii, jj, nnp.magnitude);
-                }
-            }
-        };
     };
 }
 
