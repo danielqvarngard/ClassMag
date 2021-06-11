@@ -14,7 +14,7 @@
 using namespace classmag;
 
 int main(){
-    auto percentage = 63u;
+    auto percentage = 52u;
     auto occupancy = static_cast<double>(percentage)/100.0;
     auto L = 5u;
     const std::array<unsigned int,3> size({L,L,L});

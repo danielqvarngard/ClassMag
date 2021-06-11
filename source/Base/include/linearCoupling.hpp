@@ -9,7 +9,7 @@
 
 namespace classmag::base{
     template<unsigned int dim>
-    class LinearCouplings{
+    class LinearBase{
         public:
         virtual geometry::Euclidean<dim> field(
             const unsigned int site, 
@@ -23,11 +23,25 @@ namespace classmag::base{
         virtual inline unsigned int get_n() const {
             return 0u;
         }
-
-        virtual inline void add(){
+        
+        protected:
+        LinearBase()
+        {
 
         }
-        
+    };
+
+    template<typename T, unsigned int dim>
+    class LinearCouplings : public LinearBase<dim>{
+        public: 
+        virtual inline void add(
+            const unsigned int a,
+            const unsigned int b,
+            const T& x
+        ){
+
+        }
+
         protected:
         LinearCouplings()
         {
