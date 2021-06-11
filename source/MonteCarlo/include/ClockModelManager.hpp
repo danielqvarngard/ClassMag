@@ -20,7 +20,7 @@ namespace classmag::montecarlo {
         public:
 
         ClockModelManager(
-            base::LinearCouplings<spinDim>& cr, 
+            base::LinearBase<spinDim>& cr, 
             AnisotropyVectors<spinDim>& av):
             couplings(cr),
             anivecs(av)
@@ -68,7 +68,7 @@ namespace classmag::montecarlo {
 
         private:
         unsigned int thermRuns = 100000;
-        const base::LinearCouplings<spinDim>& couplings;
+        const base::LinearBase<spinDim>& couplings;
         const AnisotropyVectors<spinDim>& anivecs;
         std::mt19937 rng;
         base::SpinStructure<spinDim> spin;
@@ -125,7 +125,7 @@ namespace classmag::montecarlo {
 
         private:
         base::SpinStructure<spinDim> spin;
-        base::LinearCouplings<spinDim>& couplings;
+        base::LinearBase<spinDim>& couplings;
         AnisotropyVectors<spinDim>& set;
         double beta;
         double partitionfcn;

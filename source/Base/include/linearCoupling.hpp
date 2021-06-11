@@ -50,7 +50,7 @@ namespace classmag::base{
     };
 
     template<typename T, unsigned int dim>
-    class CouplingsDense : public LinearCouplings<dim>{
+    class CouplingsDense : public LinearCouplings<T, dim>{
         
         public: 
         virtual geometry::Euclidean<dim> field(
