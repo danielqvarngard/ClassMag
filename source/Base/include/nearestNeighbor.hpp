@@ -2,7 +2,7 @@
 #define CLASSMAG_BASE_NEARESTNEIGHBOR_HPP
 
 #include <functional>
-//#include "linearCoupling.hpp"
+#include "linearCoupling.hpp"
 #include "Geometry/include/lattice.hpp"
 
 namespace classmag::base{
@@ -36,12 +36,11 @@ namespace classmag::base{
         return interaction;
     };
 
-    #if 0
 
-    template<unsigned int dimension, unsigned int spinDim>
+    template<unsigned int spinDim>
     void addNN(
         CouplingsMatrixDense<spinDim>& target, 
-        const NNProfile<dimension>& nnp)
+        const NNProfile& nnp)
     {
         for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
             for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
@@ -51,10 +50,10 @@ namespace classmag::base{
         }
     };
 
-    template<unsigned int dimension, unsigned int spinDim>
+    template<unsigned int spinDim>
     void addNN(
         CouplingScalarDense<spinDim>& target, 
-        const NNProfile<dimension>& nnp)
+        const NNProfile& nnp)
     {
         for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
             for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
@@ -63,7 +62,6 @@ namespace classmag::base{
             }
         }
     };
-    #endif
 }
 
 #endif
