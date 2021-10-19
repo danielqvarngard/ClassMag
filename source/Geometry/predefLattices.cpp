@@ -91,4 +91,28 @@ namespace classmag::geometry{
         lattice.append_(sublattice);
         return lattice;
     }
+
+    Lattice<3> pyrochlore(const std::array<unsigned int, 3> &systemSize){
+        auto sublattice = cubicLattice<3>(systemSize);
+        std::vector<Euclidean<3>> sites({
+            {0.0, 0.0, 0.0}, 
+            {0.25, 0.25, 0.0}, 
+            {0.25, 0.0, 0.25},
+            {0.0, 0.25, 0.25}, 
+            {0.5, 0.5, 0.0}, 
+            {0.75, 0.75, 0.0},
+            {0.75, 0.5, 0.25}, 
+            {0.5, 0.75, 0.25}, 
+            {0.0, 0.5, 0.5}, 
+            {0.25, 0.75, 0.5},
+            {0.25, 0.5, 0.75}, 
+            {0.0, 0.75, 0.75}, 
+            {0.5, 0.0, 0.5}, 
+            {0.75, 0.25, 0.5},
+            {0.75, 0.0, 0.75}, 
+            {0.5, 0.25, 0.75}});
+        sublattice.decorate_(sites);
+        auto lattice = Lattice(sublattice);
+        return lattice;
+    }
 }
