@@ -2,6 +2,7 @@
 #define CLASSMAG_MONTECARLO_HEATBATH_HPP
 
 #include <iostream>
+#include <sstream>
 #include <random>
 
 #include "Geometry/include/euclidean.hpp"
@@ -173,6 +174,24 @@ namespace classmag::montecarlo{
                 for (auto s : this->spin_[ii])
                     std::cout << s << " ";
                 std::cout << "\n";
+            }
+        }
+
+        void printSpins_(std::stringstream& stream) const{
+            for (unsigned int ii = 0; ii < lookup_.get_n(); ++ii){
+                for (auto s : this->spin_[ii])
+                    stream << s << " ";
+            }
+        }
+
+        template<unsigned int latDim>
+        void printSpins_(std::stringstream& stream, geometry::Lattice<latDim>&lattice) const{
+            for (unsigned int ii = 0; ii < lookup_.get_n(); ++ii){
+                for (auto s : this->spin_[ii])
+                    stream << s << " ";
+                for (auto x : lattice.position_(ii))
+                    stream << x << " ";
+                stream << "\n";
             }
         }
 

@@ -3,7 +3,9 @@
 
 #include <random>
 #include <iostream>
+#include <sstream>
 
+#include "Geometry/include/lattice.hpp"
 #include "Base/include/simulationProcess.hpp"
 #include "Base/include/linearCoupling.hpp"
 #include "mcFunctions.hpp"
@@ -65,6 +67,32 @@ namespace classmag::montecarlo {
             thermRuns = r;
         }
         double beta_;
+
+        void printSpins_() const{
+            for (unsigned int ii = 0; ii < couplings.get_n(); ++ii){
+                for (auto s : this->spin[ii])
+                    std::cout << s << " ";
+                std::cout << "\n";
+            }
+        }
+
+        void printSpins_(std::stringstream& stream) const{
+            for (unsigned int ii = 0; ii < couplings.get_n(); ++ii){
+                for (auto s : this->spin[ii])
+                    stream << s << " ";
+            }
+        }
+
+        template<unsigned int latDim>
+        void printSpins_(std::stringstream& stream, geometry::Lattice<latDim>&lattice) const{
+            for (unsigned int ii = 0; ii < couplings.get_n(); ++ii){
+                for (auto s : this->spin[ii])
+                    stream << s << " ";
+                for (auto x : lattice.position_(ii))
+                    stream << x << " ";
+                stream << "\n";
+            }
+        }
 
         private:
         unsigned int thermRuns = 100000;
