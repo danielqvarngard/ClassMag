@@ -31,3 +31,20 @@ target_link_libraries(
     PRIVATE
     ClassMag_ParallelTempering
 )
+
+add_executable(
+    defaultPT.mpix
+    defaultPT.cpp
+)
+
+target_include_directories(
+    defaultPT.mpix
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+target_link_libraries(
+    defaultPT.mpix
+    PRIVATE
+    ClassMag_ParallelTempering
+)
