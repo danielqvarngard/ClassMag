@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm> // *min_element
 #include <math.h> // floor
+#include <string>
 
 #include "euclidean.hpp"
 #include "pointMetric.hpp"
@@ -334,6 +335,15 @@ namespace classmag::geometry{
 
         void setSize_(const std::array<unsigned int, dimension>& size){
             systemSize_ = size;
+        }
+
+        std::string positionString(unsigned int site, const char delim) const{
+            auto pos = position_(site);
+            std::string result;
+            for (auto x : pos){
+                result += std::to_string(x) + delim;
+            }
+            return result;
         }
 
         private:
