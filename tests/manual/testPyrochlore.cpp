@@ -43,7 +43,7 @@ std::vector<geometry::Euclidean<3>> pyrochlore_ising_axes(){
         {-1.0, -1.0, +1.0},
         {-1.0, +1.0, -1.0},
         {+1.0, -1.0, -1.0}});
-        return result;
+    return result;
 }
 
 int main(int argc, char* argv[]){
