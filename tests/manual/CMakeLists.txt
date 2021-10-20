@@ -187,3 +187,21 @@ target_include_directories(
     ${CMAKE_SOURCE_DIR}/source
 )
 endif()
+
+if(1)
+
+add_executable(
+    testPyrochlore.exe
+    testPyrochlore.cpp
+)
+
+target_link_libraries(
+    testPyrochlore.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+)
+endif()
