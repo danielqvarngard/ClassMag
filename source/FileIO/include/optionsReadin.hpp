@@ -9,6 +9,7 @@
 #include "readLattice.hpp"
 #include "readMCO.hpp"
 #include "readSpins.hpp"
+#include "scancmd.hpp"
 
 namespace classmag::fileio{
 
