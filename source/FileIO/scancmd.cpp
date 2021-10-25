@@ -7,9 +7,9 @@ namespace classmag::fileio{
         const char* flag)
     {
         std::string str;
-        for (auto ii = 0; ii < argc; ++ii){
-            if (!strcmp(argv[ii], flag)){
-                str = argv[ii + 1];
+        for (auto ii = 1; ii < argc; ++ii){
+            if (!strcmp(argv[ii - 1], flag)){
+                str = argv[ii];
             }
         }
 
