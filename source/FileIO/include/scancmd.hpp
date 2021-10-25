@@ -6,8 +6,8 @@
 namespace classmag::fileio{
     std::string get_cmd_flag_str(
         const int argc, 
-        const char* argv[], 
-        const std::string& flag);
+        char* argv[], 
+        const char* flag);
 }
 
 #endif
