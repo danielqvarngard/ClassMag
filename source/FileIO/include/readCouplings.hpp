@@ -21,15 +21,15 @@ namespace classmag::fileio{
                 std::string errormsg = "Error opening coupling file " + filename;
                 throw std::runtime_error(errormsg); 
             }
-            auto strmap = setupCouplingMap();
+            auto string_map = setupCouplingMap();
             auto lat = readLattice<latDim>(filename);
             while (ifp.good()){
                 std::string line;
                 getline(ifp, line);
                 auto entry = readEntryName(line);
-                auto it = strmap.find(entry);
-                if (it != strmap.end()){
-                    switch (strmap.at(entry))
+                auto it = string_map.find(entry);
+                if (it != string_map.end()){
+                    switch (string_map.at(entry))
                     {
                     case CouplingType::NN:
                         auto nnp = base::NNProfile(lat);
@@ -55,13 +55,13 @@ namespace classmag::fileio{
     {
         auto read = true;
         while (ifp.good() && read){
-            auto strmap = setupNN();
+            auto string_map = setupNN();
             std::string line;
             getline(ifp, line);
             auto entry = readEntryName(line);
-            auto it = strmap.find(entry);
-            if (it != strmap.end()){
-                switch (strmap.at(entry))
+            auto it = string_map.find(entry);
+            if (it != string_map.end()){
+                switch (string_map.at(entry))
                 {
                 case NNParams::BREAK:
                     read = false;
