@@ -94,7 +94,7 @@ namespace classmag::base{
             auto k = geometry::linearCombination<3,3>(n,reclattice);
             result += ewaldRec(r,k,ep);
         }
-        return (-1.0) * result;
+        return (-ep.magnitude_) * result;
     }
 
     void addDipole(CouplingsMatrixDense<3> &target, const DipoleProfile& ep){

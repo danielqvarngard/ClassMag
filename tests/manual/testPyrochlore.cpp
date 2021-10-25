@@ -64,23 +64,20 @@ std::vector<std::array<double,8>> comparison_pyrochlore_dipole(){
 int main(int argc, char* argv[]){
     auto size = std::array<unsigned int,3>{1u, 1u, 1u};
     auto lat = geometry::pyrochlore(size);
+    auto axes = pyrochlore_ising_axes();
     auto ep = base::DipoleProfile(lat);
     ep.alpha_ = base::optimAlpha(lat.n_sites_(),volume(lat));
-    ep.magnitude_ = 2.0;
-    #if 1
-    auto nmin = 2u;
+    ep.magnitude_ = 0.01;
     auto nmax = 10u;
-    std::vector<double> result;
-    for (auto ii = nmin; ii <= nmax; ++ii){
-        ep.realMirrors_ = ii;
-        ep.recMirrors_ = ii;
-        auto mat = base::dipoleMatrix(0u, 0u, ep);
-        auto trq = geometry::trace(mat);
-        result.push_back(trq);
+    ep.realMirrors_ = nmax;
+    ep.recMirrors_ = nmax;
+    
+    for (auto ii = 0u; ii < 16; ++ii){
+        for (auto jj = 0u; jj < 16; ++jj){
+            auto mat = base::dipoleMatrix(ii, jj, ep);
+            auto coupling = axes[ii] * (mat * axes[jj]);
+            std::cout << coupling << " ";
+        }
+        std::cout << "\n";
     }
-    #endif
-    for (auto ii = 0u; ii < result.size(); ++ii){
-        result[ii] *= 1.0/result[result.size() - 1u];
-    }
-    print(result);
 }
