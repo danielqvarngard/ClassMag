@@ -45,8 +45,7 @@ namespace classmag::fileio{
                 std::stringstream str_stream;
                 getline(ifp, str);
                 str_stream << str;
-                std::string entry;
-                auto entry = readEntryName(entry);
+                auto entry = readEntryName(str);
                 auto it = strmap.find(str);
                 if (it != strmap.end()){
                     switch (strmap.at(str))

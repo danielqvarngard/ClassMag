@@ -9,8 +9,8 @@ namespace classmag::fileio{
         std::ifstream& spinfile, 
         base::SimulationBase<spinDim>& sim)
     {
-        base::SpinStructure<spindim> spins;
-        spins = readMatrix<double>(spinfile);
+        base::SpinStructure<spinDim> spins;
+        spins = readMatrix<double,spinDim>(spinfile);
         sim.setSpinstructure_(spins);
     }
 }

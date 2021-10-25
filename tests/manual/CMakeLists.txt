@@ -169,7 +169,7 @@ target_include_directories(
     PRIVATE
     ${CMAKE_SOURCE_DIR}/source
 )
-if(0)
+if(1)
 add_executable(
     fileio.exe
     fileio.cpp
@@ -179,6 +179,7 @@ target_link_libraries(
     fileio.exe
     PRIVATE
     ClassMag_FileIO
+    ClassMag_MonteCarlo
 )
 
 target_include_directories(
