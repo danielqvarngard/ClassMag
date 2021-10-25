@@ -15,6 +15,7 @@ target_link_libraries(
     ClassMag_MonteCarlo
 )
 
+if(0)
 add_executable(
     isingpt.mpix
     isingpt.cpp
@@ -48,3 +49,4 @@ target_link_libraries(
     PRIVATE
     ClassMag_ParallelTempering
 )
+endif()
