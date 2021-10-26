@@ -1,8 +1,14 @@
 #include "include/optionsReadin.hpp"
 
 namespace classmag::fileio{
-    std::ifstream get_input_stream(int argc, char* argv[]){
+
+    std::string get_input_file_name(int argc, char* argv[]){
         auto filename = get_cmd_flag_str(argc, argv, "-input");
+        return filename;
+    }
+
+    std::ifstream get_input_stream(int argc, char* argv[]){
+        auto filename = get_input_file_name(argc, argv);
         std::ifstream ifp;
         try
             {
@@ -17,5 +23,6 @@ namespace classmag::fileio{
             }
         return ifp;
     }
+    
     
 }

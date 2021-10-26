@@ -51,9 +51,10 @@ namespace classmag::fileio{
         }
     }
 
+    std::string get_input_file_name(int argc, char* argv[]);
+
     std::ifstream get_input_stream(int argc, char* argv[]);
 
-    std::ifstream get_input_stream();
 }
 
 #endif
