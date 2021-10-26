@@ -2,6 +2,7 @@
 #define CLASSMAG_BASE_SPINSTRUCTURE_HPP
 
 #include <vector>
+#include "Geometry/include/euclidean.hpp"
 
 namespace classmag::base{
 
