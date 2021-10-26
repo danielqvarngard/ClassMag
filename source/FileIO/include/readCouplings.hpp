@@ -13,7 +13,7 @@ namespace classmag::fileio{
     void readNNProfile(base::NNProfile& nnp, std::ifstream& ifp);
 
     template<typename T, unsigned int latDim, unsigned int spinDim>
-    int readLinearInteractions(base::LinearCouplings<T, spinDim>& target, std::string& filename){
+    int readLinearInteractions(base::LinearCouplings<T, spinDim>& target, const std::string& filename){
         try
         {
             std::ifstream ifp(filename);
