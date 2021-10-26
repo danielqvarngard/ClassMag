@@ -2,13 +2,14 @@
 #define CLASSMAG_FILEIO_OPTIONSREADIN_HPP
 
 #include <iostream>
+#include <fstream>
+#include <map>
+//#include "Base/include/linearCoupling.hpp"
+//#include "MonteCarlo/include/HeatBath.hpp"
 
-#include "Base/include/linearCoupling.hpp"
-#include "MonteCarlo/include/HeatBath.hpp"
-
-#include "readLattice.hpp"
+//#include "readLattice.hpp"
 #include "readMCO.hpp"
-#include "readSpins.hpp"
+//#include "readSpins.hpp"
 #include "scancmd.hpp"
 
 namespace classmag::fileio{
@@ -50,7 +51,9 @@ namespace classmag::fileio{
         }
     }
 
-    
+    std::ifstream get_input_stream(int argc, char* argv[]);
+
+    std::ifstream get_input_stream();
 }
 
 #endif
