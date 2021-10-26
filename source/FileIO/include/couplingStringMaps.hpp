@@ -14,8 +14,8 @@ namespace classmag::fileio{
         DIPOLE
     };
 
-    std::map<const std::string&, CouplingType> setupCouplingMap(){
-        std::map<const std::string&, CouplingType> result;
+    std::map<const std::string, CouplingType> setupCouplingMap(){
+        std::map<const std::string, CouplingType> result;
         result["NN"] = CouplingType::NN;
         result["Nearest neighbor"] = CouplingType::NN;
         result["Nearest neighbour"] = CouplingType::NN;
@@ -34,8 +34,8 @@ namespace classmag::fileio{
         CUTOFF
     };
 
-    std::map<const std::string&, NNParams> setupNN(){
-        std::map<const std::string&, NNParams> result;
+    std::map<const std::string, NNParams> setupNN(){
+        std::map<const std::string, NNParams> result;
         result[breakstring()] = NNParams::BREAK;
         result["Magnitude"] = NNParams::MAGNITUDE;
         result["NN Magnitude"] = NNParams::MAGNITUDE;
@@ -57,8 +57,8 @@ namespace classmag::fileio{
         RMIRRORS
     };
 
-    std::map<const std::string&, RKKYParams> setupRKKY(){
-        std::map<const std::string&,RKKYParams> result;
+    std::map<const std::string, RKKYParams> setupRKKY(){
+        std::map<const std::string,RKKYParams> result;
         result[breakstring()] = RKKYParams::BREAK;
         result["Magnitude"] = RKKYParams::MAGNITUDE;
         result["kf"] = RKKYParams::KF;
@@ -74,6 +74,7 @@ namespace classmag::fileio{
         result["Reciprocal mirrors"] = RKKYParams::KMIRRORS;
         result["Real Mirrors"] = RKKYParams::RMIRRORS;
         result["Real mirrors"] = RKKYParams::RMIRRORS; 
+        return result;
     }
 
     enum class DipoleParams{
@@ -86,8 +87,8 @@ namespace classmag::fileio{
         RMIRRORS
     };
 
-    std::map<const std::string&, DipoleParams> setupDipole(){
-        std::map<const std::string&,DipoleParams> result;
+    std::map<const std::string, DipoleParams> setupDipole(){
+        std::map<const std::string,DipoleParams> result;
         result[breakstring()] = DipoleParams::BREAK;
         result["Magnitude"] = DipoleParams::MAGNITUDE;
         result["Cutoff"] = DipoleParams::CUTOFF;
@@ -100,6 +101,7 @@ namespace classmag::fileio{
         result["Reciprocal mirrors"] = DipoleParams::KMIRRORS;
         result["Real Mirrors"] = DipoleParams::RMIRRORS;
         result["Real mirrors"] = DipoleParams::RMIRRORS; 
+        return result;
     }
 }
 

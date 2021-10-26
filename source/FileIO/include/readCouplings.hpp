@@ -31,11 +31,12 @@ namespace classmag::fileio{
                 if (it != string_map.end()){
                     switch (string_map.at(entry))
                     {
-                    case CouplingType::NN:
+                    case CouplingType::NN:{
                         auto nnp = base::NNProfile(lat);
                         readNNProfile(nnp,ifp);
                         target.addNN(nnp);
                         break;
+                    }
                     default:
                         break;
                     }
@@ -63,15 +64,18 @@ namespace classmag::fileio{
             if (it != string_map.end()){
                 switch (string_map.at(entry))
                 {
-                case NNParams::BREAK:
+                case NNParams::BREAK:{
                     read = false;
                     break;
-                case NNParams::MAGNITUDE:
+                }
+                case NNParams::MAGNITUDE:{
                     nnp.magnitude = readValue<double>(line);
                     break;
-                case NNParams::CUTOFF:
+                }
+                case NNParams::CUTOFF:{
                     nnp.cutoff = readValue<double>(line);
                     break;
+                }
                 default:
                     break;
                 }
