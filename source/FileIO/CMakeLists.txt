@@ -3,9 +3,10 @@ add_library(
     ClassMag_FileIO
     ${CMAKE_CURRENT_SOURCE_DIR}/optionsReadin.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/StreamManager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/StreamManager.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filesystem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scancmd.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/optionsReadin.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/StreamManager.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/scancmd.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/filesystem.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/readLattice.hpp

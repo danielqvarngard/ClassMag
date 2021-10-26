@@ -24,7 +24,7 @@ namespace classmag::fileio{
         ASDSETTINGS
     };
 
-    std::map<const std::string, OptState> mapBranch(){
+    inline std::map<const std::string, OptState> mapBranch(){
         std::map<const std::string, OptState> result;
         result["Lattice"] = OptState::LATTICE;
         result["Lattice file"] = OptState::LATTICEFILE;
