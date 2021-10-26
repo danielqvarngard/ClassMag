@@ -84,6 +84,12 @@ namespace classmag::base{
             return n_sites;
         }
 
+        virtual void resize(const unsigned int n){
+            n_sites = n;
+            auto n_elems = (n_sites * (n_sites + 1))/2u;
+            couplingvalues.resize(n_elems);
+        }
+
         protected:
 
         std::vector<T> couplingvalues;
@@ -125,6 +131,15 @@ namespace classmag::base{
                 this->couplingvalues[ii] = 0.0 * geometry::eye<3>();
             }
         }
+
+        void resize(const unsigned int n_sites) final{
+            this->n_sites = n_sites;
+            auto n_elems = (n_sites * (n_sites + 1))/2u;
+            this->couplingvalues.resize(n_elems);
+            for (auto ii = 0u; ii < n_elems; ++ii){
+                this->couplingvalues[ii] = 0.0 * geometry::eye<3>();
+            }
+        }
     };
 
     template<unsigned int dim>
@@ -133,6 +148,15 @@ namespace classmag::base{
         public:
         CouplingScalarDense(const unsigned int n_sites)
         {
+            this->n_sites = n_sites;
+            auto n_elems = (n_sites * (n_sites + 1))/2u;
+            this->couplingvalues.resize(n_elems);
+            for (auto ii = 0u; ii < n_elems; ++ii){
+                this->couplingvalues[ii] = 0.0;
+            }
+        }
+
+        void resize(const unsigned int n_sites) final{
             this->n_sites = n_sites;
             auto n_elems = (n_sites * (n_sites + 1))/2u;
             this->couplingvalues.resize(n_elems);
