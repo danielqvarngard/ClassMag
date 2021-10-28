@@ -36,6 +36,13 @@ namespace classmag::base{
         return interaction;
     };
 
+    template<typename T, unsigned int spinDim>
+    void addNN(
+        LinearCouplings<T,spinDim> &target, 
+        const NNProfile& nnp){
+
+    }
+
 
     template<unsigned int spinDim>
     void addNN(
