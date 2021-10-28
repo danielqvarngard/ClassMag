@@ -34,7 +34,7 @@ namespace classmag::fileio{
                     case CouplingType::NN:{
                         auto nnp = base::NNProfile(lat);
                         readNNProfile(nnp,ifp);
-                        target.addNN(nnp);
+                        base::addNN(target,nnp);
                         break;
                     }
                     default:
