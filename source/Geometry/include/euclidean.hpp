@@ -28,6 +28,12 @@ namespace classmag::geometry{
             return *this;
         }
 
+        Euclidean& operator=(const std::array<double,dimension> &src){
+            for (unsigned int ii = 0; ii < dimension; ++ii)
+                (*this)[ii] = src[ii];
+            return *this;
+        }
+
         Euclidean& operator+=(const Euclidean &src){
             for (unsigned int ii = 0; ii < dimension; ++ii)
                 (*this)[ii] += src[ii];
