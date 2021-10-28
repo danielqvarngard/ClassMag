@@ -24,7 +24,7 @@ namespace classmag::geometry{
 
         auto result = SubLattice<dimension>(tempBravais, tempSize);
         auto proposeSites = cubicLattice<dimension>(systemSize);
-        proposeSites.decorate_({displacement});
+        proposeSites.decorate_(std::vector<Euclidean<dimension>>{displacement});
         std::vector<Euclidean<dimension>> acceptedSites;
         std::uniform_real_distribution<double> uniformDistribution = 
             std::uniform_real_distribution<double>(0,1);
