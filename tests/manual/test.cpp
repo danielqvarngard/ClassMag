@@ -108,6 +108,39 @@ std::map<const std::string, int> mapsetup(){
     return result;
 }
 
+template<unsigned int n, unsigned int m>
+class base{
+    public:
+    virtual std::string get_string() const{
+        return "gaba\n";
+    }
+
+    unsigned int g = 0;
+};
+
+template<unsigned int n>
+class derived : public base<n,n>{
+    public:
+    virtual std::string get_string() const{
+        return "gool\n";
+    }
+    
+};
+
+class derived2 : public derived<1>{
+    public:
+    std::string get_string() const final{
+        return "!\n";
+    }
+};
+
+template<unsigned int n, unsigned int m>
+void print_string(base<n,m>& b){
+    std::cout << b.get_string();
+    b.g = 1;
+}
+
+
 
 int main(int argc, char* argv[]){
     #if 0
@@ -131,7 +164,7 @@ int main(int argc, char* argv[]){
         std::cout << "bullshit string asshole\n";
 
     #endif
-    #if 1
+    #if 0
     std::ifstream ifp;
     for (auto ii = 0; ii < argc; ++ii){
         if (!strcmp(argv[ii], "-input")){
@@ -177,5 +210,8 @@ int main(int argc, char* argv[]){
         }
     }
     #endif
+
+    derived2 d;
+    print_string(d);
     return 0;
 }

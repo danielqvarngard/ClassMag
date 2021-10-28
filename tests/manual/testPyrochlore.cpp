@@ -46,7 +46,7 @@ std::vector<geometry::Euclidean<3>> pyrochlore_ising_axes(){
     return result;
 }
 
-std::vector<std::array<double,8>> comparison_pyrochlore_dipole(){
+std::vector<std::array<double,8>> comparison_pyrochlore_cubic(){
     auto result = std::vector<std::array<double,8>>({
         {-0.523598775598288, -4.283853877480048, 1.356528775342571, -1.065331984362533, 1.356528775342573, -1.065331984362532, 0.5598676419301706, -0.5235987755982967},
         {-4.283853877480048, -0.523598775598288, -1.065331984362533, 1.356528775342571, -1.065331984362532, 1.356528775342573, -0.5235987755982967, 0.5598676419301706},
@@ -62,7 +62,7 @@ std::vector<std::array<double,8>> comparison_pyrochlore_dipole(){
 }
 
 int main(int argc, char* argv[]){
-    auto size = std::array<unsigned int,3>{1u, 1u, 1u};
+    auto size = std::array<unsigned int,3>{2u, 2u, 2u};
     auto lat = geometry::pyrochlore(size);
     auto axes = pyrochlore_ising_axes();
     auto ep = base::DipoleProfile(lat);
