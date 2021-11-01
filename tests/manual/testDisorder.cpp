@@ -16,7 +16,7 @@ using namespace classmag;
 int main(){
     auto percentage = 52u;
     auto occupancy = static_cast<double>(percentage)/100.0;
-    auto L = 5u;
+    auto L = 3u;
     const std::array<unsigned int,3> size({L,L,L});
     const auto lattice = geometry::hasx(size, occupancy);
     auto partitions = lattice.partitions_();

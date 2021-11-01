@@ -40,24 +40,24 @@ class mock{
 };
 
 int main(){
-    auto L = 3u;
+    auto L = 4u;
     const std::array<unsigned int, 3> size{L,L,L};
     //auto lat = geometry::Lattice(geometry::cubicLattice<3>(size));
-    auto lat = geometry::chas0(size);
+    auto lat = geometry::Lattice(geometry::bccLattice(size));
     base::CouplingsMatrixDense<3> s(lat.n_sites_());
     auto nnp = base::NNProfile(lat);
-    nnp.cutoff = 0.385;
+    nnp.cutoff = 0.87;
     nnp.magnitude = -1.0;
     auto ep = base::DipoleProfile(lat);
     ep.alpha_ = base::optimAlpha(lat.n_sites_(),L*L*L);
-    ep.magnitude_ = 1.0;
+    ep.magnitude_ = 0.0;
     ep.realMirrors_ = 10u;
     ep.recMirrors_ = 10u;
-    base::addDipole(s,ep);
+    //base::addDipole(s,ep);
     base::addNN(s,nnp);
     auto vmp = montecarlo::VectorModel_Profile();
-    vmp.measurement_ =      10;
-    vmp.thermalization_ =   1000000;
+    vmp.measurement_ =      100;
+    vmp.thermalization_ =   100000;
     vmp.n_sites_ = lat.n_sites_();
     #if 1
     std::cout << "Heisen\n";

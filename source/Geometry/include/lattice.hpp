@@ -25,9 +25,6 @@ namespace classmag::geometry{
     
     template <unsigned int dimension>
     class SubLattice{
-        private:
-        std::vector<Euclidean<dimension>> decoration_;
-
         public:
         SubLattice<dimension>(
             const std::array<Euclidean<dimension>,dimension> &bravais,
@@ -38,9 +35,23 @@ namespace classmag::geometry{
         {
         }
 
-        const std::array<Euclidean<dimension>,dimension> bravais_;
-        const std::array<unsigned int,dimension> systemSize_; 
-        
+        SubLattice<dimension>(){};
+
+        std::vector<Euclidean<dimension>> decoration_;
+        std::array<Euclidean<dimension>,dimension> bravais_;
+        std::array<unsigned int,dimension> systemSize_; 
+
+        void set_Bravais(const std::array<Euclidean<dimension>,dimension>& bravais){
+            for (auto ii = 0u; ii < dimension; ++ii){
+                bravais_[ii] = bravais[ii];
+            }
+        }
+
+        void set_size(const std::array<unsigned int,dimension>& size){
+            for (auto ii = 0u; ii < dimension; ++ii){
+                systemSize_[ii] = size[ii];
+            }
+        }
 
         Euclidean<dimension> position_(unsigned int site) const{
             auto periodicityConstant = 1;
@@ -58,6 +69,13 @@ namespace classmag::geometry{
         }
 
         void decorate_(const std::vector<Euclidean<dimension>> & targetDecoration){
+            auto n_decorations = targetDecoration.size();
+            decoration_.resize(n_decorations);
+            for (unsigned int ii = 0; ii < n_decorations; ++ii)
+                decoration_[ii] = targetDecoration[ii];
+        }
+
+        void decorate_(const std::vector<std::array<double,dimension>> & targetDecoration){
             auto n_decorations = targetDecoration.size();
             decoration_.resize(n_decorations);
             for (unsigned int ii = 0; ii < n_decorations; ++ii)
@@ -198,6 +216,14 @@ namespace classmag::geometry{
                 subLattice_[ii] = targetDecoration[ii];
         }
 
+        void decorate_(const std::vector<std::array<double,dimension>> & targetDecoration){
+            if (subLattice_.size() != 1)
+                subLattice_.resize(1);
+            subLattice_[0].decorate_(targetDecoration);
+        }
+
+
+
         void append_(const std::vector<SubLattice<dimension>> & targetDecoration){
             auto n_decorations = targetDecoration.size();
             for (unsigned int ii = 0; ii < n_decorations; ++ii)
@@ -331,6 +357,13 @@ namespace classmag::geometry{
 
         void setBravais_(const std::array<Euclidean<dimension>,dimension>&bravais){
             bravais_ = bravais;
+        }
+
+        void setBravais_(const std::vector<std::array<double, dimension>>& bravais){
+            if (bravais.size() == dimension){
+                for (auto ii = 0u; ii < dimension; ++ii)
+                    bravais_[ii] = bravais[ii];
+            }
         }
 
         void setSize_(const std::array<unsigned int, dimension>& size){
