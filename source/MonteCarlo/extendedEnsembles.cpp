@@ -81,7 +81,7 @@ namespace classmag::montecarlo{
         for (auto ii = 0u; ii < betas_.size() - 1; ii += 2){
             auto deltaBeta = betas_[ii+1] - betas_[ii];
             auto deltaE = energies[process_(ii+1)] - energies[process_(ii)];
-            if (boltzmannFactor(deltaBeta,deltaE) > distr_(mt_))
+            if (boltzmannFactor(-deltaBeta,deltaE) > distr_(mt_))
                 switchProcess_(ii + 1, ii);
         }
 
