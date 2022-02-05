@@ -370,6 +370,27 @@ namespace classmag::geometry{
             systemSize_ = size;
         }
 
+        auto getBravais_() -> std::array<Euclidean<dimension>,dimension>
+        {
+            return bravais_;
+        }
+
+        void getBravais_(const std::vector<std::array<double, dimension>>& bravais){
+            if (bravais.size() == dimension){
+                for (auto ii = 0u; ii < dimension; ++ii)
+                    bravais_[ii] = bravais[ii];
+            }
+        }
+
+        auto getSize_() -> std::array<unsigned int, dimension>{
+            return systemSize_;
+        }
+
+        auto getSubLattice_() -> std::vector<SubLattice<dimension>>
+        {
+            return subLattice_;
+        }
+
         std::string positionString(unsigned int site, const char delim) const{
             auto pos = position_(site);
             std::string result;
