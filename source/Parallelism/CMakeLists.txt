@@ -3,6 +3,7 @@ if(MPI_CXX_FOUND)
         ClassMag_Parallelism
         SHARED
         ${CMAKE_CURRENT_SOURCE_DIR}/messengers.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ArrayMessage.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/messengers.hpp
     )
 
