@@ -4,7 +4,7 @@
 #include <mpi.h>
 #include <vector>
 
-#include "FileIO/include/filesystem.hpp"
+#include "ArrayMessage.hpp"
 namespace classmag::parallelism{
 
     class Hub{
@@ -12,7 +12,7 @@ namespace classmag::parallelism{
         Hub();
         int scatterDoubles_(const std::vector<double> &source, int tag);
         int gatherDoubles_(std::vector<double> &target, int tag);
-        int gatherDoubles_(fileio::VectorTarget &target, int tag);
+        int gatherDoubles_(ArrayMessage &target, int tag);
 
         private:
         int listeners_;

@@ -4,9 +4,9 @@
 #include <vector>
 
 namespace classmag::parallelism{
-    struct VectorTarget{
+    struct ArrayMessage{
         public:
-        VectorTarget(const unsigned int n):
+        ArrayMessage(const unsigned int n):
         messageLength_(n)
         {
             data_.resize(n);

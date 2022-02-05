@@ -27,7 +27,7 @@ namespace classmag::parallelism {
         return 0;
     }
 
-    int Hub::gatherDoubles_(fileio::VectorTarget &target, int tag){
+    int Hub::gatherDoubles_(ArrayMessage &target, int tag){
         target.data_.resize(listeners_);
         
         auto entry = 0u;
