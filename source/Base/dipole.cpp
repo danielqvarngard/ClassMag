@@ -1,5 +1,5 @@
 #include "include/dipole.hpp"
-#include "include/linearCoupling.hpp"
+//#include "include/linearCoupling.hpp"
 
 namespace classmag::base{
     double optimAlpha(
@@ -87,7 +87,7 @@ namespace classmag::base{
         range = integerSweepExclude<3>(ep.recMirrors_);
         auto reclattice = geometry::reciprocalBasis(ep.lattice_.getBravais_());
         for (auto ii = 0u; ii < 3; ++ii){
-            reclattice[ii] *= (M_PI/3.0)/ep.lattice_.getSize_()[ii]; // wtf is this prefactor
+            reclattice[ii] *= (M_PI/3.0)/ep.lattice_.getSize_()[ii]; 
         }
         auto r = ep.lattice_.position_(site1) - ep.lattice_.position_(site2);
         for (auto n : range){
@@ -96,7 +96,7 @@ namespace classmag::base{
         }
         return (-ep.magnitude_) * result;
     }
-
+#if 0
     void addDipole(CouplingsMatrixDense<3> &target, const DipoleProfile& ep){
         for (auto ii = 0u; ii < ep.lattice_.n_sites_(); ++ii){
             for (auto jj = ii; jj < ep.lattice_.n_sites_(); ++jj){
@@ -105,4 +105,5 @@ namespace classmag::base{
             }
         }
     }
+#endif
 }

@@ -1,6 +1,12 @@
 #include "include/rkky.hpp"
 
 namespace classmag::base{
+    double rkky_value(const double k_F, const double r){
+        auto x = 2.0*k_F*r;
+        auto coupling  = -(x*cos(x) - sin(x))/(pow(x,4.0));
+        return coupling;
+    };
+
     std::function<double(const unsigned int, const unsigned int)>
         rkkyInteraction(
             const double kf,

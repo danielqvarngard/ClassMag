@@ -2,7 +2,8 @@
 #define CLASSMAG_BASE_NEARESTNEIGHBOR_HPP
 
 #include <functional>
-#include "linearCoupling.hpp"
+#include <iostream>
+//#include "linearCoupling.hpp"
 #include "Geometry/include/lattice.hpp"
 
 namespace classmag::base{
@@ -17,7 +18,7 @@ namespace classmag::base{
 
         const geometry::PointMetric& lattice;
         double cutoff;
-        double magnitude;
+        double magnitude = 1.0;
     };
 
     template<unsigned int dimension>
@@ -36,22 +37,23 @@ namespace classmag::base{
         return interaction;
     };
 
+#if 0 
     template<typename T, unsigned int spinDim>
     void addNN(
         LinearCouplings<T,spinDim> &target, 
         const NNProfile& nnp){
-
+        std::cout << "Base addNN called \n";
     }
-
 
     template<unsigned int spinDim>
     void addNN(
         CouplingsMatrixDense<spinDim>& target, 
         const NNProfile& nnp)
     {
+        std::cout << "Matrix addNN called\n";
         for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
             for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
-                if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff)
+                if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff*nnp.cutoff)
                     target.add(ii,jj, nnp.magnitude*geometry::eye<spinDim>());
             }
         }
@@ -62,13 +64,15 @@ namespace classmag::base{
         CouplingScalarDense<spinDim>& target, 
         const NNProfile& nnp)
     {
+        std::cout << "Scalar addNN called\n";
         for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
             for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
-                if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff)
+                if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff*nnp.cutoff)
                     target.add(ii, jj, nnp.magnitude);
             }
         }
     };
+#endif
 }
 
 #endif

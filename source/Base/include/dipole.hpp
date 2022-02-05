@@ -6,10 +6,18 @@
 #include "Geometry/include/lattice.hpp"
 #include "Geometry/include/reciprocal.hpp"
 #include "numerics.hpp"
-#include "couplingLookup.hpp"
-#include "linearCoupling.hpp"
+//#include "couplingLookup.hpp"
+//#include "linearCoupling.hpp"
 
 namespace classmag::base{
+
+    double volume(const geometry::Lattice<3> &lat){
+        auto bravais = lat.getBravais_();
+        auto size = lat.getSize_();
+        auto V = static_cast<double>(size[0]*size[1]*size[2]);
+        V *= abs(bravais[0] * geometry::cross(bravais[1],bravais[2]));
+        return V;
+    }
 
     struct DipoleProfile{
         public:
@@ -60,7 +68,7 @@ namespace classmag::base{
         const unsigned int site2,
         const DipoleProfile &ep);
 
-    void addDipole(CouplingsMatrixDense<3> &target, const DipoleProfile& ep);
+//    void addDipole(CouplingsMatrixDense<3> &target, const DipoleProfile& ep);
 }
 
 #endif

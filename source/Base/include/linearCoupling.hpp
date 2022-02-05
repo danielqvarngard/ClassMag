@@ -6,6 +6,9 @@
 
 #include "Geometry/include/matrix.hpp"
 #include "spinStructure.hpp"
+#include "dipole.hpp"
+#include "nearestNeighbor.hpp"
+#include "rkky.hpp"
 
 namespace classmag::base{
     template<unsigned int dim>
@@ -22,6 +25,18 @@ namespace classmag::base{
 
         virtual inline unsigned int get_n() const {
             return 0u;
+        }
+
+        virtual void addNN(const NNProfile& nnp) {
+            std::cout << "Base addNN called\n";
+        }
+        virtual void addDipole(const DipoleProfile& ep) {
+            std::cout << "Base addDipole called\n";
+        }
+
+
+        virtual void addRKKY(const RKKYProfile& profile) {
+            std::cout << "Base addRKKY called\n";
         }
         
         protected:
@@ -49,6 +64,8 @@ namespace classmag::base{
         }
     };
 
+
+    // TODO: Is the spin dimension parameter necessary?
     template<typename T, unsigned int dim>
     class CouplingsDense : public LinearCouplings<T, dim>{
         
@@ -114,8 +131,8 @@ namespace classmag::base{
         }
     };
     
-    template<unsigned int dim>
-    class CouplingsMatrixDense : public CouplingsDense<geometry::Matrix<dim, dim>, dim>
+//    template<unsigned int dim>
+    class CouplingsMatrixDense : public CouplingsDense<geometry::Matrix<3, 3>, 3>
     {
         public:
         CouplingsMatrixDense(){
@@ -140,6 +157,39 @@ namespace classmag::base{
                 this->couplingvalues[ii] = 0.0 * geometry::eye<3>();
             }
         }
+
+        virtual void addNN(const NNProfile& nnp) override
+        {
+            for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
+                for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
+                    if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff*nnp.cutoff)
+                        add(ii,jj, nnp.magnitude*geometry::eye<3>());
+                }
+            }
+        };
+
+        virtual void addDipole(const DipoleProfile& ep) override 
+        {
+            for (auto ii = 0u; ii < ep.lattice_.n_sites_(); ++ii){
+                for (auto jj = ii; jj < ep.lattice_.n_sites_(); ++jj){
+                    auto x = dipoleMatrix(ii,jj,ep);
+                    add(ii,jj,x);
+                }
+            }
+        }
+
+        virtual void addRKKY(const RKKYProfile& profile) override
+        {
+        for (auto ii = 0u; ii < profile.lattice.n_sites_(); ++ii){
+            for (auto jj = ii + 1; jj < profile.lattice.n_sites_(); ++jj){
+                auto r2 = profile.lattice.squareDistance_(ii,jj);
+                if (r2 < profile.cutoff*profile.cutoff){
+                    auto strength = profile.magnitude*rkky_value(profile.k_F, sqrt(r2));
+                    add(ii,jj, strength*geometry::eye<3>());
+                }
+            }
+        }
+    };
     };
 
     template<unsigned int dim>
