@@ -50,3 +50,40 @@ target_link_libraries(
     ClassMag_ParallelTempering
 )
 endif()
+
+if(MPI_CXX_FOUND)
+    add_executable(
+        approximantPaper.mpix
+        ${CMAKE_CURRENT_SOURCE_DIR}/approximantPaper.cpp
+    )
+
+    target_link_libraries(
+        approximantPaper.mpix
+        PUBLIC
+        MPI::MPI_CXX
+        ClassMag_MonteCarlo
+        ClassMag_FileIO
+        ClassMag_Parallelism
+        ClassMag_ParallelTempering
+    )
+
+    add_executable(
+        approximantPaperXY.mpix
+        ${CMAKE_CURRENT_SOURCE_DIR}/approximantPaperXY.cpp
+    )
+
+    target_link_libraries(
+        approximantPaperXY.mpix
+        PUBLIC
+        MPI::MPI_CXX
+        ClassMag_MonteCarlo
+        ClassMag_FileIO
+        ClassMag_Parallelism
+        ClassMag_ParallelTempering
+    )
+
+    add_executable(
+        mpitest.mpix
+        ${CMAKE_CURRENT_SOURCE_DIR}/mpitest.cpp
+    )
+endif()
