@@ -38,7 +38,7 @@ int main(int argc, char* argv[]){
     auto temperature_intervals = fileio::read_temperatures(infile);
     auto temperatures = fileio::convert_temperature_intervals(
         world_size - 1, temperature_intervals);
-    auto betas = montecarlo::reciprocal_vector(temperatures);
+    auto betas = montecarlo::invert_vector_elements(temperatures);
     montecarlo::VectorModel_Profile mco;
 
     fileio::readMCO(mco, infile);

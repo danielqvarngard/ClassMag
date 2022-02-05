@@ -29,7 +29,7 @@ namespace classmag::montecarlo{
         return cosine;
     }
 
-    std::vector<double> reciprocal_vector(const std::vector<double>& v){
+    std::vector<double> invert_vector_elements(const std::vector<double>& v){
         std::vector<double> result(v.size());
         for (auto ii = 0u; ii < v.size(); ++ii)
             result[ii] = 1.0/v[ii];

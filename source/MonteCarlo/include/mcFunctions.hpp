@@ -14,7 +14,7 @@ namespace classmag::montecarlo{
     double logarithm(double x);
     double boltzmannFactor(double beta, double delta_E);
     double heatBathCosine(double fieldStrength, double z);
-    std::vector<double> reciprocal_vector(const std::vector<double>& v);
+    std::vector<double> invert_vector_elements(const std::vector<double>& v);
 }
 
 #endif
