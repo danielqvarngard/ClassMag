@@ -14,7 +14,23 @@ namespace classmag::base{
     std::vector<double> linspace(
         const double min, 
         const double max, 
-        const unsigned int stepCount);
+        const unsigned int stepCount
+    );
+
+    std::vector<double> linspace_open(
+        const double min, 
+        const double max, 
+        const unsigned int stepCount
+    );
+
+    std::vector<double> logspace(
+        const double min,
+        const double max,
+        const unsigned int step_count
+    );
+
+    double trapz_term(const double d0, const double d1, const double dx);
+    double euler_forward(const double d0, const double d1, const double dx);
     
     template<unsigned int dimension>
     std::vector<geometry::Euclidean<dimension>> integerSweepPositive(unsigned int nmax){
