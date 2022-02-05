@@ -9,6 +9,7 @@
 #include <cerrno>
 
 #include "filesystem.hpp"
+#include "Parallelism/include/ArrayMessage.hpp"
 
 namespace classmag::fileio{
     class OStreamManager{
@@ -52,7 +53,7 @@ namespace classmag::fileio{
             return (*this);
         }
 
-        OStreamManager &operator<<(const VectorTarget &v){
+        OStreamManager &operator<<(const parallelism::ArrayMessage &v){
             for (auto ii = 0u; ii < v.messageLength_; ++ii){
                 for (auto d : v.data_[ii]){
                     (*this) << d;
