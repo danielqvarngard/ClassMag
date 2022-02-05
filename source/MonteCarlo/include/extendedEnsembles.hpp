@@ -37,6 +37,7 @@ namespace classmag::montecarlo{
         private:
         void seed_(const int seed);
         std::vector<double> betas_;
+        std::vector<double> acceptance_rates_;
 
         std::mt19937 mt_ = std::mt19937(0);
         std::uniform_real_distribution<double> distr_ =
@@ -48,6 +49,7 @@ namespace classmag::montecarlo{
         virtual void update_(const std::vector<double> &energies);
 
         std::vector<double> reorderedBetas_();
+        std::vector<double> get_acceptance_rates_();
     };
 }
 
