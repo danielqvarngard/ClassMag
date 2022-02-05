@@ -28,4 +28,11 @@ namespace classmag::montecarlo{
         auto cosine = (1.0/fieldStrength) * logarithm(logArgument) + 1.0;
         return cosine;
     }
+
+    std::vector<double> reciprocal_vector(const std::vector<double>& v){
+        std::vector<double> result(v.size());
+        for (auto ii = 0u; ii < v.size(); ++ii)
+            result[ii] = 1.0/v[ii];
+        return result;
+    }
 }
