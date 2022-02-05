@@ -55,9 +55,9 @@ namespace classmag::montecarlo{
         return result;
     }
 
-    fileio::VectorTarget PermutationManager::variableOrdered_(
-        const fileio::VectorTarget &processordered){
-        fileio::VectorTarget result(processordered.messageLength_);
+    parallelism::ArrayMessage PermutationManager::variableOrdered_(
+        const parallelism::ArrayMessage &processordered){
+        parallelism::ArrayMessage result(processordered.messageLength_);
         for (auto ii = 0u; ii < processordered.messageLength_; ++ii){
             for (auto jj = 0u; jj < processordered.data_[ii].size(); ++jj)
                 result.data_[variable_(ii)][jj] = processordered.data_[ii][jj];

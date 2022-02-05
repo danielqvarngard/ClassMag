@@ -5,7 +5,7 @@
 #include <random>
 
 #include "mcFunctions.hpp"
-#include "FileIO/include/filesystem.hpp"
+#include "Parallelism/include/ArrayMessage.hpp"
 
 namespace classmag::montecarlo{
     struct PermutationEntry{
@@ -23,7 +23,7 @@ namespace classmag::montecarlo{
 
         std::vector<double> processOrdered_(const std::vector<double> &variableordered);
         std::vector<double> variableOrdered_(const std::vector<double> &processordered);
-        fileio::VectorTarget variableOrdered_(const fileio::VectorTarget &processordered);
+        parallelism::ArrayMessage variableOrdered_(const parallelism::ArrayMessage &processordered);
         protected:
         PermutationManager(unsigned int size);
         inline void switchProcess_(unsigned int a, unsigned int b);
