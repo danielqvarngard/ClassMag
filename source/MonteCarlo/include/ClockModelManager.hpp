@@ -11,7 +11,7 @@
 #include "mcFunctions.hpp"
 namespace classmag::montecarlo {
     template<unsigned int spinDim>
-    class AnisotropyVectors : 
+    class EasyAxisVectors : 
         public std::vector<
             std::vector<
                 geometry::Euclidean<spinDim>>>{
@@ -23,7 +23,7 @@ namespace classmag::montecarlo {
 
         ClockModelManager(
             base::LinearBase<spinDim>& cr, 
-            AnisotropyVectors<spinDim>& av):
+            EasyAxisVectors<spinDim>& av):
             couplings(cr),
             anivecs(av)
         {
@@ -97,7 +97,7 @@ namespace classmag::montecarlo {
         private:
         unsigned int thermRuns = 100000;
         const base::LinearBase<spinDim>& couplings;
-        const AnisotropyVectors<spinDim>& anivecs;
+        const EasyAxisVectors<spinDim>& anivecs;
         std::mt19937 rng;
         base::SpinStructure<spinDim> spin;
         std::vector<unsigned int> representation;
@@ -154,7 +154,7 @@ namespace classmag::montecarlo {
         private:
         base::SpinStructure<spinDim> spin;
         base::LinearBase<spinDim>& couplings;
-        AnisotropyVectors<spinDim>& set;
+        EasyAxisVectors<spinDim>& set;
         double beta;
         double partitionfcn;
         bool partitioncomputed = false;
