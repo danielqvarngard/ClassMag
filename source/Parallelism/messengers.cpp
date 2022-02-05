@@ -1,4 +1,5 @@
 #include "include/messengers.hpp"
+#include <iostream>
 
 namespace classmag::parallelism {
     Hub::Hub()
@@ -13,12 +14,12 @@ namespace classmag::parallelism {
         target.resize(listeners_);
         
         auto entry = 0u;
-        for (unsigned int ii = 0; ii < rank_ - 1; ++ii){
+        for (int ii = 0; ii < rank_ - 1; ++ii){
             MPI_Recv(&target[entry], 1, MPI_DOUBLE, ii, tag, comm_, &status_);
             ++entry;
         }
 
-        for (unsigned int ii = rank_ + 1; ii < listeners_ + 1; ++ii){
+        for (int ii = rank_ + 1; ii < listeners_ + 1; ++ii){
             MPI_Recv(&target[entry], 1, MPI_DOUBLE, ii, tag, comm_, &status_);
             ++entry;
         }
@@ -30,7 +31,7 @@ namespace classmag::parallelism {
         target.data_.resize(listeners_);
         
         auto entry = 0u;
-        for (auto ii = 0u; ii < rank_ - 1u; ++ii){
+        for (auto ii = 0; ii < rank_ - 1; ++ii){
             target.data_[entry].resize(target.messageLength_);
             MPI_Recv(
                 &target.data_[entry][0], 
@@ -43,7 +44,7 @@ namespace classmag::parallelism {
             ++entry;
         }
 
-        for (auto ii = 0u; ii < rank_ - 1u; ++ii){
+        for (auto ii = rank_ + 1; ii < listeners_ + 1; ++ii){
             target.data_[entry].resize(target.messageLength_);
             MPI_Recv(
                 &target.data_[entry][0], 
@@ -60,16 +61,17 @@ namespace classmag::parallelism {
     };
 
     int Hub::scatterDoubles_(const std::vector<double> &source, int tag){
-        if (source.size() != listeners_)
-            return 1;
+//        if (source.size() != listeners_){
+//            return 1;
+//        }
         
         auto entry = 0u;
-        for (unsigned int ii = 0; ii < rank_ - 1; ++ii){
+        for (int ii = 0; ii < rank_ - 1; ++ii){
             MPI_Send(&source[entry], 1, MPI_DOUBLE, ii, tag, comm_);
             ++entry;
         }
 
-        for (unsigned int ii = rank_ + 1; ii < listeners_ + 1; ++ii){
+        for (int ii = rank_ + 1; ii < listeners_ + 1; ++ii){
             MPI_Send(&source[entry], 1, MPI_DOUBLE, ii, tag, comm_);
             ++entry;
         }
