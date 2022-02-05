@@ -17,7 +17,7 @@ namespace classmag::fileio{
         PREDEFINED
     };
 
-    std::map<const std::string, GeoState> mapsetup(){
+    inline std::map<const std::string, GeoState> mapsetup(){
         std::map<const std::string, GeoState> result;
         result["Size"] = GeoState::SIZE;
         result["Sublattice"] = GeoState::SUBLATTICE;
@@ -42,22 +42,29 @@ namespace classmag::fileio{
             }
             while (ifp.good()){
                 std::string str;
-                std::stringstream str_stream;
                 getline(ifp, str);
                 auto entry = readEntryName(str);
+                
                 auto it = strmap.find(entry);
                 if (it != strmap.end()){
-                    switch (strmap.at(str))
+                    switch (strmap.at(entry))
                     {
-                    case GeoState::SIZE:
-                        getline(ifp,str);
+                    case GeoState::SIZE:{
                         lattice.setSize_(readRow<unsigned int,latDim>(str));
                         break;
-                    case GeoState::BRAVAIS:
+                    }
+                    case GeoState::BRAVAIS:{
                         lattice.setBravais_(readMatrix<double,latDim>(ifp));
                         break;
-                    case GeoState::DECORATION:
+                    }
+                    case GeoState::DECORATION:{
                         lattice.decorate_(readMatrix<double,latDim>(ifp));
+                        break;
+                    }
+                    case GeoState::PREDEFINED:{
+                        
+                        break;
+                    }
                     default:
                         break;
                     }
@@ -71,6 +78,49 @@ namespace classmag::fileio{
         }
         
         return lattice;
+    }
+
+    template<unsigned int latDim>
+    geometry::Lattice<latDim> readPredefLattice(){
+
+    }
+
+    template<unsigned int latDim>
+    std::array<unsigned int, latDim> readSize(const std::string& latticefile){
+        auto strmap = mapsetup();
+        std::array<unsigned int, latDim> size;
+        try
+        {
+            std::ifstream ifp(latticefile);
+            if (!ifp.is_open() || !ifp.good()){
+                std::string errormsg = "Error opening lattice file " + latticefile;
+                throw std::runtime_error(errormsg); 
+            }
+            while (ifp.good()){
+                std::string str;
+                getline(ifp, str);
+                auto entry = readEntryName(str);
+                auto it = strmap.find(entry);
+                if (it != strmap.end()){
+                    switch (strmap.at(entry))
+                    {
+                    case GeoState::SIZE:{
+                        size = readRow<unsigned int,latDim>(str);
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                }
+            }
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+            abort();
+        }
+        
+        return size;
     }
 }
 
