@@ -24,6 +24,7 @@ namespace classmag::fileio{
         result["RKKY"] = CouplingType::RKKY;
         result["rkky"] = CouplingType::RKKY;
         result["Dipole"] = CouplingType::DIPOLE;
+        result["dipole"] = CouplingType::DIPOLE;
         return result;
     }
 
@@ -38,9 +39,11 @@ namespace classmag::fileio{
         std::map<const std::string, NNParams> result;
         result[breakstring()] = NNParams::BREAK;
         result["Magnitude"] = NNParams::MAGNITUDE;
+        result["magnitude"] = NNParams::MAGNITUDE;
         result["NN Magnitude"] = NNParams::MAGNITUDE;
         result["NN magnitude"] = NNParams::MAGNITUDE;
         result["Cutoff"] = NNParams::CUTOFF;
+        result["cutoff"] = NNParams::CUTOFF;
         result["Cutoff Radius"] = NNParams::CUTOFF;
         result["Cutoff radius"] = NNParams::CUTOFF;
         return result;
@@ -61,10 +64,14 @@ namespace classmag::fileio{
         std::map<const std::string,RKKYParams> result;
         result[breakstring()] = RKKYParams::BREAK;
         result["Magnitude"] = RKKYParams::MAGNITUDE;
+        result["magnitude"] = RKKYParams::MAGNITUDE;
         result["kf"] = RKKYParams::KF;
+        result["k_f"] = RKKYParams::KF;
+        result["k_F"] = RKKYParams::KF;
         result["Fermi wavevector"] = RKKYParams::KF;
         result["Fermi Wavevector"] = RKKYParams::KF;
         result["Cutoff"] = RKKYParams::CUTOFF;
+        result["cutoff"] = RKKYParams::CUTOFF;
         result["Cutoff radius"] = RKKYParams::CUTOFF;
         result["Cutoff Radius"] = RKKYParams::CUTOFF;
         result["Alpha"] = RKKYParams::ALPHA;
@@ -91,6 +98,7 @@ namespace classmag::fileio{
         std::map<const std::string,DipoleParams> result;
         result[breakstring()] = DipoleParams::BREAK;
         result["Magnitude"] = DipoleParams::MAGNITUDE;
+        result["magnitude"] = DipoleParams::MAGNITUDE;
         result["Cutoff"] = DipoleParams::CUTOFF;
         result["Cutoff radius"] = DipoleParams::CUTOFF;
         result["Cutoff Radius"] = DipoleParams::CUTOFF;
@@ -99,8 +107,11 @@ namespace classmag::fileio{
         result["k mirrors"] = DipoleParams::KMIRRORS;
         result["Reciprocal Mirrors"] = DipoleParams::KMIRRORS;
         result["Reciprocal mirrors"] = DipoleParams::KMIRRORS;
+        result["reciprocal mirrors"] = DipoleParams::KMIRRORS;
         result["Real Mirrors"] = DipoleParams::RMIRRORS;
         result["Real mirrors"] = DipoleParams::RMIRRORS; 
+        result["real mirrors"] = DipoleParams::RMIRRORS; 
+        result["r mirrors"] = DipoleParams::RMIRRORS; 
         return result;
     }
 }
