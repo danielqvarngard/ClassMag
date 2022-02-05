@@ -2,6 +2,7 @@
 #define CLASSMAG_MONTECARLO_MCFUNCTIONS_HPP
 
 #include <cmath>
+#include <vector>
 
 #include "Geometry/include/euclidean.hpp"
 
@@ -13,6 +14,7 @@ namespace classmag::montecarlo{
     double logarithm(double x);
     double boltzmannFactor(double beta, double delta_E);
     double heatBathCosine(double fieldStrength, double z);
+    std::vector<double> reciprocal_vector(const std::vector<double>& v);
 }
 
 #endif
