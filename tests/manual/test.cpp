@@ -8,210 +8,25 @@
 #include <map>
 #include <stdexcept>
 
-std::string readEntryName(const std::string &row){
-    std::stringstream stream;
-    stream << row;
-    bool finito = false;
-    std::string entry;
-    while (!stream.eof() && !finito){
-        
-        std::string temp;
-        stream >> temp;
-        if (temp.compare("=") != 0){
-            if (!entry.empty())
-                entry += " ";
-            entry += temp;
-        }
-        else
-            finito = true;
-    }
-    return entry;
+#include "Geometry/include/predefLattices.hpp"
+#include "MonteCarlo/include/PredefAnisotropyVectors.hpp"
+using namespace classmag;
+
+void print_euclidean(const geometry::Euclidean<3>& e){
+    for (auto ii = 0u; ii < 3; ++ii)
+        std::cout << e[ii] << " ";
+    std::cout << "\n";
 }
 
-int readDelimiter(const std::string &line){
-    if (line.find('{') < line.npos)
-        return -1;
-    if (line.find('}') < line.npos)
-        return +1;
-    return 0;
-}
-
-bool matrixEnd(const std::string &line){
-    if (line.find('}') < line.npos)
-        return true;
-    else
-        return false;
-}
-
-template<typename T, unsigned int dim>
-std::array<T, dim> readRow(const std::string line){
-    std::stringstream stream;
-    std::array<T, dim> result;
-    stream << line;
-    unsigned int ii = 0;
-    while (!stream.eof()){
-        std::string temp_str;
-        T value;
-        stream >> temp_str;
-        if (std::stringstream(temp_str) >> value){
-            result[ii] = value;
-            ++ii;
+    template<unsigned int spinDim>
+    void print_easyplane_norms(const montecarlo::EasyPlaneVectors<spinDim>& x){
+        for (auto ii = 0; ii < x.size(); ++ii){
+            std::cout << geometry::norm(x[ii][0]) << " " << geometry::norm(x[ii][1]) << "\n";
         }
     }
-    if (ii < dim)
-        std::cout << "error reading entries\n";
-    return result;
-    
-}
-
-template<typename T, unsigned int columns>
-std::vector<std::array<T, columns>> readMatrix(std::ifstream &ifp){
-    std::vector<std::array<T,columns>> result;
-    bool endOfMatrix = false;
-    while (!endOfMatrix){
-        std::string line;
-        getline(ifp, line);
-        if (matrixEnd(line) || ifp.eof())
-            endOfMatrix = true;
-        else{
-            auto row = readRow<T,columns>(line);
-            result.push_back(row);
-        }
-    }
-    return result;
-}
-
-template<typename T, unsigned int dim>
-void printrow(std::array<T, dim> &row){
-    for(auto ii = 0u; ii < dim; ++ii)
-        std::cout << row[ii] << " ";
-}
-
-template<typename T, unsigned int dim>
-void printmatrix(std::vector<std::array<T, dim>> &matrix){
-    for(auto ii = 0u; ii < matrix.size(); ++ii){
-        printrow<T, dim>(matrix[ii]);
-        std::cout << "\n";
-    }
-}
-
-enum StringLabels{
-    PDI_INVALID = -1,
-    PDI_FOO = 1,
-    PDI_BAR = 2
-};
-
-std::map<const std::string, int> mapsetup(){
-    std::map<const std::string, int> result;
-    result["foo"] = PDI_FOO;
-    result["bar"] = PDI_BAR;
-    return result;
-}
-
-template<unsigned int n, unsigned int m>
-class base{
-    public:
-    virtual std::string get_string() const{
-        return "gaba\n";
-    }
-
-    unsigned int g = 0;
-};
-
-template<unsigned int n>
-class derived : public base<n,n>{
-    public:
-    virtual std::string get_string() const{
-        return "gool\n";
-    }
-    
-};
-
-class derived2 : public derived<1>{
-    public:
-    std::string get_string() const final{
-        return "!\n";
-    }
-};
-
-template<unsigned int n, unsigned int m>
-void print_string(base<n,m>& b){
-    std::cout << b.get_string();
-    b.g = 1;
-}
-
-
 
 int main(int argc, char* argv[]){
-    #if 0
-    const auto mappus = mapsetup();
-    const std::string str = "bat";
-    auto it = mappus.find(str);
-    if (it != mappus.end()){
-        switch (mappus.at(str))
-        {
-        case PDI_FOO:
-            std::cout << "foo detected\n";
-            break;
-        case PDI_BAR:
-            std::cout << "bar detected\n";
-            break;
-        default:
-            break;
-        }
-    }
-    else
-        std::cout << "bullshit string asshole\n";
-
-    #endif
-    #if 0
-    std::ifstream ifp;
-    for (auto ii = 0; ii < argc; ++ii){
-        if (!strcmp(argv[ii], "-input")){
-            try
-            {
-                ifp.open(argv[ii + 1], std::ifstream::in);
-                if(!ifp.is_open() || !ifp.good())
-                    throw std::runtime_error("File not found.");
-                std::cout << "Alles godt?\n";
-            }
-            catch(const std::exception& e)
-            {
-                std::cerr << e.what() << '\n';
-                abort();
-            }
-            
-            
-        }
-    }
-    std::cout << "get going\n";
-    int s = 0;
-    int r = 0;
-    if (ifp.is_open() && ifp.good()){
-        std::cout << "ifp.is_open()\n";
-        
-        while (ifp.good()){
-            std::string str;
-            std::stringstream str_stream;
-            getline(ifp, str);
-            str_stream << str;
-            std::string entry;
-            if(readEntryName(str).compare("Array") == 0){
-                auto arr = readMatrix<double,3>(ifp);
-                printmatrix<double,3>(arr);
-            }
-
-            while (!str_stream.eof()){
-                std::string temp_str;
-                str_stream >> temp_str;
-                double temp_value;
-            }
-
-        }
-    }
-    #endif
-
-    derived2 d;
-    print_string(d);
+    auto x = montecarlo::compute_tsai_easyplanes();
+    print_easyplane_norms(x);
     return 0;
 }

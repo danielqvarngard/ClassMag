@@ -1,66 +1,99 @@
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <vector>
 
+#include <mpi.h>
 
 #include "Geometry/include/predefLattices.hpp"
 #include "Base/include/nearestNeighbor.hpp"
 #include "Base/include/dipole.hpp"
+#include "Base/include/rkky.hpp"
 #include "Base/include/linearCoupling.hpp"
+#include "Base/include/numerics.hpp"
 #include "MonteCarlo/include/HeatBath.hpp"
 #include "MonteCarlo/include/ClockModelManager.hpp"
 #include "MonteCarlo/include/postProcessing.hpp"
+#include "FileIO/include/filesystem.hpp"
+#include "FileIO/include/scancmd.hpp"
 
 using namespace classmag;
 
-class mock{
-    public:
-    unsigned int n_sites = 6u;
+int main(int argc, char* argv[]){
+    MPI_Init(NULL,NULL);
+
+    int world_size;
+	MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+	
+	int world_rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
+    auto s_lower = fileio::get_cmd_flag_str(argc,argv, "-Jl");
+    double j_lower = 1.0;
+    if (!s_lower.empty()){
+        j_lower = std::stod(s_lower);
+    }
+    auto s_higher = fileio::get_cmd_flag_str(argc,argv, "-Jh");
+    double j_higher = 10.0;
+    if (!s_higher.empty()){
+        j_higher = std::stod(s_higher);
+    }
+    double k_F = 19.8;
+    auto s_k = fileio::get_cmd_flag_str(argc,argv,"-k_F");
+    if (!s_k.empty()){
+        k_F = std::stod(s_k);
+    }
+    auto L = 2u;
+    auto s_L = fileio::get_cmd_flag_str(argc,argv,"-L");
+    if (!s_L.empty()){
+        L = std::stoi(s_L);
+    }
+    double j = j_lower;
+    if (world_size > 1){
+        auto n = static_cast<double>(world_size) - 1.0;
+        auto m = static_cast<double>(world_rank);
+        j = m * (j_higher - j_lower)/n + j_lower;
+    }
+
     
-    inline unsigned int columnIndex(const unsigned int a) const
-    {
-        return (a * n_sites - ((a + 1u) * a)/2u);
-    }
-    inline unsigned int index(const unsigned int a, const unsigned int b) const 
-    {
-        if (a < b)
-            return index(b, a);
-        else
-            return (a + columnIndex(b));
-    }
+    
+    std::string dir = "../out/";
+    std::string label = fileio::datestamp();
+    label += "_" + std::to_string(L) + "_" + std::to_string(world_rank); 
+    std::string filename = dir + label + ".mcout";
+    std::ofstream ofp(filename);
+    ofp << "Wavevector = " + std::to_string(k_F) + "\n";
+    ofp << "J_rkky/J_dip = " + std::to_string(j) + "\n";
+    ofp << "-----------------\n";
 
-    void print(){
-        for (auto ii = 0u; ii < n_sites; ++ii){
-            for (auto jj = ii; jj < n_sites; ++jj){
-                std::cout << index(ii,jj) << " "; 
-            }
-            std::cout << "\n";
-        }
-    }
-};
-
-int main(){
-    auto L = 4u;
+    
     const std::array<unsigned int, 3> size{L,L,L};
     //auto lat = geometry::Lattice(geometry::cubicLattice<3>(size));
-    auto lat = geometry::Lattice(geometry::bccLattice(size));
-    base::CouplingsMatrixDense<3> s(lat.n_sites_());
+    auto lat = geometry::chas0_bipartite(size);
+    base::CouplingsMatrixDense s(lat.n_sites_());
+
+    auto rkkyp = base::RKKYProfile(lat);
+    rkkyp.k_F = k_F;
+    rkkyp.cutoff = 2.0 * static_cast<double>(L);
+    rkkyp.magnitude = 8.0 * j * k_F * k_F * k_F;
+
     auto nnp = base::NNProfile(lat);
-    nnp.cutoff = 0.87;
+    nnp.cutoff = 0.387;
     nnp.magnitude = -1.0;
     auto ep = base::DipoleProfile(lat);
     ep.alpha_ = base::optimAlpha(lat.n_sites_(),L*L*L);
-    ep.magnitude_ = 0.0;
+    ep.magnitude_ = 1.0;
     ep.realMirrors_ = 10u;
     ep.recMirrors_ = 10u;
-    //base::addDipole(s,ep);
-    base::addNN(s,nnp);
+    s.addDipole(ep);
+    //base::addNN(s,nnp);
+    s.addRKKY(rkkyp);
     auto vmp = montecarlo::VectorModel_Profile();
-    vmp.measurement_ =      100;
-    vmp.thermalization_ =   100000;
+    vmp.measurement_ =      100000;
+    vmp.thermalization_ =   1000000;
     vmp.n_sites_ = lat.n_sites_();
     #if 1
-    std::cout << "Heisen\n";
+    //ofp << "Heisen\n";
     auto mc = montecarlo::HeatBath<3>(vmp, s);
     #endif
 
@@ -68,23 +101,18 @@ int main(){
     auto v1 = geometry::Euclidean<3>({0.0, 0.0, 1.0});
     auto v2 = geometry::Euclidean<3>({0.0, 0.0, -1.0});
     auto baseset = std::vector<geometry::Euclidean<3>>({v1,v2});
-    auto anivecs = montecarlo::AnisotropyVectors<3>();
+    auto anivecs = montecarlo::EasyAxisVectors<3>();
     for (auto ii = 0u; ii < vmp.n_sites_; ++ii)
         anivecs.push_back(baseset);
     montecarlo::ClockModelManager<3> mc(s,anivecs);
     mc.beta_ = 1.0;
-    std::cout << "Ising\n";
-    #endif
-    #if 0
-    auto T = {  10.0, 6.0, 4.0, 3.0, 2.5,
-                2.0, 1.5, 1.4, 1.3, 1.2, 1.1, 1.0, 0.9,
-                0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5, 0.475, 
-                0.45, 0.4, 0.35, 0.325, 0.3, 0.28, 0.26, 0.24, 0.22,
-                0.20, 0.18, 0.16, 0.14, 0.12, 0.1, 0.09, 0.08,
-                0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01};
+    ofp << "Ising\n";
     #endif
     #if 1
-    auto T = {0.0001, 0.00001, 0.000001, 0.0000001, 0.00000001, 0.00000001};
+    auto T = {  20.0, 16.0, 14.0, 12.0,
+                10.0, 9.5, 9.0, 8.5, 8.0, 7.5, 7.0,
+                6.5, 6.0, 5.5, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5,
+                2.0, 1.5,  1.0, 0.5, 0.25, 0.1, 0.05, 0.025, 0.01};
     #endif
     for (auto t : T){
         auto beta = 1.0/t;
@@ -106,12 +134,14 @@ int main(){
         auto magnetization = mat.meanEstimate/static_cast<double>(lat.n_sites_());
         auto chi = mat.varianceEstimate / 
             (t * static_cast<double>(lat.n_sites_()));
-        std::cout << t << " " << energy << " " << heatcap << " ";
-        std::cout << magnetization << " " << chi << "\n";
+        ofp << t << " " << energy << " " << heatcap << " ";
+        ofp << magnetization << " " << chi << "\n";
     }
     
-    std::cout << "-----------------\n";
+    ofp << "-----------------\n";
     std::stringstream spinstring;
     mc.printSpins_(spinstring,lat);
-    std::cout << spinstring.str();
+    
+    ofp << spinstring.str();
+    MPI_Finalize();
 }

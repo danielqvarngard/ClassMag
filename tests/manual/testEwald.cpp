@@ -17,21 +17,20 @@ void print(std::vector<double> &v){
     std::cout << "\n";
 }
 
-double volume(const geometry::Lattice<3> &lat){
-    auto bravais = lat.getBravais_();
-    auto size = lat.getSize_();
-    auto V = static_cast<double>(size[0]*size[1]*size[2]);
-    V *= abs(bravais[0] * geometry::cross(bravais[1],bravais[2]));
-    return V;
+template<unsigned int m, unsigned int n>
+void print(geometry::Matrix<m,n>& mat){
+    for (auto v : mat)
+        print(v);
+    
 }
 
 int main(int argc, char* argv[]){
-    auto size = std::array<unsigned int,3>{8u, 8u, 8u};
+    auto size = std::array<unsigned int,3>{8u, 3u, 8u};
     auto lat = geometry::Lattice(geometry::cubicLattice<3>(size));
     auto ep = base::DipoleProfile(lat);
-    ep.alpha_ = base::optimAlpha(lat.n_sites_(),volume(lat));
+    ep.alpha_ = base::optimAlpha(lat.n_sites_(),base::volume(lat));
     ep.magnitude_ = 2.0;
-    #if 1
+    #if 0
     auto nmin = 2u;
     auto nmax = 10u;
     std::vector<double> result;
@@ -43,8 +42,9 @@ int main(int argc, char* argv[]){
         result.push_back(trq);
     }
     #endif
-    for (auto ii = 0u; ii < result.size(); ++ii){
-        result[ii] *= 1.0/result[result.size() - 1u];
-    }
-    print(result);
+    ep.realMirrors_ = 10u;
+    ep.recMirrors_ = 10u;
+    auto mat = base::dipoleMatrix(0u,0u,ep);
+    print(mat);
+
 }

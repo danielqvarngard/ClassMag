@@ -86,6 +86,18 @@ add_executable(
     test.cpp
 )
 
+target_link_libraries(
+    repl.exe
+    PRIVATE
+    ClassMag_Geometry
+)
+
+target_include_directories(
+    repl.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
 add_executable(
     pt.exe
     testPT.cpp
@@ -150,6 +162,27 @@ target_include_directories(
 )
 
 add_executable(
+    xy.exe
+    xy.cpp
+)   
+
+target_link_libraries(
+    xy.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+)
+
+target_include_directories(
+    xy.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+add_executable(
     testMPI.exe
     testMPI.cpp
 )   
@@ -169,7 +202,7 @@ target_include_directories(
     PRIVATE
     ${CMAKE_SOURCE_DIR}/source
 )
-if(1)
+if(0)
 add_executable(
     fileio.exe
     fileio.cpp
