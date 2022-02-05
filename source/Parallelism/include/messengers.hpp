@@ -1,3 +1,6 @@
+#ifndef CLASSMAG_PARALLELISM_MESSENGERS_HPP
+#define CLASSMAG_PARALLELISM_MESSENGERS_HPP
+
 #include <mpi.h>
 #include <vector>
 
@@ -13,7 +16,7 @@ namespace classmag::parallelism{
 
         private:
         int listeners_;
-        int rank_;
+        int rank_ = 0;
         MPI_Comm comm_ = MPI_COMM_WORLD;
         MPI_Status status_;
     };
@@ -32,3 +35,4 @@ namespace classmag::parallelism{
         MPI_Status status_;
     };
 }
+#endif
