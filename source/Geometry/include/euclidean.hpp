@@ -95,6 +95,16 @@ namespace classmag::geometry{
 
     template<unsigned int dimension>
     Euclidean<dimension> operator*(
+        const Euclidean<dimension> &e,
+        const double d){
+        Euclidean<dimension> result;
+        for (unsigned int ii = 0; ii < dimension; ++ii)
+            result[ii] = d * e[ii];
+        return result;
+    }
+
+    template<unsigned int dimension>
+    Euclidean<dimension> operator*(
         const int d,
         const Euclidean<dimension> &e){
         Euclidean<dimension> result;
