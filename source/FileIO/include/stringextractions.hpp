@@ -72,13 +72,49 @@ namespace classmag::fileio{
         return result;
     }
 
+    template <typename T>
+    std::vector<T> read_list(const std::string& line){
+        std::stringstream stream;
+        std::vector<T> result;
+        stream << line;
+        unsigned int ii = 0;
+        while (!stream.eof()){
+            std::string temp_str;
+            T value;
+            stream >> temp_str;
+            if (std::stringstream(temp_str) >> value){
+                result.push_back(value);
+            }
+        }
+
+        return result;
+    }
+
+    template<typename T, unsigned int columns>
+    std::vector<T> read_list(std::ifstream &ifp){
+        std::vector<T> result;
+        bool end_of_list = false;
+        while (!end_of_list){
+            std::string line;
+            getline(ifp, line);
+            if (matrixEnd(line) || ifp.eof())
+                end_of_list = true;
+            else{
+                auto row = read_list<T>(line);
+                for (auto ii = 0u; ii < row.size(); ++ii)
+                    result.push_back(row[ii]);
+            }
+        }
+        return result;
+    }
+
     template<typename T, unsigned int dim>
-    std::array<T, dim> readRow(const std::string line){
+    std::array<T, dim> readRow(const std::string& line){
         std::stringstream stream;
         std::array<T, dim> result;
         stream << line;
         unsigned int ii = 0;
-        while (!stream.eof()){
+        while (!stream.eof() && ii < dim){
             std::string temp_str;
             T value;
             stream >> temp_str;
