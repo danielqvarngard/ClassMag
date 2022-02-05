@@ -5,6 +5,9 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/StreamManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filesystem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scancmd.cpp
+#    ${CMAKE_CURRENT_SOURCE_DIR}/mcopts_cmd.cpp
+#    ${CMAKE_CURRENT_SOURCE_DIR}/include/mcopts_cmd.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/readDefaultSettings.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/optionsReadin.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/StreamManager.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/scancmd.hpp
@@ -22,11 +25,3 @@ target_include_directories(
     PUBLIC
     ${CMAKE_SOURCE_DIR}/source/
 )
-
-if (FALSE)
-add_library(
-    ClassMag_FileIO
-    ${CMAKE_CURRENT_SOURCE_DIR}/filesystem.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/filesystem.hpp
-)
-endif()
