@@ -5,7 +5,10 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/mcFunctions.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/extendedEnsembles.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/HeatBath.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/XYModelManager.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/ClockModelManager.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/PredefAnisotropyVectors.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/AnisotropyVectors.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/extendedEnsembles.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/postProcessing.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/mcFunctions.hpp
