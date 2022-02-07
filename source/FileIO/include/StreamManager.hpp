@@ -64,33 +64,6 @@ namespace classmag::fileio{
             return (*this);
         }
     };
-
-    #if 0
-    class IStreamManager{
-        private:
-        std::ifstream is_;
-
-        public:
-        std::string delimiter_ = ",\t";
-        std::string newline_ = "\n";
-
-        IStreamManager &operator>>(double &x);
-
-        std::vector<double> get_CSV_row_();
-
-        template<unsigned int size>
-        IStreamManager &operator>>(std::array<double,size> &array){
-            std::string headers;
-            std::getline(is_,headers);
-            std::stringstream entryBuffer(headers);
-            std::string entry;
-            for (auto ii = 0; ii < array.size(); ++ii){
-                (*this) >> array[ii];
-            }
-        }
-    };
-    #endif
-
 }
 
 #endif
