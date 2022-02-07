@@ -13,10 +13,9 @@ namespace classmag::fileio{
     }
 
     void WriteDefaultFileHeader(
-        const std::string& outfile,
+        std::ofstream& of,
         const DefaultMonteCarloParameters& parameters
     ){
-        std::ofstream of(outfile);
 
         of << "--- Update parameters: ---\n\n";
         of << "Thermalizations = " << parameters.thermalizations << ";\n";

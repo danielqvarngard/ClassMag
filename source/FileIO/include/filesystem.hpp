@@ -38,7 +38,7 @@ namespace classmag::fileio{
     );
 
     void WriteDefaultFileHeader(
-        const std::string& outfile, 
+        std::ofstream& of, 
         const DefaultMonteCarloParameters& parameters
     );
 }
