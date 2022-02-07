@@ -2,7 +2,7 @@
 #include <iostream>
 
 namespace classmag::parallelism {
-    Hub::Hub()
+    CentralNodeMessenger::CentralNodeMessenger()
     {
         int world_size;
         MPI_Comm_size(MPI_COMM_WORLD, &world_size);
@@ -10,7 +10,7 @@ namespace classmag::parallelism {
         MPI_Comm_rank(MPI_COMM_WORLD, &rank_);
     }
 
-    int Hub::gatherDoubles_(std::vector<double> &target, int tag){
+    int CentralNodeMessenger::gatherDoubles_(std::vector<double> &target, int tag){
         target.resize(listeners_);
         
         auto entry = 0u;
@@ -27,7 +27,7 @@ namespace classmag::parallelism {
         return 0;
     }
 
-    int Hub::gatherDoubles_(ArrayMessage &target, int tag){
+    int CentralNodeMessenger::gatherDoubles_(ArrayMessage &target, int tag){
         target.data_.resize(listeners_);
         
         auto entry = 0u;
@@ -60,7 +60,7 @@ namespace classmag::parallelism {
         return 0;
     };
 
-    int Hub::scatterDoubles_(const std::vector<double> &source, int tag){
+    int CentralNodeMessenger::scatterDoubles_(const std::vector<double> &source, int tag){
 //        if (source.size() != listeners_){
 //            return 1;
 //        }
@@ -79,23 +79,23 @@ namespace classmag::parallelism {
         return 0;
     }
 
-    Listener::Listener(int hubIndex):
+    EdgeNodeMessenger::EdgeNodeMessenger(int hubIndex):
     hubIndex_(hubIndex)
     {
 
     }
 
-    int Listener::getDouble_(double &target, int tag){
+    int EdgeNodeMessenger::getDouble_(double &target, int tag){
         MPI_Recv(&target, 1, MPI_DOUBLE, hubIndex_, tag, comm_, &status_);
         return 0;
     }
 
-    int Listener::sendDouble_(const double source, int tag){
+    int EdgeNodeMessenger::sendDouble_(const double source, int tag){
         MPI_Send(&source, 1, MPI_DOUBLE, hubIndex_, tag, comm_);
         return 0;
     }
 
-    int Listener::sendDouble_(const std::vector<double> &source, int tag){
+    int EdgeNodeMessenger::sendDouble_(const std::vector<double> &source, int tag){
         for(auto d : source)
             sendDouble_(d,tag);
         return 0;

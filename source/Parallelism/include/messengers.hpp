@@ -7,9 +7,9 @@
 #include "ArrayMessage.hpp"
 namespace classmag::parallelism{
 
-    class Hub{
+    class CentralNodeMessenger{
         public:
-        Hub();
+        CentralNodeMessenger();
         int scatterDoubles_(const std::vector<double> &source, int tag);
         int gatherDoubles_(std::vector<double> &target, int tag);
         int gatherDoubles_(ArrayMessage &target, int tag);
@@ -21,10 +21,10 @@ namespace classmag::parallelism{
         MPI_Status status_;
     };
 
-    class Listener{
+    class EdgeNodeMessenger{
         public:
-        Listener() = default;
-        Listener(int hubIndex);
+        EdgeNodeMessenger() = default;
+        EdgeNodeMessenger(int hubIndex);
         int getDouble_(double &target, int tag);
         int sendDouble_(const double source, int tag);
         int sendDouble_(const std::vector<double> &source, int tag);
