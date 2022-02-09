@@ -1,55 +1,65 @@
 #include "ptProcs.hpp"
 
 namespace classmag::environments{
-    int mpiPT_hub(
-        const std::vector<double> &betas,
-        const unsigned int measurementCount){
-        
-        auto fn = "out/" + fileio::datestamp();
-        fileio::OStreamManager mcenFile(fn + ".mcen");
 
-        parallelism::Hub msg;
-        montecarlo::ParallelTemperer ptm(betas);
-        msg.scatterDoubles_(betas,betaChannel);
-        for (auto ii = 0u; ii < measurementCount; ++ii){
+    void MPI_PT_Hub_Thermalize
+    (
+        const PT_Input& input, 
+        montecarlo::ParallelTemperer& ptm
+    ){
+        parallelism::CentralNodeMessenger msg; 
+        for (auto ii = 0u; ii < input.thermalization_runs_; ++ii)
+        {
+            msg.scatterDoubles_(ptm.processOrdered_(input.betas_), betaChannel);
             std::vector<double> energies;
-            msg.gatherDoubles_(energies, energyChannel);
-            mcenFile << ptm.variableOrdered_(energies); 
+            msg.gatherDoubles_(energies,energyChannel);
             ptm.update_(energies);
-            msg.scatterDoubles_(ptm.processOrdered_(betas), betaChannel);
+        }    
+    }
+
+    PT_Return MPI_PT_Hub(const PT_Input& input){
+        PT_Return result;
+        montecarlo::ParallelTemperer ptm(input.betas_);
+        MPI_PT_Hub_Thermalize(input, ptm);
+
+        parallelism::CentralNodeMessenger msg;
+        for (auto ii = 0u; ii < input.measurement_runs_; ++ii){
+            std::vector<double> energies;
+            msg.gatherDoubles_(energies, energyChannel); 
+            ptm.update_(energies);
+            msg.scatterDoubles_(ptm.processOrdered_(input.betas_), betaChannel);
         }
-        return 0;
+        return result;
     };
 
-    int mpiPT_hub(
-        const std::vector<double> &betas, 
-        const unsigned int measurementCount,
+    PT_Return MPI_PT_Hub(
+        const PT_Input& input,
         const unsigned int orderCount){
         if (orderCount == 0)
-            return mpiPT_hub(betas, measurementCount);
+            return MPI_PT_Hub(input);
 
-        auto fn = "out/" + fileio::datestamp();
-        fileio::OStreamManager mcenFile(fn + ".mcen");
-        fileio::OStreamManager mcopFile(fn + ".mcop");
-
-        parallelism::Hub msg;
+        montecarlo::ParallelTemperer ptm(input.betas_);
+        MPI_PT_Hub_Thermalize(input, ptm);
+        parallelism::CentralNodeMessenger msg;
         parallelism::ArrayMessage vt(orderCount);
-        montecarlo::ParallelTemperer ptm(betas);
-        
-        msg.scatterDoubles_(betas,betaChannel);
+        PT_Return result;
 
-        for (auto ii = 0u; ii < measurementCount; ++ii){
+        for (auto ii = 0u; ii < input.measurement_runs_; ++ii){
+            msg.scatterDoubles_(ptm.processOrdered_(input.betas_), betaChannel);
             std::vector<double> energies;
             msg.gatherDoubles_(energies, energyChannel);
             msg.gatherDoubles_(vt,orderChannel);
-            mcenFile << ptm.variableOrdered_(energies);
-            mcopFile << ptm.variableOrdered_(vt);
+            result.microstate_energies.push_back(ptm.variableOrdered_(energies));
+            result.microstate_variables.push_back(ptm.variableOrdered_(vt));
             ptm.update_(energies);
-            msg.scatterDoubles_(ptm.processOrdered_(betas), betaChannel);
         }
 
+        auto accrate = ptm.get_acceptance_rates_();
+        auto n = static_cast<double>(input.measurement_runs_);
+        for (auto ii = 0; ii < accrate.size(); ++ii)
+            accrate[ii] /= n;
 
-
-        return 0;
+        result.acceptance_rates = std::move(accrate);
+        return std::move(result);
     };
 }

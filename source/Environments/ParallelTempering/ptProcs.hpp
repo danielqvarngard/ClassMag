@@ -4,6 +4,9 @@
 #include <iostream>
 #include <mpi.h>
 
+#include <utility>
+
+#include "PT_Return.hpp"
 #include "FileIO/include/filesystem.hpp"
 #include "FileIO/include/StreamManager.hpp"
 #include "MonteCarlo/include/HeatBath.hpp"
@@ -20,20 +23,33 @@ namespace classmag::environments{
         invalidChannel = -1
     };
 
-    int mpiPT_hub(const std::vector<double> &betas, const unsigned int measurementCount);
+    struct PT_Input{
+        int measurement_runs_;
+        int thermalization_runs_;
+        std::vector<double> betas_;
+    };
 
-    int mpiPT_hub(
-        const std::vector<double> &betas, 
-        const unsigned int measurementCount,
-        const unsigned int orderCount);
+    void MPI_PT_Hub_Thermalize(const PT_Input& input);
 
-    template <unsigned int spinDimension> // Eww, we should use a visitor pattern
+    void MPI_PT_Hub(const std::vector<double>& betas, const PT_Input& input);
+
+    PT_Return MPI_PT_Hub(const PT_Input& input);
+
+    PT_Return MPI_PT_Hub(const PT_Input& input, const unsigned int orderCount);
+
+    template <unsigned int spinDimension> // Eww, we should use polymorphism or something
     int mpiPT_mc(
-        montecarlo::HeatBath<spinDimension> &mc){
-        parallelism::Listener msg;
-        msg.getDouble_(mc.beta_, betaChannel);
-        mc.thermalize_();
-        for (auto ii = 0u; ii < mc.measurements_(); ++ii){
+        montecarlo::XYModelManager<spinDimension> &mc,
+        montecarlo::VectorModel_Profile& mco){
+        parallelism::EdgeNodeMessenger msg;
+
+        for (auto ii = 0; ii < mco.thermalization_; ++ii){
+            msg.getDouble_(mc.beta_, betaChannel);
+            mc.update_();
+        }
+        
+
+        for (auto ii = 0u; ii < mco.measurement_; ++ii){
             mc.update_();
             auto e = mc.energy_();
             msg.sendDouble_(e, energyChannel);
@@ -42,11 +58,11 @@ namespace classmag::environments{
         return 0;
     };
 
-    template <unsigned int spinDimension> // Eww, we should use a visitor pattern
+    template <unsigned int spinDimension> // Eww, we should use polymorphism or something
     int mpiPT_mc(
-        montecarlo::XYModelManager<spinDimension> &mc,
+        montecarlo::HeatBath<spinDimension> &mc,
         montecarlo::VectorModel_Profile& mco){
-        parallelism::Listener msg;
+        parallelism::EdgeNodeMessenger msg;
         msg.getDouble_(mc.beta_, betaChannel);
         mc.update_(mco.thermalization_);
         for (auto ii = 0u; ii < mco.measurement_; ++ii){
@@ -60,7 +76,7 @@ namespace classmag::environments{
 
     template <unsigned int spinDimension>
     int mpiPT_mc(montecarlo::ClockModelManager<spinDimension> &mc){
-        parallelism::Listener msg;
+        parallelism::EdgeNodeMessenger msg;
         msg.getDouble_(mc.beta_, betaChannel);
         mc.thermalize_();
         
