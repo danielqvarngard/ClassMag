@@ -1,0 +1,9 @@
+#ifndef CLASSMAG_BASE_APPROXIMANT_PAPER_MEASUREMENTS_HPP
+#define CLASSMAG_BASE_APPROXIMANT_PAPER_MEASUREMENTS_HPP
+
+namespace classmag::base
+{
+    
+}
+
+#endif

@@ -9,6 +9,10 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/numerics.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/numerics.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dipole.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/default_orderparameters.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/default_orderparameters.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/approximant_paper_measurements.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/approximant_paper_measurements.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/linearCoupling.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/dipole.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/hasxStagMag.hpp
