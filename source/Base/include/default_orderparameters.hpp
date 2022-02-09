@@ -7,21 +7,13 @@
 
 namespace classmag::base
 {
-    OrderParameter<3> MagnetizationElements(unsigned int cartesian_index);
-    std::vector<OrderParameter<3>> Magnetization
-    (
+    OrderParameter<3> MagnetizationElement(unsigned int cartesian_index);
 
-    );
+    std::vector<OrderParameter<3>> Magnetization();
 
     OrderParameter<3> BipartiteStaggeredMagnetization
     (
-        unsigned int cartesian_index,
-        std::vector<unsigned int> sublattice_partition_indices
-    );
-    
-    std::vector<OrderParameter<3>> BipartiteStaggeredMagnetization
-    (
-        std::vector<unsigned int> sublattice_partition_indices
+        const std::vector<unsigned int>& sublattice_partition_indices
     );
 }
 
