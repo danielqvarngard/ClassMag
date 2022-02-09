@@ -27,7 +27,7 @@ namespace classmag::montecarlo{
         return sn_[processIndex].variableIndex;
     }
 
-    std::vector<unsigned int> PermutationManager::variable_(){
+    std::vector<unsigned int> PermutationManager::variable_() const{
         std::vector<unsigned int> result(sn_.size());
 
         for (auto ii = 0u; ii < sn_.size(); ++ii){
@@ -92,10 +92,11 @@ namespace classmag::montecarlo{
             auto deltaE = energies[process_(ii+1)] - energies[process_(ii)];
             if (boltzmannFactor(-deltaBeta,deltaE) > distr_(mt_))
                 switchProcess_(ii + 1, ii);
+                acceptance_rates_[ii] += 1.0;
         }
     }
 
-    std::vector<double> ParallelTemperer::reorderedBetas_(){
+    std::vector<double> ParallelTemperer::reorderedBetas_() const noexcept{
         auto permIndices = variable_();
         std::vector<double> result(betas_.size());
         for (auto ii = 0u; ii < betas_.size(); ++ii)

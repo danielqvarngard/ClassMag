@@ -18,7 +18,7 @@ namespace classmag::montecarlo{
         PermutationManager(const PermutationManager &) = delete;
 
         inline unsigned int variable_(const unsigned int processIndex) const;
-        std::vector<unsigned int> variable_();
+        std::vector<unsigned int> variable_() const;
         inline unsigned int process_(const unsigned int variableIndex) const;
 
         std::vector<double> processOrdered_(const std::vector<double> &variableordered);
@@ -48,8 +48,9 @@ namespace classmag::montecarlo{
         
         virtual void update_(const std::vector<double> &energies);
 
-        std::vector<double> reorderedBetas_();
-        std::vector<double> get_acceptance_rates_();
+        std::vector<double> reorderedBetas_() const noexcept;
+        inline std::vector<double> get_acceptance_rates_() const noexcept;
+        inline void reset_acceptance_rates() noexcept;
     };
 }
 
