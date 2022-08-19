@@ -37,12 +37,14 @@ namespace classmag::environments{
         const unsigned int orderCount){
         if (orderCount == 0)
             return MPI_PT_Hub(input);
-
+        
         montecarlo::ParallelTemperer ptm(input.betas_);
-        MPI_PT_Hub_Thermalize(input, ptm);
         parallelism::CentralNodeMessenger msg;
         parallelism::ArrayMessage vt(orderCount);
         PT_Return result;
+
+        MPI_PT_Hub_Thermalize(input, ptm);
+        ptm.reset_acceptance_rates();
 
         for (auto ii = 0u; ii < input.measurement_runs_; ++ii){
             msg.scatterDoubles_(ptm.processOrdered_(input.betas_), betaChannel);
@@ -50,7 +52,8 @@ namespace classmag::environments{
             msg.gatherDoubles_(energies, energyChannel);
             msg.gatherDoubles_(vt,orderChannel);
             result.microstate_energies.push_back(ptm.variableOrdered_(energies));
-            result.microstate_variables.push_back(ptm.variableOrdered_(vt));
+            auto reordered = ptm.variableOrdered_(vt);
+            result.microstate_variables.push_back(reordered);
             ptm.update_(energies);
         }
 

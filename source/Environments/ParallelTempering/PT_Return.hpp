@@ -2,6 +2,8 @@
 #define CLASSMAG_ENVIRONMENTS_PTRETURN_HPP
 
 #include <vector>
+#include <string>
+#include <iostream>
 #include "Parallelism/include/ArrayMessage.hpp"
 
 namespace classmag::environments
@@ -19,14 +21,13 @@ namespace classmag::environments
 
         inline bool is_process_number_equal() const noexcept
         {
-            (microstate_energies[0].size() == microstate_variables[0].data_.size());
+            return (microstate_energies[0].size() == microstate_variables[0].data_.size());
         }
 
         inline bool is_energy_and_variables_equal_size() const noexcept
         {
             return (
-                is_measurement_number_equal() &&
-                is_process_number_equal()
+                is_measurement_number_equal() && is_process_number_equal()
             );
         }
     };
