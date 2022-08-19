@@ -7,6 +7,7 @@
 #include "Geometry/include/matrix.hpp"
 #include "spinStructure.hpp"
 #include "dipole.hpp"
+#include "dipole_spherical.hpp"
 #include "nearestNeighbor.hpp"
 #include "rkky.hpp"
 
@@ -34,6 +35,9 @@ namespace classmag::base{
             std::cout << "Base addDipole called\n";
         }
 
+        virtual void addDipole_spherical(const DipoleProfile& ep) {
+            std::cout << "Base addDipole called\n";
+        }
 
         virtual void addRKKY(const RKKYProfile& profile) {
             std::cout << "Base addRKKY called\n";
@@ -171,8 +175,18 @@ namespace classmag::base{
         virtual void addDipole(const DipoleProfile& ep) override 
         {
             for (auto ii = 0u; ii < ep.lattice_.n_sites_(); ++ii){
-                for (auto jj = ii; jj < ep.lattice_.n_sites_(); ++jj){
+                for (auto jj = ii + 1; jj < ep.lattice_.n_sites_(); ++jj){
                     auto x = dipoleMatrix(ii,jj,ep);
+                    add(ii,jj,x);
+                }
+            }
+        }
+
+        virtual void addDipole_spherical(const DipoleProfile& ep) override 
+        {
+            for (auto ii = 0u; ii < ep.lattice_.n_sites_(); ++ii){
+                for (auto jj = ii + 1; jj < ep.lattice_.n_sites_(); ++jj){
+                    auto x = dipole_spherical_matrix(ii,jj,ep);
                     add(ii,jj,x);
                 }
             }
