@@ -7,7 +7,10 @@
 #include "Geometry/include/euclidean.hpp"
 
 namespace classmag::base{
-    double pi();
+    inline double pi()
+    {
+        return M_PI;
+    };
     
     std::vector<double> shanks(std::vector<double> &x);
 
@@ -81,6 +84,25 @@ namespace classmag::base{
         return result;
     }
     
+    inline unsigned int maximum_z3plus_index(const unsigned int maximum_entry)
+    {
+        unsigned int result = 
+            maximum_entry * (maximum_entry + 1) * (maximum_entry + 1) + 
+            maximum_entry * (maximum_entry + 1) +
+            maximum_entry + 1;
+
+        return result;
+    }
+
+    inline std::array<unsigned int, 3> z3plus_entry(const unsigned int index, const unsigned int max)
+    {
+        auto n1 = index % (max + 1);
+        auto n2 = (index/(max + 1)) % (max + 1);
+        auto n3 = (index/((max + 1u) * (max + 1u))) % (max + 1);
+        
+        auto result = std::array<unsigned int, 3>({n1, n2, n3});
+        return result;
+    }
 }
 
 #endif
