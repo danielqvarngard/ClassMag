@@ -33,4 +33,14 @@ namespace classmag::base{
 
     }
 
+
+    double rkky_scalar_mirrored
+    (
+        unsigned int site1, 
+        unsigned int site2, 
+        const RKKYProfile& rp
+    ){
+        
+    }
+
 }

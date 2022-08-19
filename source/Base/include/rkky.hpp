@@ -7,6 +7,7 @@
 
 #include "Geometry/include/lattice.hpp"
 #include "Base/include/spinStructure.hpp"
+#include "numerics.hpp"
 // #include "Base/include/linearCoupling.hpp"
 
 namespace classmag::base{
@@ -21,9 +22,17 @@ namespace classmag::base{
         double cutoff = 1000;
         double magnitude = 1;
         double k_F = 1;
+        unsigned int mirrors = 0u;
     };
 
     double rkky_value(const double k_F, const double r);
+
+    double rkky_scalar_mirrored
+    (
+        unsigned int site1, 
+        unsigned int site2, 
+        const RKKYProfile& rp
+    );
 
     std::function<double(const unsigned int, const unsigned int)>
         rkkyInteraction(
