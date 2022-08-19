@@ -6,14 +6,19 @@
 namespace classmag::parallelism{
     struct ArrayMessage{
         public:
+
+        ArrayMessage()
+        {
+            
+        }
+
         ArrayMessage(const unsigned int n):
         messageLength_(n)
         {
-            data_.resize(n);
         }
 
         std::vector<std::vector<double>> data_;
-        const unsigned int messageLength_;
+        unsigned int messageLength_;
     };
 }
 
