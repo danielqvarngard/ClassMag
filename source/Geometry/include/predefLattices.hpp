@@ -16,6 +16,7 @@ namespace classmag::geometry{
     Lattice<3> chas0_bipartite(const std::array<unsigned int, 3> &systemSize);
     Lattice<3> chas100(const std::array<unsigned int, 3> &systemSize);
     Lattice<3> pyrochlore(const std::array<unsigned int, 3> &systemSize);
+    Lattice<3> gaa(const std::array<unsigned int, 3> &system_size);
 
     template<unsigned int dim>
     SubLattice<dim> cubicLattice(

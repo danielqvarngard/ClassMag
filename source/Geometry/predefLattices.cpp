@@ -115,4 +115,40 @@ namespace classmag::geometry{
         auto lattice = Lattice(sublattice);
         return lattice;
     }
+
+    Lattice<3> gaa(const std::array<unsigned int, 3> &system_size){
+        std::array<Euclidean<3>,3> bravais;
+        for (auto v : bravais){
+            v.fill(0.0);
+        }
+
+        bravais[0][0] = 18.78470;
+        bravais[1][1] = 23.82080;
+        bravais[2][2] = 5.30100;
+
+        auto sublattice = SubLattice<3>(bravais, system_size);
+
+        std::vector<Euclidean<3>> sites({
+            {2.341701,   15.162654,   1.328378},
+            {16.443000,  8.658147,    3.972623},
+            {7.050649,   8.658147,    3.978878},
+            {11.734051,  15.162654,   1.322122},
+            {16.443000,  3.252254,    3.972623},
+            {2.341701,   20.568547,   1.328378},
+            {11.734051,  20.568547,   1.322122},
+            {7.050649,   3.252254,    3.978878},
+            {2.358231,   3.153874,    1.360290},
+            {16.426469,  20.666927,   3.940710},
+            {7.034119,   20.666927,   4.010790},
+            {11.750582,  3.153874,    1.290210},
+            {16.426469,  15.064275,   3.940710},
+            {2.358231,   8.756526,    1.360290},
+            {11.750582,  8.756526,    1.290210},
+            {7.034119,   15.064275,   4.010790}
+        });
+
+        sublattice.decorate_(sites);
+        auto lattice = Lattice(sublattice);
+        return lattice;
+    }
 }
