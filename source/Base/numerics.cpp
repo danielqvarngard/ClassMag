@@ -1,9 +1,6 @@
 #include "include/numerics.hpp"
 
 namespace classmag::base{
-    double pi(){
-        return M_PI;
-    }
 
     std::vector<double> shanks(std::vector<double> &x){
         std::vector<double> s(x.size() - 2);
