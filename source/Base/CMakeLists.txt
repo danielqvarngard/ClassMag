@@ -12,6 +12,9 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/default_orderparameters.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/default_orderparameters.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/approximant_paper_measurements.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dipole_real_space.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dipole_reciprocal_space.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dipole_spherical.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/approximant_paper_measurements.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/linearCoupling.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/dipole.hpp
@@ -22,6 +25,10 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/include/interactionBase.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/couplingLookup.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/orderParameter.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/dipole_profile.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/dipole_real_space.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/dipole_reciprocal_space.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/dipole_spherical.hpp
 )
 
 target_link_libraries(
@@ -34,4 +41,4 @@ target_include_directories(
     ClassMag_Base
     PUBLIC
     ${CMAKE_SOURCE_DIR}/source
-    )
+)
