@@ -27,7 +27,7 @@ namespace classmag::base
     }
 
     OrderParameter<3> BipartiteStaggeredMagnetization(
-        const std::vector<unsigned int> sublattice_partition_indices
+        const std::vector<unsigned int>& sublattice_partition_indices
     ){
         std::function<double(const SpinStructure<3>&)> staggered_magnetization = 
             [sublattice_partition_indices](const SpinStructure<3>& spins){
