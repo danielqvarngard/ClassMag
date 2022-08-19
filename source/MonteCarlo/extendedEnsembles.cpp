@@ -48,8 +48,8 @@ namespace classmag::montecarlo{
 
     std::vector<double> PermutationManager::variableOrdered_(
         const std::vector<double> &processordered){
-        std::vector<double> result(sn_.size());
-        for (auto ii = 0u; ii < sn_.size(); ++ii){
+        std::vector<double> result(processordered.size());
+        for (auto ii = 0u; ii < processordered.size(); ++ii){
             result[variable_(ii)] = processordered[ii];
         }
         return result;
@@ -57,10 +57,16 @@ namespace classmag::montecarlo{
 
     parallelism::ArrayMessage PermutationManager::variableOrdered_(
         const parallelism::ArrayMessage &processordered){
-        parallelism::ArrayMessage result(processordered.messageLength_);
-        for (auto ii = 0u; ii < processordered.messageLength_; ++ii){
-            for (auto jj = 0u; jj < processordered.data_[ii].size(); ++jj)
-                result.data_[variable_(ii)][jj] = processordered.data_[ii][jj];
+        parallelism::ArrayMessage result;
+
+        auto number_of_vectors = processordered.data_.size();
+        result.data_.resize(number_of_vectors);
+        
+        for (auto ii = 0u; ii < number_of_vectors; ++ii){
+            for (auto x : processordered.data_[ii])
+            {
+                result.data_[variable_(ii)].push_back(x);
+            }
         }
         return result;
     }
@@ -69,7 +75,7 @@ namespace classmag::montecarlo{
     PermutationManager(static_cast<unsigned int>(betas.size())),
     betas_(betas)
     {
-        acceptance_rates_ = std::vector<double>(betas.size(),0.0);
+        acceptance_rates_ = std::vector<double>(betas.size() - 1,0.0);
     }
 
     void ParallelTemperer::seed_(const int seed){
@@ -90,9 +96,10 @@ namespace classmag::montecarlo{
         for (auto ii = 1u; ii < betas_.size() - 1; ii += 2){
             auto deltaBeta = betas_[ii+1] - betas_[ii];
             auto deltaE = energies[process_(ii+1)] - energies[process_(ii)];
-            if (boltzmannFactor(-deltaBeta,deltaE) > distr_(mt_))
+            if (boltzmannFactor(-deltaBeta,deltaE) > distr_(mt_)){
                 switchProcess_(ii + 1, ii);
                 acceptance_rates_[ii] += 1.0;
+            }
         }
     }
 
