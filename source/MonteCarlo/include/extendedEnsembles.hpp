@@ -49,8 +49,13 @@ namespace classmag::montecarlo{
         virtual void update_(const std::vector<double> &energies);
 
         std::vector<double> reorderedBetas_() const noexcept;
-        inline std::vector<double> get_acceptance_rates_() const noexcept;
-        inline void reset_acceptance_rates() noexcept;
+        inline std::vector<double> get_acceptance_rates_() const noexcept{
+            return acceptance_rates_;
+        };
+
+        inline void reset_acceptance_rates() noexcept{
+            acceptance_rates_ = std::vector<double>(acceptance_rates_.size(),0.0);
+        };
     };
 }
 
