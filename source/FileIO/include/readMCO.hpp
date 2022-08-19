@@ -5,6 +5,7 @@
 #include <map>
 #include <fstream>
 #include <string>
+#include <iostream>
 
 #include "Base/include/numerics.hpp"
 #include "MonteCarlo/include/mcProfile.hpp"
@@ -129,18 +130,18 @@ namespace classmag::fileio{
     }
 
     std::vector<double> convert_temperature_intervals(
-        const unsigned int target_size, 
+        const int target_size, 
         const std::vector<double>& temperature_intervals
     ){
         std::vector<double> result;
-        unsigned int n_per_interval = target_size/(temperature_intervals.size() - 1);
+        int n_per_interval = target_size/(temperature_intervals.size() - 1);
         if (target_size > temperature_intervals.size())
         {
-            auto n_extra = target_size - n_per_interval * (temperature_intervals.size() - 1);
+            int n_extra = target_size - n_per_interval * (temperature_intervals.size() - 1);
             for (auto ii = 0u; ii < temperature_intervals.size() - 1; ++ii){
                 --n_extra;
                 auto n_leftover = 0u;
-                if (n_extra > 0)
+                if (n_extra >= 0)
                     n_leftover = 1u;
                 auto sub_interval = 
                     base::linspace_open(temperature_intervals[ii], temperature_intervals[ii + 1], 

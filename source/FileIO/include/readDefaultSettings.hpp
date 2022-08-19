@@ -26,7 +26,8 @@ namespace classmag::fileio{
         OVERRELAXATIONS,
         RESAMPLES,
         ORDERPARAMETERS,
-        SIZE
+        SIZE,
+        TEMPERATURES
     };
 
     std::map<const std::string, MCDefaultOptions> setupHackyMap(){
@@ -40,6 +41,7 @@ namespace classmag::fileio{
         result["rkky"] = MCDefaultOptions::RKKY;
         result["Dipole"] = MCDefaultOptions::DIPOLE;
         result["dipole"] = MCDefaultOptions::DIPOLE;
+        result["Temperatures"] = MCDefaultOptions::TEMPERATURES;
         result["Thermalizations"] = MCDefaultOptions::THERMALIZATIONS;
         result["Skips"] = MCDefaultOptions::SKIPS;
         result["Measurements"] = MCDefaultOptions::MEASUREMENTS;
@@ -100,6 +102,9 @@ namespace classmag::fileio{
                     case MCDefaultOptions::SIZE:{
                         result.system_size = read_list<int>(line);
                         break;
+                    }
+                    case MCDefaultOptions::TEMPERATURES:{
+                        result.temperatures = read_list<double>(line);
                     }
                     default:
                         break;

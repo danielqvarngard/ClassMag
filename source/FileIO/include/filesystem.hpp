@@ -30,6 +30,7 @@ namespace classmag::fileio{
         double dipole_k_reciprocal;
         double dipole_alpha = -1.0;
 
+        std::vector<double> temperatures;
         std::vector<int> system_size;
     };
 

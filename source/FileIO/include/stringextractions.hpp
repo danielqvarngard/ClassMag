@@ -15,6 +15,10 @@ namespace classmag::fileio{
         return "};";
     }
 
+    inline std::string entry_delimiter(){
+        return ";";
+    }
+
     std::string readEntryName(const std::string &row){
         std::stringstream stream;
         stream << row;
