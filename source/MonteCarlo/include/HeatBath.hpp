@@ -11,12 +11,13 @@
 #include "Base/include/simulationProcess.hpp"
 #include "Base/include/orderParameter.hpp"
 #include "Base/include/linearCoupling.hpp"
+#include "MonteCarloBase.hpp"
 #include "mcProfile.hpp"
 #include "mcFunctions.hpp"
 namespace classmag::montecarlo{
 
     template<unsigned int spinDimension>
-    class HeatBath : public base::SimulationBase<spinDimension>{
+    class HeatBath : public MonteCarloBase<spinDimension>{
         public:
         HeatBath():
         base::SimulationBase<spinDimension>(),
@@ -42,7 +43,7 @@ namespace classmag::montecarlo{
         HeatBath(
             VectorModel_Profile &mcp,
             base::LinearBase<spinDimension> &c):
-        base::SimulationBase<spinDimension>(mcp.n_sites_),
+        MonteCarloBase<spinDimension>(mcp.n_sites_),
         mcp_(mcp),
         lookup_(c),
         rng_(std::mt19937(mcp.seed_)),
@@ -62,17 +63,6 @@ namespace classmag::montecarlo{
             for (unsigned int ii = 0; ii < mcp_.n_sites_; ++ii)
                 this->spin_[ii] = randomUnitVector_();
         };
-
-        void addOrderParameter_(
-            const base::OrderParameter<spinDimension> &op){
-            orderParameters_.push_back(op);
-        }
-
-        void addOrderParameter_(
-            const base::OrderParameters<spinDimension> &op){
-            for (auto o : op)
-                addOrderParameter_(o);
-        }
 
         void overRelax_(){
             for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
@@ -113,7 +103,7 @@ namespace classmag::montecarlo{
             return mcp_.measurement_;
         }
             
-        double energy_() const{
+        virtual double energy_() const override{
             auto total = 0.0;
             for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
                 auto energy = -1.0 * localField_(ii) * this->spin_[ii];
@@ -122,80 +112,6 @@ namespace classmag::montecarlo{
 
             return total/2.0; // Do not count interactions twice!
         }
-
-        virtual std::vector<double> measure_() const override{
-            std::vector<double> results;
-            for (auto orderParameter : orderParameters_)
-                results.push_back(orderParameter.measure_(this->spin_));
-            return results;
-        }
-
-        std::vector<std::string> measurementNames_() const{
-            std::vector<std::string> results;
-            for (auto measure : orderParameters_)
-                results.push_back(measure.name_);
-            return results;
-        }
-
-        void printSpin_(unsigned int site) const{
-            for (unsigned int ii = 0; ii < spinDimension; ++ii)
-                std::cout << this->spin_[site][ii] << " ";
-            std::cout << "\n";
-        }
-
-        void printM_() const{
-            for (unsigned int ii = 0; ii < spinDimension; ++ii){
-                auto total = 0.0;
-                for (auto s : this->spin_)
-                    total += s[ii];
-                std::cout << total << " ";
-            }
-            std::cout << "\n";
-        }
-
-        void printCouplings_(unsigned int site) const{
-                for (unsigned int ii = 0; ii < this->n_sites_; ++ii)
-                    std::cout << lookup_.coupling(site,ii) << "\n";
-        }
-
-        void printCoordinations_() const{
-            for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
-                auto z = 0.0;
-                for (unsigned int jj = 0; jj < this->n_sites_; ++jj){
-                    z += lookup_.coupling(ii,jj);
-                }
-                std::cout << z << " ";
-            }
-            std::cout << "\n";        
-        }
-
-        void printSpins_() const{
-            for (unsigned int ii = 0; ii < this->n_sites_; ++ii){
-                for (auto s : this->spin_[ii])
-                    std::cout << s << " ";
-                std::cout << "\n";
-            }
-        }
-
-        void printSpins_(std::stringstream& stream) const{
-            for (unsigned int ii = 0; ii < lookup_.get_n(); ++ii){
-                for (auto s : this->spin_[ii])
-                    stream << s << " ";
-            }
-        }
-
-        template<unsigned int latDim>
-        void printSpins_(std::stringstream& stream, geometry::Lattice<latDim>&lattice) const{
-            for (unsigned int ii = 0; ii < lookup_.get_n(); ++ii){
-                for (auto s : this->spin_[ii])
-                    stream << s << " ";
-                for (auto x : lattice.position_(ii))
-                    stream << x << " ";
-                stream << "\n";
-            }
-        }
-
-        double beta_ = 1.0;
 
         geometry::Euclidean<spinDimension> spinsum_() const{
             auto result = geometry::Euclidean<spinDimension>();
@@ -225,16 +141,11 @@ namespace classmag::montecarlo{
             return result;
 
         }
-
-        void seed_(const int seed){
-            rng_ = std::mt19937(seed);
-        }
         
         private:
         VectorModel_Profile mcp_;
         base::LinearBase<spinDimension>& lookup_;
         std::mt19937 rng_;
-        base::OrderParameters<spinDimension> orderParameters_;
 
         std::normal_distribution<double> normalDistribution_;
         std::uniform_real_distribution<double> uniformDistribution_ = 
@@ -258,7 +169,7 @@ namespace classmag::montecarlo{
                 auto field = localField_(ii);
                 auto delta_E = (-1.0) * field * (candidateSpin - this->spin_[site]);
                 auto r = uniformDistribution_(rng_);
-                auto bf = boltzmannFactor(beta_,delta_E);
+                auto bf = boltzmannFactor(this->beta_,delta_E);
                 auto check = false;
                 if (bf > r){
                     this->spin_[site] = candidateSpin;
@@ -282,7 +193,7 @@ namespace classmag::montecarlo{
         auto fieldNorm = geometry::norm(field);
         auto z = uniformDistribution_(rng_);
         
-        auto cosine = heatBathCosine(beta_*fieldNorm,z);
+        auto cosine = heatBathCosine(this->beta_*fieldNorm,z);
         auto sine = squareRoot(1 - cosine*cosine);
 
         auto invariantAngle = 2.0*pi()*uniformDistribution_(rng_);
