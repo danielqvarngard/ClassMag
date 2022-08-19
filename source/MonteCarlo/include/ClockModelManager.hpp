@@ -11,7 +11,7 @@
 #include "mcFunctions.hpp"
 namespace classmag::montecarlo {
     template<unsigned int spinDim>
-    class EasyAxisVectors : 
+    class EasyAxisVectors :  // Shouldn't this be in base?
         public std::vector<
             std::vector<
                 geometry::Euclidean<spinDim>>>{
