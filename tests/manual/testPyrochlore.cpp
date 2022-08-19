@@ -1,6 +1,9 @@
 #include <iostream>
 
 #include "Base/include/dipole.hpp"
+#include "Base/include/dipole_spherical.hpp"
+#include "Geometry/include/euclidean.hpp"
+#include "Geometry/include/matrix.hpp"
 #include "Geometry/include/predefLattices.hpp"
 using namespace classmag;
 
@@ -11,18 +14,16 @@ void print(geometry::Euclidean<dim> &e){
     std::cout << "\n";
 }
 
+void print(geometry::Matrix<3,3>& m)
+{
+    for (auto e : m)
+        print<3>(e);
+}
+
 void print(std::vector<double> &v){
     for (auto d : v)
         std::cout << d << " ";
     std::cout << "\n";
-}
-
-double volume(const geometry::Lattice<3> &lat){
-    auto bravais = lat.getBravais_();
-    auto size = lat.getSize_();
-    auto V = static_cast<double>(size[0]*size[1]*size[2]);
-    V *= abs(bravais[0] * geometry::cross(bravais[1],bravais[2]));
-    return V;
 }
 
 std::vector<geometry::Euclidean<3>> pyrochlore_ising_axes(){
@@ -63,21 +64,27 @@ std::vector<std::array<double,8>> comparison_pyrochlore_cubic(){
 
 int main(int argc, char* argv[]){
     auto size = std::array<unsigned int,3>{2u, 2u, 2u};
-    auto lat = geometry::pyrochlore(size);
-    auto axes = pyrochlore_ising_axes();
+    auto lat = geometry::Lattice<3>(geometry::cubicLattice<3>(size));
+    auto axis = geometry::Euclidean<3>({1.0, 0.0, 0.0});
     auto ep = base::DipoleProfile(lat);
-    ep.alpha_ = base::optimAlpha(lat.n_sites_(),volume(lat));
-    ep.magnitude_ = 0.01;
-    auto nmax = 10u;
+    ep.length_ = 2.0;
+    auto pata_couplings = comparison_pyrochlore_cubic();
+    //ep.alpha_ = base::optimAlpha(lat.n_sites_(),volume(lat));
+    ep.alpha_ = 2.0;
+    ep.magnitude_ = 1.0;
+    auto nmax = 20u;
     ep.realMirrors_ = nmax;
     ep.recMirrors_ = nmax;
-    
-    for (auto ii = 0u; ii < 16; ++ii){
-        for (auto jj = 0u; jj < 16; ++jj){
-            auto mat = base::dipoleMatrix(ii, jj, ep);
-            auto coupling = axes[ii] * (mat * axes[jj]);
-            std::cout << coupling << " ";
+
+    #if 1
+    for (auto ii = 0u; ii < 8u; ++ii){
+        for (auto jj = 0u; jj < 8u; ++jj){
+            auto mat = base::dipole_spherical_matrix(ii, jj, ep);
+            //mat = mat + (4.0 * base::pi()) * geometry::eye<3>();
+            auto coupling = axis * (mat * axis);
+            std::cout << coupling/pata_couplings[ii][jj] << " ";
         }
         std::cout << "\n";
     }
+    #endif
 }

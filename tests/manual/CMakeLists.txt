@@ -90,6 +90,8 @@ target_link_libraries(
     repl.exe
     PRIVATE
     ClassMag_Geometry
+    ClassMag_Base
+    ClassMag_FileIO
 )
 
 target_include_directories(
@@ -183,6 +185,42 @@ target_include_directories(
 )
 
 add_executable(
+    xy_kf.exe
+    xy_kf.cpp
+)   
+
+target_link_libraries(
+    xy_kf.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+    ${MPI_C_LIBRARIES}
+)
+
+add_executable(
+    investigate_plateau.exe
+    investigate_plateau.cpp
+)   
+
+target_link_libraries(
+    investigate_plateau.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+)
+
+target_include_directories(
+    xy_kf.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+add_executable(
     testMPI.exe
     testMPI.cpp
 )   
@@ -202,25 +240,6 @@ target_include_directories(
     PRIVATE
     ${CMAKE_SOURCE_DIR}/source
 )
-if(0)
-add_executable(
-    fileio.exe
-    fileio.cpp
-)   
-
-target_link_libraries(
-    fileio.exe
-    PRIVATE
-    ClassMag_FileIO
-    ClassMag_MonteCarlo
-)
-
-target_include_directories(
-    fileio.exe
-    PRIVATE
-    ${CMAKE_SOURCE_DIR}/source
-)
-endif()
 
 if(1)
 

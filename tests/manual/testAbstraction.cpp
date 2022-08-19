@@ -38,7 +38,7 @@ int main(int argc, char* argv[]){
     if (!s_higher.empty()){
         j_higher = std::stod(s_higher);
     }
-    double k_F = 19.8;
+    double k_F = 1;
     auto s_k = fileio::get_cmd_flag_str(argc,argv,"-k_F");
     if (!s_k.empty()){
         k_F = std::stod(s_k);
@@ -67,9 +67,9 @@ int main(int argc, char* argv[]){
     ofp << "-----------------\n";
 
     
-    const std::array<unsigned int, 3> size{L,L,L};
+    const std::array<unsigned int, 3> size{L,L,2*L};
     //auto lat = geometry::Lattice(geometry::cubicLattice<3>(size));
-    auto lat = geometry::chas0_bipartite(size);
+    auto lat = geometry::gaa(size);
     base::CouplingsMatrixDense s(lat.n_sites_());
 
     auto rkkyp = base::RKKYProfile(lat);
@@ -78,19 +78,19 @@ int main(int argc, char* argv[]){
     rkkyp.magnitude = 8.0 * j * k_F * k_F * k_F;
 
     auto nnp = base::NNProfile(lat);
-    nnp.cutoff = 0.387;
+    nnp.cutoff = 7.01;
     nnp.magnitude = -1.0;
     auto ep = base::DipoleProfile(lat);
-    ep.alpha_ = base::optimAlpha(lat.n_sites_(),L*L*L);
+    ep.alpha_ = base::optimAlpha(lat.n_sites_(),L*2*L*L);
     ep.magnitude_ = 1.0;
     ep.realMirrors_ = 10u;
     ep.recMirrors_ = 10u;
     s.addDipole(ep);
-    //base::addNN(s,nnp);
-    s.addRKKY(rkkyp);
+    //s.addNN(nnp);
+    //s.addRKKY(rkkyp);
     auto vmp = montecarlo::VectorModel_Profile();
     vmp.measurement_ =      100000;
-    vmp.thermalization_ =   1000000;
+    vmp.thermalization_ =   100000;
     vmp.n_sites_ = lat.n_sites_();
     #if 1
     //ofp << "Heisen\n";
@@ -109,33 +109,54 @@ int main(int argc, char* argv[]){
     ofp << "Ising\n";
     #endif
     #if 1
-    auto T = {  20.0, 16.0, 14.0, 12.0,
-                10.0, 9.5, 9.0, 8.5, 8.0, 7.5, 7.0,
-                6.5, 6.0, 5.5, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5,
-                2.0, 1.5,  1.0, 0.5, 0.25, 0.1, 0.05, 0.025, 0.01};
+    auto T = {  4.0, 3.0, 2.0, 1.5,
+                1.0, 0.5, 0.25, 0.1, 
+                0.05, 0.025, 0.01, 0.0075, 
+                0.005, 0.0025, 0.001, 0.0005};
     #endif
+    std::cout << "Starting mc loop\n";
     for (auto t : T){
         auto beta = 1.0/t;
         mc.beta_ = beta;
         mc.update_(vmp.thermalization_);
         auto u = std::vector<double>(vmp.measurement_);
-        auto m = std::vector<double>(vmp.measurement_);
+        auto m_a = std::vector<double>(vmp.measurement_);
+        auto m_b = std::vector<double>(vmp.measurement_);
+        auto m_c = std::vector<double>(vmp.measurement_);
         for (auto ii = 0u; ii < vmp.measurement_; ++ii){
             mc.update_();
             u[ii] = mc.energy_();
-            m[ii] = geometry::norm(mc.spinsum_());
+            auto magnetization = mc.spinsum_();
+            m_a[ii] = magnetization[0];
+            m_b[ii] = magnetization[1];
+            m_c[ii] = magnetization[2];
         }
 
         auto dat = montecarlo::defaultBootstrap(u, 2);
         auto energy = dat.meanEstimate/static_cast<double>(lat.n_sites_());
         auto heatcap = dat.varianceEstimate / 
             (t * t * static_cast<double>(lat.n_sites_()));
-        auto mat = montecarlo::defaultBootstrap(m, 2);
-        auto magnetization = mat.meanEstimate/static_cast<double>(lat.n_sites_());
-        auto chi = mat.varianceEstimate / 
-            (t * static_cast<double>(lat.n_sites_()));
+        
         ofp << t << " " << energy << " " << heatcap << " ";
-        ofp << magnetization << " " << chi << "\n";
+
+        auto mat_a = montecarlo::defaultBootstrap(m_a, 10);
+        auto magnetization_a = mat_a.meanEstimate/static_cast<double>(lat.n_sites_());
+        auto chi_a = mat_a.varianceEstimate / 
+            (t * static_cast<double>(lat.n_sites_()));
+        ofp << magnetization_a << " " << chi_a << " ";
+
+        auto mat_b = montecarlo::defaultBootstrap(m_b, 10);
+        auto magnetization_b = mat_b.meanEstimate/static_cast<double>(lat.n_sites_());
+        auto chi_b = mat_b.varianceEstimate / 
+            (t * static_cast<double>(lat.n_sites_()));
+        ofp << magnetization_b << " " << chi_b << " ";
+
+        auto mat_c = montecarlo::defaultBootstrap(m_c, 10);
+        auto magnetization_c = mat_c.meanEstimate/static_cast<double>(lat.n_sites_());
+        auto chi_c = mat_c.varianceEstimate / 
+            (t * static_cast<double>(lat.n_sites_()));
+        ofp << magnetization_c << " " << chi_c << "\n";
+
     }
     
     ofp << "-----------------\n";

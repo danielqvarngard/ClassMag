@@ -8,7 +8,7 @@
 
 #include "Geometry/include/predefLattices.hpp"
 #include "Base/include/nearestNeighbor.hpp"
-#include "Base/include/dipole.hpp"
+#include "Base/include/dipole_spherical.hpp"
 #include "Base/include/rkky.hpp"
 #include "Base/include/linearCoupling.hpp"
 #include "Base/include/numerics.hpp"
@@ -28,6 +28,13 @@ double square_vecnorm(const std::vector<double>& v){
     return std::inner_product(std::begin(v), std::end(v), std::begin(v), 0.0);
 }
 
+double magnetization_norm(const std::vector<double>& v){
+    double m = 0.0;
+    for (auto ii = 0; ii < 3; ++ii)
+        m += v[ii] * v[ii];
+    return sqrt(m);
+}
+
 int main(int argc, char* argv[]){
     MPI_Init(NULL,NULL);
 
@@ -37,35 +44,36 @@ int main(int argc, char* argv[]){
 	int world_rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
 
-    auto s_lower = fileio::get_cmd_flag_str(argc,argv, "-Jl");
-    double j_lower = 1.0;
-    if (!s_lower.empty()){
-        j_lower = std::stod(s_lower);
+    auto s_j = fileio::get_cmd_flag_str(argc,argv, "-J");
+    double j = 1.0;
+    if (!s_j.empty()){
+        j = std::stod(s_j);
     }
-    auto s_higher = fileio::get_cmd_flag_str(argc,argv, "-Jh");
-    double j_higher = 10.0;
-    if (!s_higher.empty()){
-        j_higher = std::stod(s_higher);
+    
+    double k_F_lower = 19.8;
+    auto s_k_lower = fileio::get_cmd_flag_str(argc,argv,"-k_Fl");
+    if (!s_k_lower.empty()){
+        k_F_lower = std::stod(s_k_lower);
     }
-    double k_F = 19.8;
-    auto s_k = fileio::get_cmd_flag_str(argc,argv,"-k_F");
-    if (!s_k.empty()){
-        k_F = std::stod(s_k);
+
+    double k_F_higher = 19.8;
+    auto s_k_higher = fileio::get_cmd_flag_str(argc,argv,"-k_Fh");
+    if (!s_k_higher.empty()){
+        k_F_higher = std::stod(s_k_higher);
     }
+
     auto L = 2u;
     auto s_L = fileio::get_cmd_flag_str(argc,argv,"-L");
     if (!s_L.empty()){
         L = std::stoi(s_L);
     }
-    double j = j_lower;
+    double k_F = k_F_lower;
     if (world_size > 1){
         auto n = static_cast<double>(world_size) - 1.0;
         auto m = static_cast<double>(world_rank);
-        j = m * (j_higher - j_lower)/n + j_lower;
+        k_F = m * (k_F_higher - k_F_lower)/n + k_F_lower;
     }
 
-    
-    
     std::string dir = "../out/xy";
     std::string label = fileio::datestamp();
     label += "_" + std::to_string(L) + "_" + std::to_string(world_rank); 
@@ -94,18 +102,22 @@ int main(int argc, char* argv[]){
     ep.magnitude_ = 1.0;
     ep.realMirrors_ = 10u;
     ep.recMirrors_ = 10u;
-    s.addDipole(ep);
+    ep.length_ = static_cast<double>(L);
     //s.addNN(nnp);
     s.addRKKY(rkkyp);
+    s.addDipole_spherical(ep);
     auto vmp = montecarlo::VectorModel_Profile();
-    vmp.measurement_ =      10000;
-    vmp.thermalization_ =   100000;
+    vmp.measurement_ =      1000000;
+    vmp.thermalization_ =   1000000;
+    auto n_resamples = 1;
     vmp.n_sites_ = lat.n_sites_();
     #if 1
     auto anivecs = montecarlo::compute_tsai_easyplanes();
     auto mc = montecarlo::XYModelManager<3>(s, anivecs);
     auto op = base::Magnetization();
     mc.addOrderParameter_(op);
+    auto staggered_boy = base::BipartiteStaggeredMagnetization(lat.partitions_());
+    mc.addOrderParameter_(staggered_boy);
     mc.theta_distr_width = 2.0*montecarlo::pi()/20.0;
     #endif
 
@@ -123,10 +135,18 @@ int main(int argc, char* argv[]){
     ofp << "Ising\n";
     #endif
     #if 1
-    auto T = {  20.0, 16.0, 14.0, 12.0,
-                9.5, 8.0, 7.0,
-                5.5, 4.5, 3.5, 3.0, 2.5,
-                2.0, 1.0, 0.5, 0.1, 0.025, 0.01, 0.0075, 0.005, 0.0025, 0.001};
+    auto T = {  1000.0, 950.0, 900.0, 850.0, 800.0, 750.0, 700.0, 650.0, 600.0,
+                //550.0, 540.0, 530.0, 520.0, 510.0,
+                500.0, 490.0, 480.0, 470.0, 460.0,
+                //450.0, 440.0, 430.0, 420.0, 410.0,
+                400.0, 390.0, 380.0, 370.0, 360.0,
+                //350.0, 340.0, 330.0, 320.0, 310.0, 300.0, 290.0, 280.0, 270.0, 260.0,
+                250.0, 240.0, 230.0, 220.0, 210.0, 200.0, 190.0, 180.0, 170.0,
+                160.0, 150.0, 140.0, 130.0, 120.0, 110.0, 100.0, 95.0, 90.0,
+                80.0, 70.0, 60.0, 50.0, 40.0, 30.0, 20.0, 15.0, 10.0, 5.0,
+                4.0, 3.0, 2.0, 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1};
+                //85.0, 80.0, 75.0, 60.0, 45.0, 35.0, 26.0, 20.0, 16.0, 12.0, 8.5,
+                //5.5, 3.0, 2.0, 1.0, 0.5, 0.1, 0.025, 0.01, 0.005, 0.0025, 0.001};
     #endif
     for (auto t : T){
         auto beta = 1.0/t;
@@ -134,22 +154,31 @@ int main(int argc, char* argv[]){
         mc.update_(vmp.thermalization_);
         auto u = std::vector<double>(vmp.measurement_);
         auto m = std::vector<double>(vmp.measurement_);
+        auto stagmag = std::vector<double>(vmp.measurement_);
         for (auto ii = 0u; ii < vmp.measurement_; ++ii){
             mc.update_();
             u[ii] = mc.energy_();
-            m[ii] = square_vecnorm(mc.measure_());
+            auto ops = mc.measure_();
+            m[ii] = magnetization_norm(ops);
+            stagmag[ii] = ops[3];
         }
 
-        auto dat = montecarlo::defaultBootstrap(u, 2);
+        auto dat = montecarlo::defaultBootstrap(u, n_resamples);
         auto energy = dat.meanEstimate/static_cast<double>(lat.n_sites_());
         auto heatcap = dat.varianceEstimate / 
             (t * t * static_cast<double>(lat.n_sites_()));
-        auto mat = montecarlo::defaultBootstrap(m, 2);
+        auto mat = montecarlo::defaultBootstrap(m, n_resamples);
         auto magnetization = mat.meanEstimate/static_cast<double>(lat.n_sites_());
         auto chi = mat.varianceEstimate / 
             (t * static_cast<double>(lat.n_sites_()));
+
+        auto mat_2 = montecarlo::defaultBootstrap(stagmag, n_resamples);
+        auto stag_magnetization = mat_2.meanEstimate/static_cast<double>(lat.n_sites_());
+        auto stag_chi = mat_2.varianceEstimate / 
+            (t * static_cast<double>(lat.n_sites_()));
         ofp << t << " " << energy << " " << heatcap << " ";
-        ofp << magnetization << " " << chi << "\n";
+        ofp << magnetization << " " << chi << " ";
+        ofp << stag_magnetization << " " << stag_chi << "\n"; 
     }
     
     ofp << "-----------------\n";
@@ -157,5 +186,6 @@ int main(int argc, char* argv[]){
     mc.printSpins_(spinstring,lat);
     
     ofp << spinstring.str();
+    ofp.close();
     MPI_Finalize();
 }
