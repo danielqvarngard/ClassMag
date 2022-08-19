@@ -9,6 +9,7 @@
 #include "Parallelism/include/messengers.hpp"
 #include "Geometry/include/predefLattices.hpp"
 #include "Environments/ParallelTempering/ptProcs.hpp"
+#include "MonteCarlo/include/HeatBath.hpp"
 
 using namespace classmag;
 
@@ -41,14 +42,14 @@ int main(int argc, char* argv[]){
     fileio::readMCO(mco, infile);
     mco.n_sites_ = lattice.n_sites_();
     if (world_rank == 0){
-        environments::mpiPT_hub(betas,mco.measurement_);
+        //environments::MPI_PT_Hub(betas,mco.measurement_);
     }
     else {
         auto couplings = base::CouplingsMatrixDense(n_sites);
         fileio::readLinearInteractions<geometry::Matrix<3,3>,3,3>(couplings, infile, lattice);
         auto mc_proc = montecarlo::HeatBath<3>(mco,couplings);
         mc_proc.seed_(world_rank);
-        environments::mpiPT_mc<3>(mc_proc);
+        environments::mpiPT_mc<3>(mc_proc,mco);
     }
     MPI_Finalize();
 }
