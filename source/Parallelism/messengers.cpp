@@ -96,8 +96,7 @@ namespace classmag::parallelism {
     }
 
     int EdgeNodeMessenger::sendDouble_(const std::vector<double> &source, int tag){
-        for(auto d : source)
-            sendDouble_(d,tag);
+        MPI_Send(&source[0], source.size(), MPI_DOUBLE, hubIndex_, tag, comm_);
         return 0;
     }
 }
