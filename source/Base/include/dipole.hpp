@@ -5,6 +5,7 @@
 #include "Geometry/include/matrix.hpp"
 #include "Geometry/include/lattice.hpp"
 #include "Geometry/include/reciprocal.hpp"
+#include "dipole_profile.hpp"
 #include "numerics.hpp"
 //#include "couplingLookup.hpp"
 //#include "linearCoupling.hpp"
@@ -18,20 +19,6 @@ namespace classmag::base{
         V *= abs(bravais[0] * geometry::cross(bravais[1],bravais[2]));
         return V;
     }
-
-    struct DipoleProfile{
-        public:
-        DipoleProfile(geometry::Lattice<3> lat):
-            lattice_(lat)
-            {
-
-        };
-        geometry::Lattice<3> lattice_;
-        double alpha_ = 1.0;
-        double magnitude_ = 1.0;
-        unsigned int realMirrors_ = 0u;
-        unsigned int recMirrors_ = 0u;
-    };
 
     geometry::Euclidean<3> unscaledDipole(
         geometry::Euclidean<3> &s1, 
@@ -65,6 +52,11 @@ namespace classmag::base{
 
     geometry::Matrix<3,3> dipoleMatrix(
         const unsigned int site1, 
+        const unsigned int site2,
+        const DipoleProfile &ep);
+
+    geometry::Matrix<3,3> dipoleMatrix_widom(
+        const unsigned int site1,
         const unsigned int site2,
         const DipoleProfile &ep);
 

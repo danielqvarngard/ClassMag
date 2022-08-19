@@ -63,7 +63,17 @@ namespace classmag::base{
         const unsigned int site1,
         const unsigned int site2,
         const DipoleProfile &ep){
-        auto result = 0.0*geometry::eye<3>();
+        
+
+        auto size = ep.lattice_.getSize_();
+        auto bravais = ep.lattice_.getBravais_();
+        auto V = 1.0;
+        for (unsigned int ii = 0u; ii < 3; ++ii){
+            V *= size[ii];
+        }
+        V *= abs(bravais[0] * geometry::cross(bravais[1], bravais[2]));
+
+        auto result = 4.0*pi()/(3.0 * V) * geometry::eye<3>();
         auto range = std::vector<geometry::Euclidean<3>>();
 
         if (site1 == site2){
@@ -72,6 +82,39 @@ namespace classmag::base{
         }
         else
             range = integerSweepFull<3>(ep.realMirrors_);
+        
+        for (auto n : range){
+            const auto size = ep.lattice_.getSize_();
+            auto mirrorcoefficients = geometry::elementwise<unsigned int,3>(size,n);
+            auto mirrorvector = geometry::linearCombination<3,3>(
+                mirrorcoefficients,
+                ep.lattice_.getBravais_());
+            auto r = ep.lattice_.position_(site1) - 
+                (ep.lattice_.position_(site2) - mirrorvector);
+            result += ewaldRealB(r, ep) * geometry::eye<3>() + 
+                ((-1.0) * ewaldRealC(r, ep));
+        }
+        range = integerSweepExclude<3>(ep.recMirrors_);
+        auto reclattice = geometry::reciprocalBasis(ep.lattice_.getBravais_());
+        for (auto ii = 0u; ii < 3; ++ii){
+            reclattice[ii] *= (M_PI/3.0)/ep.lattice_.getSize_()[ii]; 
+        }
+        auto r = ep.lattice_.position_(site1) - ep.lattice_.position_(site2);
+        for (auto n : range){
+            auto k = geometry::linearCombination<3,3>(n,reclattice);
+            result += ewaldRec(r,k,ep);
+        }
+        return (-ep.magnitude_) * result;
+    }
+
+    geometry::Matrix<3,3> dipoleMatrix_widom(
+        const unsigned int site1,
+        const unsigned int site2,
+        const DipoleProfile &ep){
+        auto result = 0.0*geometry::eye<3>();
+        auto range = std::vector<geometry::Euclidean<3>>();
+
+        range = integerSweepFull<3>(ep.realMirrors_);
         
         for (auto n : range){
             const auto size = ep.lattice_.getSize_();
