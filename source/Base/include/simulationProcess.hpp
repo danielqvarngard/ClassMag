@@ -19,10 +19,16 @@ namespace classmag::base{
 
         }
 
+        virtual double energy_() const{
+            return 0.0;
+        }
+
+        #if 0
         virtual std::vector<double> measure_() const{
             std::vector<double> result = {0.0};
             return result;
         }
+        #endif
 
         void update_(const unsigned int n_times){
             for (unsigned int ii = 0; ii < n_times; ++ii)
