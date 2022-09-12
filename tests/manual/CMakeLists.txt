@@ -200,22 +200,30 @@ target_link_libraries(
     ${MPI_C_LIBRARIES}
 )
 
+target_include_directories(
+    xy_kf.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
 add_executable(
-    investigate_plateau.exe
-    investigate_plateau.cpp
+    ising_town.exe
+    ising_town.cpp
 )   
 
 target_link_libraries(
-    investigate_plateau.exe
+    ising_town.exe
     PRIVATE
     ClassMag_Base
     ClassMag_FileIO
     ClassMag_Geometry
     ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+    ${MPI_C_LIBRARIES}
 )
 
 target_include_directories(
-    xy_kf.exe
+    ising_town.exe
     PRIVATE
     ${CMAKE_SOURCE_DIR}/source
 )
@@ -239,6 +247,20 @@ target_include_directories(
     testMPI.exe
     PRIVATE
     ${CMAKE_SOURCE_DIR}/source
+)
+
+add_executable(
+    investigate_plateau.exe
+    investigate_plateau.cpp
+)   
+
+target_link_libraries(
+    investigate_plateau.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
 )
 
 if(1)
