@@ -39,6 +39,37 @@ namespace classmag::montecarlo{
         return result;
     }
 
+    EasyAxisVectors<3> compute_tsai_easyaxes(){
+        EasyAxisVectors<3> result;
+        result.resize(12);
+
+        auto tau = (1.0 + sqrt(5.0))/2.0;
+        auto v0 = geometry::Euclidean<3>({-1.0, tau, 0.0});
+        auto e = geometry::Euclidean<3>({tau, 1.0, 0.0});
+        e *= 1.0/geometry::norm(e);
+        v0 *= 1.0/geometry::norm(v0);
+
+        for (unsigned int ii = 0; ii < 12; ++ii){
+            result[ii].push_back(v0);
+            result[ii].push_back((-1.0)*v0);
+            circShift(e);
+            if ((ii + 1) % 3 == 0)
+                e[1] *= -1.0;
+            
+            if (ii == 5)
+                e *= -1.0;
+            
+            circShift(v0);
+            if ((ii + 1) % 3 == 0)
+                v0[1] *= -1.0;
+            
+            if (ii == 5)
+                v0 *= -1.0;
+        }
+
+        return result;
+    }
+
 }
 
 #endif
