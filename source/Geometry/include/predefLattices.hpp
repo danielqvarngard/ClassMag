@@ -30,6 +30,11 @@ namespace classmag::geometry{
         auto lattice = SubLattice<dim>(bravais,systemSize);
         return lattice;
     }
+
+    Lattice<3> lihof4(const std::array<unsigned int, dim>& system_size)
+    {
+        
+    }
 }
 
 #endif
