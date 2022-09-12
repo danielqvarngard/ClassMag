@@ -13,6 +13,13 @@ namespace classmag::montecarlo{
             std::array<geometry::Euclidean<spinDim>,2>>{
     };
 
+    template<unsigned int spinDim>
+    class EasyAxisVectors :
+        public std::vector<
+            std::vector<
+                geometry::Euclidean<spinDim>>>{
+    };
+
 }
 
 #endif

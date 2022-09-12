@@ -9,13 +9,8 @@
 #include "Base/include/simulationProcess.hpp"
 #include "Base/include/linearCoupling.hpp"
 #include "mcFunctions.hpp"
+#include "AnisotropyVectors.hpp"
 namespace classmag::montecarlo {
-    template<unsigned int spinDim>
-    class EasyAxisVectors :  // Shouldn't this be in base?
-        public std::vector<
-            std::vector<
-                geometry::Euclidean<spinDim>>>{
-    };
 
     template<unsigned int spinDim>
     class ClockModelManager{
