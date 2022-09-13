@@ -10,19 +10,20 @@
 #include "Base/include/linearCoupling.hpp"
 #include "mcFunctions.hpp"
 #include "AnisotropyVectors.hpp"
+#include "MonteCarloBase.hpp"
 namespace classmag::montecarlo {
 
     template<unsigned int spinDim>
-    class ClockModelManager{
+    class ClockModelManager : public MonteCarloBase<spinDim>{
         public:
 
         ClockModelManager(
             base::LinearBase<spinDim>& cr, 
             EasyAxisVectors<spinDim>& av):
+            MonteCarloBase<spinDim>(cr.get_n()),
             couplings(cr),
             anivecs(av)
         {
-            spin.resize(cr.get_n());
             representation.resize(cr.get_n());
             randomize();
         }
@@ -44,8 +45,8 @@ namespace classmag::montecarlo {
         double energy_() const{
             auto result = 0.0;
             for (auto ii = 0u; ii < couplings.get_n(); ++ii){
-                auto field = couplings.field(ii,spin);
-                result -= 0.5 * (field * spin[ii]);
+                auto field = couplings.field(ii,this->spin_);
+                result -= 0.5 * (field * this->spin_[ii]);
             }
             return result;
         }
@@ -54,7 +55,7 @@ namespace classmag::montecarlo {
             auto result = geometry::Euclidean<spinDim>();
             result.fill(0.0);
             for (auto ii = 0u; ii < couplings.get_n(); ++ii){
-                result += spin[ii];
+                result += this->spin_[ii];
             }
             return result;
         }
@@ -65,7 +66,7 @@ namespace classmag::montecarlo {
 
         void printSpins_() const{
             for (unsigned int ii = 0; ii < couplings.get_n(); ++ii){
-                for (auto s : this->spin[ii])
+                for (auto s : this->spin_[ii])
                     std::cout << s << " ";
                 std::cout << "\n";
             }
@@ -73,7 +74,7 @@ namespace classmag::montecarlo {
 
         void printSpins_(std::stringstream& stream) const{
             for (unsigned int ii = 0; ii < couplings.get_n(); ++ii){
-                for (auto s : this->spin[ii])
+                for (auto s : this->spin_[ii])
                     stream << s << " ";
             }
         }
@@ -81,7 +82,7 @@ namespace classmag::montecarlo {
         template<unsigned int latDim>
         void printSpins_(std::stringstream& stream, geometry::Lattice<latDim>&lattice) const{
             for (unsigned int ii = 0; ii < couplings.get_n(); ++ii){
-                for (auto s : this->spin[ii])
+                for (auto s : this->spin_[ii])
                     stream << s << " ";
                 for (auto x : lattice.position_(ii))
                     stream << x << " ";
@@ -94,15 +95,14 @@ namespace classmag::montecarlo {
         const base::LinearBase<spinDim>& couplings;
         const EasyAxisVectors<spinDim>& anivecs;
         std::mt19937 rng;
-        base::SpinStructure<spinDim> spin;
         std::vector<unsigned int> representation;
         std::uniform_real_distribution<double> distr = 
             std::uniform_real_distribution<double>(0,1);
 
         void localupdate(const unsigned int site)
         {
-            auto basisindex = site;
-            auto basisnumber = anivecs[site].size();
+            auto anindex = site % anivecs.size();
+            auto basisnumber = anivecs[anindex].size();
             auto suggestedIndex = 0u;
             if (basisnumber > 2){
                 auto intDistr = std::uniform_int_distribution<unsigned int>(1,basisnumber);
@@ -110,24 +110,25 @@ namespace classmag::montecarlo {
             }
             else
                 suggestedIndex = (representation[site] + 1) % basisnumber;
-            auto suggested = anivecs[site][suggestedIndex];
+            auto suggested = anivecs[anindex][suggestedIndex];
 
-            auto field = couplings.field(site, spin);
-            auto deltaE = (-1.0) * field * (suggested - spin[site]);
+            auto field = couplings.field(site, this->spin_);
+            auto deltaE = (-1.0) * field * (suggested - this->spin_[site]);
             auto r = distr(rng);
             if (boltzmannFactor(beta_,deltaE) > r){
-                spin[site] = suggested;
+                this->spin_[site] = suggested;
                 representation[site] = suggestedIndex;
             }
         }
 
         void localrandom(unsigned int site){
-            auto basisnumber = anivecs[site].size();
+            auto anindex = site % anivecs.size();
+            auto basisnumber = anivecs[anindex].size();
             auto intDistr = std::uniform_int_distribution<unsigned int>(0,basisnumber - 1);
             auto suggestedIndex = intDistr(rng);
             representation[site] = suggestedIndex;
-            auto suggested = anivecs[site][suggestedIndex];
-            spin[site] = suggested;
+            auto suggested = anivecs[anindex][suggestedIndex];
+            this->spin_[site] = suggested;
         }
 
         void randomize(){
