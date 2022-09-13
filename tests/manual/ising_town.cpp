@@ -112,13 +112,12 @@ int main(int argc, char* argv[]){
     auto n_resamples = 1;
     vmp.n_sites_ = lat.n_sites_();
     #if 1
-    auto anivecs = montecarlo::compute_tsai_easyplanes();
-    auto mc = montecarlo::XYModelManager<3>(s, anivecs);
+    auto anivecs = montecarlo::compute_tsai_easyaxes();
+    auto mc = montecarlo::ClockModelManager<3>(s, anivecs);
     auto op = base::Magnetization();
     mc.addOrderParameter_(op);
     auto staggered_boy = base::BipartiteStaggeredMagnetization(lat.partitions_());
     mc.addOrderParameter_(staggered_boy);
-    mc.theta_distr_width = 2.0*montecarlo::pi()/20.0;
     #endif
 
     #if 0
