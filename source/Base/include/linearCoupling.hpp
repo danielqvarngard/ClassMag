@@ -39,6 +39,10 @@ namespace classmag::base{
             std::cout << "Base addDipole called\n";
         }
 
+        virtual void addDipole_fishy(const DipoleProfile& ep) {
+            std::cout << "Base addDipole called\n";
+        }
+
         virtual void addRKKY(const RKKYProfile& profile) {
             std::cout << "Base addRKKY called\n";
         }
@@ -187,6 +191,16 @@ namespace classmag::base{
             for (auto ii = 0u; ii < ep.lattice_.n_sites_(); ++ii){
                 for (auto jj = ii + 1; jj < ep.lattice_.n_sites_(); ++jj){
                     auto x = dipole_spherical_matrix(ii,jj,ep);
+                    add(ii,jj,x);
+                }
+            }
+        }
+
+        virtual void addDipole_fishy(const DipoleProfile& ep) override 
+        {
+            for (auto ii = 0u; ii < ep.lattice_.n_sites_(); ++ii){
+                for (auto jj = ii + 1; jj < ep.lattice_.n_sites_(); ++jj){
+                    auto x = dipole_fishy_matrix(ii,jj,ep);
                     add(ii,jj,x);
                 }
             }

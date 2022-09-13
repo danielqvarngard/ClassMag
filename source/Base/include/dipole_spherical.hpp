@@ -14,6 +14,13 @@ namespace classmag::base
         const unsigned int site2,
         const DipoleProfile& ep
     );
+
+     geometry::Matrix<3,3> dipole_fishy_matrix
+    (
+        const unsigned int site1,
+        const unsigned int site2,
+        const DipoleProfile& ep
+    );
 }
 
 #endif

@@ -19,7 +19,7 @@ namespace classmag::base
         const geometry::Euclidean<3>& displacement
     ){
 
-        auto result = 4.0 * pi()/3.0 * geometry::eye<3>();
+        auto result = 0.0 * geometry::eye<3>();
 
         DipoleRecSumTerm term(displacement, alpha);
         
