@@ -14,6 +14,7 @@
 #include "MonteCarlo/include/ClockModelManager.hpp"
 #include "MonteCarlo/include/postProcessing.hpp"
 #include "MonteCarlo/include/HeatBath.hpp"
+#include "MonteCarlo/include/PredefAnisotropyVectors.hpp"
 
 
 using namespace classmag;
@@ -97,7 +98,7 @@ int main(int argc, char* argv[])
     
 
     auto size = std::array<unsigned int,3>{L, L, L};
-    auto lat = geometry::chas0(size);
+    auto lat = geometry::lihof4(size);
 
     auto vmp = montecarlo::VectorModel_Profile();
     vmp.measurement_ =      1000000;
@@ -132,9 +133,10 @@ int main(int argc, char* argv[])
     ep.length_ = static_cast<double>(L);
     
     base::CouplingsMatrixDense s(lat.n_sites_());
-    s.addDipole_spherical(ep);
-
-    montecarlo::HeatBath<3> mc(vmp,s);
+    s.addDipole_fishy(ep);
+    auto anivecs = montecarlo::compute_lihof4_easyaxes();
+    auto mc = montecarlo::ClockModelManager<3>(s, anivecs);
+    //montecarlo::HeatBath<3> mc(vmp,s);
 
     auto delim = "-----------------\n";
     std::string dir = "../out/";
