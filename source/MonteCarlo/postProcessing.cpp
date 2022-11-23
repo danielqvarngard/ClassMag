@@ -2,10 +2,17 @@
 
 namespace classmag::montecarlo{
     double mean(const std::vector<double> &x){
-        auto a = 0.0;
+        //Kahan summation
+        auto sum = 0.0;
+        auto c = 0.0;
         for (auto d : x)
-            a += d;
-        return a/static_cast<double>(x.size());
+        {
+            auto y = d - c;
+            auto t = sum + y;
+            c = (t - sum) - y;
+            sum = t;
+        }
+        return sum/static_cast<double>(x.size());
     }
 
     double moment(const std::vector<double> &x, const double exponent){
@@ -16,11 +23,18 @@ namespace classmag::montecarlo{
     }
 
     double variance(const std::vector<double> &x, double x_mean){
-        auto result = 0.0;
+        auto sum = 0.0;
+        auto c = 0.0;
         for (auto d : x)
-            result += (d - x_mean)*(d - x_mean);
-        result /= static_cast<double>(x.size() - 1);
-        return result;
+        {
+            auto x = (d - x_mean)*(d - x_mean);
+            auto y = x - c;
+            auto t = sum + y;
+            c = (t - sum) - y;
+            sum = t;
+        }
+        sum /= static_cast<double>(x.size() - 1);
+        return sum;
     }
 
     double variance(const std::vector<double> &x){
