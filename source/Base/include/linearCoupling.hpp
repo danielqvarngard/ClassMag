@@ -224,6 +224,11 @@ namespace classmag::base{
     class CouplingScalarDense : public CouplingsDense<double, dim>
     {
         public:
+        CouplingScalarDense()
+        {
+
+        };
+
         CouplingScalarDense(const unsigned int n_sites)
         {
             this->n_sites = n_sites;
@@ -242,6 +247,29 @@ namespace classmag::base{
                 this->couplingvalues[ii] = 0.0;
             }
         }
+
+        virtual void addNN(const NNProfile& nnp) override
+        {
+            for (auto ii = 0u; ii < nnp.lattice.n_sites_(); ++ii){
+                for (auto jj = ii + 1; jj < nnp.lattice.n_sites_(); ++jj){
+                    if (nnp.lattice.squareDistance_(ii,jj) < nnp.cutoff*nnp.cutoff)
+                        this->add(ii,jj, nnp.magnitude);
+                }
+            }
+        };
+
+        virtual void addRKKY(const RKKYProfile& profile) override
+        {
+            for (auto ii = 0u; ii < profile.lattice.n_sites_(); ++ii){
+                for (auto jj = ii + 1; jj < profile.lattice.n_sites_(); ++jj){
+                    auto r2 = profile.lattice.squareDistance_(ii,jj);
+                    if (r2 < profile.cutoff*profile.cutoff){
+                        auto strength = profile.magnitude*rkky_value(profile.k_F, sqrt(r2));
+                        this->add(ii,jj, strength);
+                    }
+                }
+            }
+        };
     };
 }
 

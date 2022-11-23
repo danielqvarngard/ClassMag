@@ -15,7 +15,7 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/dipole_real_space.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dipole_reciprocal_space.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dipole_spherical.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/couplings_kelvin.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/couplings_kelvin.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/approximant_paper_measurements.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/linearCoupling.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/dipole.hpp
