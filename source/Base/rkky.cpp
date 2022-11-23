@@ -7,6 +7,26 @@ namespace classmag::base{
         return coupling;
     };
 
+    double rkky_value(const double k_F, const double r, const double free_path){
+        auto coupling  = rkky_value(k_F, r);
+        coupling *= exp(-r/free_path);
+        return coupling;
+    };
+
+    double xas0_k_f(const double nu, const double a)
+    {
+        auto N = 176.0;
+        double rho = N * nu * pow(a, -3.0);
+        
+        double k_F = pow(3.0 * rho * pow(M_PI, 2.0),1.0/3.0);
+        return k_F;
+    };
+
+    double xas0_k_f(const double nu)
+    {
+        return xas0_k_f(nu, 14.7e-10);
+    };
+
     std::function<double(const unsigned int, const unsigned int)>
         rkkyInteraction(
             const double kf,

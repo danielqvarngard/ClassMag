@@ -25,7 +25,11 @@ namespace classmag::base{
         unsigned int mirrors = 0u;
     };
 
+    double xas0_k_f(const double nu, const double a);
+    double xas0_k_f(const double nu);
+
     double rkky_value(const double k_F, const double r);
+    double rkky_value(const double k_F, const double r, const double free_path);
 
     double rkky_scalar_mirrored
     (
