@@ -70,6 +70,21 @@ namespace classmag::montecarlo{
         return result;
     }
 
+    EasyAxisVectors<3> compute_lihof4_easyaxes(){
+        EasyAxisVectors<3> result;
+        result.resize(4);
+
+        auto v0 = geometry::Euclidean<3>({0.0, 0.0, 1.0});
+
+
+        for (unsigned int ii = 0; ii < 4; ++ii){
+            result[ii].push_back(v0);
+            result[ii].push_back((-1.0)*v0);
+        }
+
+        return result;
+    }
+
 }
 
 #endif
