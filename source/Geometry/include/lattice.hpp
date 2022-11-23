@@ -9,6 +9,7 @@
 #include <string>
 
 #include "euclidean.hpp"
+#include "matrix.hpp"
 #include "pointMetric.hpp"
 
 namespace classmag::geometry{
@@ -20,6 +21,33 @@ namespace classmag::geometry{
         std::vector<Euclidean<dimension>> result;
         result.resize(1);
         result[0] = e;
+        return result;
+    }
+
+    template<unsigned int dimension>
+    std::vector<Euclidean<dimension>> integer_sweep_positive(unsigned int nmax){
+        auto n_elems = static_cast<unsigned int>(pow(nmax + 1, dimension)) - 1u;
+        auto result = std::vector<Euclidean<dimension>>(n_elems);
+        for (auto ii = 0u; ii < n_elems; ++ii){
+            for (auto jj = 0u; jj < dimension; ++jj){
+                auto numerator = ii + 1u;
+                auto denominator = static_cast<unsigned int>(pow(nmax + 1,jj));
+                result[ii][jj] = (numerator/denominator) % (nmax + 1);
+            }
+        }
+        return result;
+    }
+
+    template<unsigned int dimension>
+    std::vector<Euclidean<dimension>> integer_sweep_full(unsigned int nmax){
+        auto offsets = integer_sweep_positive<dimension>(2u * nmax);
+        auto corner = Euclidean<dimension>();
+        corner.fill(-1.0 * nmax);
+        auto result = std::vector<Euclidean<dimension>>(offsets.size() + 1);
+        result[0] = corner;
+        for (auto ii = 0u; ii < offsets.size(); ++ii){
+            result[ii + 1] = corner + offsets[ii];
+        }
         return result;
     }
     
@@ -169,7 +197,34 @@ namespace classmag::geometry{
             return translationVector;
         }
 
-        
+        Euclidean<dimension> get_period_vector(unsigned int direction) const noexcept
+        {
+            Euclidean<dimension> result;
+            result.fill(0.0);
+
+            if (direction < dimension)
+            {
+                for (auto ii = 0u; ii < dimension; ++ii)
+                {
+                    result += static_cast<double>(systemSize_[ii]) * bravais_[ii];
+                }
+            }
+            return result;
+        }
+
+
+        #if 0
+        std::vector<Euclidean<dimension>> compute_folding_vectors(unsigned int nmax)
+        {
+            std::vector<Euclidean<dimension>> result;
+            auto sweep = integer_sweep_full<dimension>(nmax);
+
+            Matrix<dimension, dimension> period_matrix;
+
+
+        }
+        #endif
+
 
         Euclidean<dimension> mirroredPosition_(
             unsigned int site, 
