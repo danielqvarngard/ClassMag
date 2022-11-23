@@ -207,12 +207,12 @@ target_include_directories(
 )
 
 add_executable(
-    ising_town.exe
-    ising_town.cpp
+    ising_rkky.exe
+    ising_rkky.cpp
 )   
 
 target_link_libraries(
-    ising_town.exe
+    ising_rkky.exe
     PRIVATE
     ClassMag_Base
     ClassMag_FileIO
@@ -223,10 +223,99 @@ target_link_libraries(
 )
 
 target_include_directories(
-    ising_town.exe
+    ising_rkky.exe
     PRIVATE
     ${CMAKE_SOURCE_DIR}/source
 )
+
+add_executable(
+    heisen_rkky.exe
+    heisen_rkky.cpp
+)   
+
+target_link_libraries(
+    heisen_rkky.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+    ${MPI_C_LIBRARIES}
+)
+
+target_include_directories(
+    ising_rkky.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+add_executable(
+    ising_nn.exe
+    ising_nn.cpp
+)   
+
+target_link_libraries(
+    ising_nn.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+    ${MPI_C_LIBRARIES}
+)
+
+target_include_directories(
+    ising_nn.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+add_executable(
+    heisen_nn.exe
+    heisen_nn.cpp
+)   
+
+target_link_libraries(
+    heisen_nn.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+    ${MPI_C_LIBRARIES}
+)
+
+target_include_directories(
+    heisen_nn.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
+add_executable(
+    heisen_nn_sweep.exe
+    heisen_nn_sweep.cpp
+)   
+
+target_link_libraries(
+    heisen_nn_sweep.exe
+    PRIVATE
+    ClassMag_Base
+    ClassMag_FileIO
+    ClassMag_Geometry
+    ClassMag_MonteCarlo
+    ClassMag_ParallelTempering
+    ${MPI_C_LIBRARIES}
+)
+
+target_include_directories(
+    heisen_nn_sweep.exe
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}/source
+)
+
 
 add_executable(
     testMPI.exe
