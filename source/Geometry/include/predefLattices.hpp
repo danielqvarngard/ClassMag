@@ -31,10 +31,7 @@ namespace classmag::geometry{
         return lattice;
     }
 
-    Lattice<3> lihof4(const std::array<unsigned int, 3>& system_size)
-    {
-
-    }
+    Lattice<3> lihof4(const std::array<unsigned int, 3>& system_size);
 }
 
 #endif
