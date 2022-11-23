@@ -151,4 +151,17 @@ namespace classmag::geometry{
         auto lattice = Lattice(sublattice);
         return lattice;
     }
+
+    Lattice<3> lihof4(const std::array<unsigned int, 3> &systemSize){
+        auto sublattice = cubicLattice<3>(systemSize);
+        std::vector<Euclidean<3>> sites({
+            {0,      0,      0},
+            {0,      0.5000, 0.5000},
+            {0.5000, 0,      0.5000},
+            {0.5000, 0.5000, 0}
+        });
+        sublattice.decorate_(sites);
+        auto lattice = Lattice(sublattice);
+        return lattice;
+    }
 }
