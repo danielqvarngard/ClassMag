@@ -221,6 +221,12 @@ namespace classmag::geometry{
         }
         return result;
     }
+
+    template<unsigned int dim>
+    bool is_shorter_than(const Euclidean<dim>& e1, const Euclidean<dim>& e2)
+    {
+        return (e1*e1) < (e2*e2);
+    }
 }
 
 
